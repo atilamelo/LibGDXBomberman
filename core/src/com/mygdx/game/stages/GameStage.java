@@ -73,7 +73,8 @@ public class GameStage extends Stage {
 
         @Override
         public boolean keyDown(int keycode) {
-            // TODO: Implementar com switch case e variáveis de apoio para o movimento x e y; 
+            // TODO: Implementar com switch case e variáveis de apoio para o movimento x e y;
+            // TODO: Imple
 
             if (keycode == Input.Keys.UP)
                 bomberman.setLinearVelocity(new Vector2(0, 1));
