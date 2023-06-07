@@ -3,12 +3,14 @@ package com.mygdx.game.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.game.utils.Constants;
 import com.mygdx.game.utils.WorldUtils;
 
 // Estrutura básica baseado no Runner feito por William Moura 
@@ -70,37 +72,52 @@ public class GameStage extends Stage {
     }
 
     private class InputProcessor extends InputAdapter {
+        float moving_x, moving_y;
+
+        public InputProcessor() {
+            moving_x = moving_y = 0.0f;
+        }
 
         @Override
         public boolean keyDown(int keycode) {
-            // TODO: Implementar com switch case e variáveis de apoio para o movimento x e y;
-            // TODO: Imple
+            switch (keycode) {
+                case Input.Keys.UP:
+                    moving_x = 0;
+                    moving_y = Constants.BOMBERMAN_VELOCITY;
+                    break;
+                case Input.Keys.DOWN:
+                    moving_x = 0;
+                    moving_y = -Constants.BOMBERMAN_VELOCITY;
+                    break;
+                case Input.Keys.LEFT:
+                    moving_x = -Constants.BOMBERMAN_VELOCITY;
+                    moving_y = 0;
+                    break;
+                case Input.Keys.RIGHT:
+                    moving_x = Constants.BOMBERMAN_VELOCITY;
+                    moving_y = 0;
+                    break;
+            }
 
-            if (keycode == Input.Keys.UP)
-                bomberman.setLinearVelocity(new Vector2(0, 1));
-            if (keycode == Input.Keys.DOWN)
-                bomberman.setLinearVelocity(new Vector2(0, -1));
-            if (keycode == Input.Keys.LEFT)
-                bomberman.setLinearVelocity(new Vector2(-1, 0));
-            if (keycode == Input.Keys.RIGHT)
-                bomberman.setLinearVelocity(new Vector2(1, 0));
+            bomberman.setLinearVelocity(new Vector2(moving_x, moving_y));
 
             return true;
         }
 
         @Override
         public boolean keyUp(int keycode) {
-            // TODO: Arrumar essa parte de quando o bomberman para, ele só deve parar se a direção do sentido 
-            // é a mesma da que a tecla foi solta
-            // TODO: Implementar com switch case
-            if (keycode == Input.Keys.UP)
-                bomberman.setLinearVelocity(new Vector2(0, 0));
-            if (keycode == Input.Keys.DOWN)
-                bomberman.setLinearVelocity(new Vector2(0, 0));
-            if (keycode == Input.Keys.LEFT)
-                bomberman.setLinearVelocity(new Vector2(0, 0));
-            if (keycode == Input.Keys.RIGHT)
-                bomberman.setLinearVelocity(new Vector2(0, 0));
+            switch (keycode) {
+                case Keys.UP:
+                case Keys.DOWN:
+                    moving_y = 0;
+                    break;
+                case Keys.LEFT:
+                case Keys.RIGHT:
+                    moving_x = 0;
+                    break;
+            }
+
+            bomberman.setLinearVelocity(new Vector2(moving_x, moving_y));
 
             return true;
         }
