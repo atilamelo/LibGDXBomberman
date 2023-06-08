@@ -11,5 +11,6 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("My GDX Game");
 		new Lwjgl3Application(new Bomberman(), config);
+
 	}
 }

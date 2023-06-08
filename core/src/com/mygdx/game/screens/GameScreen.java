@@ -4,22 +4,29 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.mygdx.game.entities.Player;
 
 public class GameScreen implements Screen {
 
   private TiledMap map;
   private OrthogonalTiledMapRenderer renderer;
   private OrthographicCamera camera;
+  private Player player;
 
+  
   @Override
   public void show() {
-    map = new TmxMapLoader().load("maps/Mapa_Fase1.tmx");
+    map = new TmxMapLoader().load("maps/map.tmx");
     renderer = new OrthogonalTiledMapRenderer(map);
 
     camera = new OrthographicCamera();
+
+    player = new Player(new Sprite(new Texture("img/player.png")));
   }
 
   @Override
@@ -29,6 +36,10 @@ public class GameScreen implements Screen {
 
     renderer.setView(camera);
     renderer.render();
+
+    renderer.getSpriteBatch().begin();
+    player.draw(renderer.getSpriteBatch());
+    renderer.getSpriteBatch().end();
   }
 
   @Override
