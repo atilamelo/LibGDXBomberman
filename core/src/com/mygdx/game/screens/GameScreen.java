@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.mygdx.game.entities.Player;
@@ -18,7 +19,6 @@ public class GameScreen implements Screen {
   private OrthographicCamera camera;
   private Player player;
 
-  
   @Override
   public void show() {
     map = new TmxMapLoader().load("maps/map.tmx");
@@ -26,7 +26,16 @@ public class GameScreen implements Screen {
 
     camera = new OrthographicCamera();
 
-    player = new Player(new Sprite(new Texture("bubble.png")));
+    player =
+      new Player(
+        new Sprite(new Texture("player.png")),
+        (TiledMapTileLayer) map.getLayers().get(0)
+      );
+    player.setPosition(
+      4 * player.getCollisionLayer().getTileWidth(),
+      (player.getCollisionLayer().getHeight() - 6) *
+      player.getCollisionLayer().getTileHeight()
+    );
   }
 
   @Override
@@ -64,5 +73,6 @@ public class GameScreen implements Screen {
   public void dispose() {
     map.dispose();
     renderer.dispose();
+    player.getTexture().dispose();
   }
 }
