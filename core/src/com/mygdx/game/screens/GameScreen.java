@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
 
     camera = new OrthographicCamera();
 
-    player = new Player(new Sprite(new Texture("player.png")));
+    player = new Player(new Sprite(new Texture("bubble.png")));
   }
 
   @Override
