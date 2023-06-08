@@ -10,19 +10,20 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.utils.Constants;
 import com.mygdx.game.utils.WorldUtils;
 
 // Estrutura básica baseado no Runner feito por William Moura 
 // http://williammora.com/a-running-game-with-libgdx-part-1
-public class GameStage extends Stage {
+public class GameStage extends Stage{
 
     // This will be our viewport measurements while working with the debug renderer
     private static final int VIEWPORT_WIDTH = 20;
     private static final int VIEWPORT_HEIGHT = 13;
 
     private World world;
-    private Body bomberman;
+    private Bomberman bomberman;
 
     private InputProcessor inputProcessor;
 
@@ -34,7 +35,7 @@ public class GameStage extends Stage {
 
     public GameStage() {
         world = WorldUtils.createWorld();
-        bomberman = WorldUtils.createBomberman(world);
+        bomberman = new Bomberman(WorldUtils.createBomberman(world));
         renderer = new Box2DDebugRenderer();
         setupCamera();
 
@@ -47,6 +48,10 @@ public class GameStage extends Stage {
         camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);
         camera.update();
+    }
+
+    private void setupWorld(){
+        addActor(bomberman);
     }
 
     @Override
@@ -99,7 +104,7 @@ public class GameStage extends Stage {
                     break;
             }
 
-            bomberman.setLinearVelocity(new Vector2(moving_x, moving_y));
+            bomberman.move(new Vector2(moving_x, moving_y));
 
             return true;
         }
@@ -117,7 +122,7 @@ public class GameStage extends Stage {
                     break;
             }
 
-            bomberman.setLinearVelocity(new Vector2(moving_x, moving_y));
+            bomberman.move(new Vector2(moving_x, moving_y));
 
             return true;
         }
