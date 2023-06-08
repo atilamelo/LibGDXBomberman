@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
 
     camera = new OrthographicCamera();
 
-    player = new Player(new Sprite(new Texture("img/player.png")));
+    player = new Player(new Sprite(new Texture("player.png")));
   }
 
   @Override
@@ -37,9 +37,9 @@ public class GameScreen implements Screen {
     renderer.setView(camera);
     renderer.render();
 
-    renderer.getSpriteBatch().begin();
-    player.draw(renderer.getSpriteBatch());
-    renderer.getSpriteBatch().end();
+    renderer.getBatch().begin();
+    player.draw(renderer.getBatch());
+    renderer.getBatch().end();
   }
 
   @Override
