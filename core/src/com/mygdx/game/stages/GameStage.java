@@ -19,8 +19,8 @@ import com.mygdx.game.utils.WorldUtils;
 public class GameStage extends Stage{
 
     // This will be our viewport measurements while working with the debug renderer
-    private static final int VIEWPORT_WIDTH = 20;
-    private static final int VIEWPORT_HEIGHT = 13;
+    private static final int VIEWPORT_WIDTH = Constants.APP_WIDTH;
+    private static final int VIEWPORT_HEIGHT = Constants.APP_HEIGHT;
 
     private World world;
     private Bomberman bomberman;
@@ -35,9 +35,11 @@ public class GameStage extends Stage{
 
     public GameStage() {
         world = WorldUtils.createWorld();
-        bomberman = new Bomberman(WorldUtils.createBomberman(world));
+        Body bombermanBody = WorldUtils.createBomberman(world);
+        bomberman = new Bomberman(bombermanBody);
         renderer = new Box2DDebugRenderer();
         setupCamera();
+        setupWorld();
 
         inputProcessor = new InputProcessor();
         Gdx.input.setInputProcessor(inputProcessor);
@@ -87,24 +89,20 @@ public class GameStage extends Stage{
         public boolean keyDown(int keycode) {
             switch (keycode) {
                 case Input.Keys.UP:
-                    moving_x = 0;
-                    moving_y = Constants.BOMBERMAN_VELOCITY;
+                    bomberman.moveUp();
                     break;
                 case Input.Keys.DOWN:
-                    moving_x = 0;
-                    moving_y = -Constants.BOMBERMAN_VELOCITY;
+                    bomberman.moveDown();
                     break;
                 case Input.Keys.LEFT:
-                    moving_x = -Constants.BOMBERMAN_VELOCITY;
-                    moving_y = 0;
+                    bomberman.moveLeft();
                     break;
                 case Input.Keys.RIGHT:
-                    moving_x = Constants.BOMBERMAN_VELOCITY;
-                    moving_y = 0;
+                    bomberman.moveRight();
                     break;
             }
 
-            bomberman.move(new Vector2(moving_x, moving_y));
+            // bomberman.move(new Vector2(moving_x, moving_y));
 
             return true;
         }
@@ -113,11 +111,15 @@ public class GameStage extends Stage{
         public boolean keyUp(int keycode) {
             switch (keycode) {
                 case Keys.UP:
+                    bomberman.moveUp = false;
                 case Keys.DOWN:
+                    bomberman.moveDown = false; 
                     moving_y = 0;
                     break;
                 case Keys.LEFT:
+                    bomberman.moveLeft = false;
                 case Keys.RIGHT:
+                    bomberman.moveRight = false;
                     moving_x = 0;
                     break;
             }
