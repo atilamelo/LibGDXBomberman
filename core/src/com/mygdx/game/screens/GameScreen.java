@@ -21,16 +21,18 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
-    map = new TmxMapLoader().load("maps/map(2).tmx");
+    map = new TmxMapLoader().load("maps/map_teste.tmx");
     renderer = new OrthogonalTiledMapRenderer(map);
 
     camera = new OrthographicCamera();
 
-    player =
-      new Player(
+    TiledMapTileLayer layerBloco =  (TiledMapTileLayer) map.getLayers().get(0);
+
+    player =  new Player(
         new Sprite(new Texture("player.png")),
         (TiledMapTileLayer) map.getLayers().get(0)
       );
+
     player.setPosition(
       4 * player.getCollisionLayer().getTileWidth(),
       (player.getCollisionLayer().getHeight() - 6) *

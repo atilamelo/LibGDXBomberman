@@ -2,6 +2,8 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -41,8 +43,9 @@ public class Player extends Sprite{
 
         if(velocidade.x < 0){
             //Canto superior esquerdo
-            collisionX = collisionLayer.getCell((int) (getX() / tileWidth),(int) ((getY() + getHeight()) / tileHeight))
+            collisionX = collisionLayer.getCell((int) (getX() / tileWidth), (int) ((getY() + getHeight()) / tileHeight))
                         .getTile().getProperties().containsKey("collision");
+
             
             //Meio esquerdo
             if(!collisionX)
@@ -84,6 +87,7 @@ public class Player extends Sprite{
             //Inferior esquerdo
             collisionY = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight))
             .getTile().getProperties().containsKey("collision");
+            TiledMapTile maptile = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight)).getTile();
             
             //Meio inferior
             if(!collisionY)
