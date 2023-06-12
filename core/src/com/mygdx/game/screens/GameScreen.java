@@ -21,7 +21,7 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
-    map = new TmxMapLoader().load("maps/map.tmx");
+    map = new TmxMapLoader().load("maps/map(2).tmx");
     renderer = new OrthogonalTiledMapRenderer(map);
 
     camera = new OrthographicCamera();
