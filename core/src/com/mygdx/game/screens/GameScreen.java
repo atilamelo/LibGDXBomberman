@@ -29,7 +29,7 @@ public class GameScreen implements Screen {
     TiledMapTileLayer layerBloco =  (TiledMapTileLayer) map.getLayers().get(0);
 
     player =  new Player(
-        new Sprite(new Texture("player.png")),
+        new Sprite(new Texture("assets/img/player.png")),
         (TiledMapTileLayer) map.getLayers().get(0)
       );
 
@@ -38,6 +38,8 @@ public class GameScreen implements Screen {
       (player.getCollisionLayer().getHeight() - 6) *
       player.getCollisionLayer().getTileHeight()
     );
+
+    Gdx.input.setInputProcessor(player);
   }
 
   @Override

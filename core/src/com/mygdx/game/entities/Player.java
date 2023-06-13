@@ -1,18 +1,22 @@
 package com.mygdx.game.entities;
 
+import javax.swing.text.AbstractDocument.BranchElement;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends Sprite{
+public class Player extends Sprite implements InputProcessor{
     
     private Vector2 velocidade = new Vector2();
     private float speed = 60 * 2, gravidade = 60 * 1.8f;
     private TiledMapTileLayer collisionLayer;
+    //private boolean canJump;
     
     public Player(Sprite sprite, TiledMapTileLayer collisionLayer) {
         super(sprite);
@@ -150,5 +154,76 @@ public class Player extends Sprite{
         this.collisionLayer = collisionLayer;
     }
     
-    
+    @Override
+    public boolean keyDown(int keyCode) {
+        switch(keyCode) {
+            case Keys.W:
+                velocidade.y = speed;
+                gravidade = 0;
+                break;
+                // if(canJump){
+                //     velocidade.y = speed;
+                //     canJump = false;
+                // }
+                // break;
+            case Keys.A:
+                velocidade.x = -speed;
+                break;
+            case Keys.D:
+                velocidade.x = speed;
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyUp(int keyCode) {
+        switch(keyCode) {
+            case Keys.A:
+            case Keys.D:
+                velocidade.x = 0;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        //throw new UnsupportedOperationException("Unimplemented method 'touchDown'");
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        //throw new UnsupportedOperationException("Unimplemented method 'touchUp'");
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        // TODO Auto-generated method stub
+        //throw new UnsupportedOperationException("Unimplemented method 'touchDragged'");
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        // TODO Auto-generated method stub
+        //throw new UnsupportedOperationException("Unimplemented method 'mouseMoved'");
+        return false;
+
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        // TODO Auto-generated method stub
+        //throw new UnsupportedOperationException("Unimplemented method 'scrolled'");
+        return false;
+    }
 }
