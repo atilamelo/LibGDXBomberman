@@ -11,12 +11,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends Sprite implements InputProcessor{
+public class Player extends Sprite implements InputProcessor {
     
     private Vector2 velocidade = new Vector2();
-    private float speed = 60 * 2, gravidade = 60 * 1.8f;
+    private float speed = 60 * 2;
     private TiledMapTileLayer collisionLayer;
-    //private boolean canJump;
     
     public Player(Sprite sprite, TiledMapTileLayer collisionLayer) {
         super(sprite);
@@ -29,94 +28,82 @@ public class Player extends Sprite implements InputProcessor{
     }
 
     public void update(float delta) {
-        velocidade.y -= gravidade * delta;
-
-        if(velocidade.y > speed){
-            velocidade.y = speed;
-        }
-        else if(velocidade.y < speed){
-            velocidade.y = -speed;
-        }
-
-        //salvar a posição antiga
+        // Salvar a posição antiga
         float oldX = getX(), oldY = getY(), tileWidth = collisionLayer.getTileWidth(), tileHeight = collisionLayer.getTileHeight();
         boolean collisionX = false, collisionY = false;
 
-        //mova-se para X
+        // Movimentar-se para X
         setX(getX() + velocidade.x * delta);
 
-        if(velocidade.x < 0){
-            //Canto superior esquerdo
+        if (velocidade.x < 0) {
+            // Canto superior esquerdo
             collisionX = collisionLayer.getCell((int) (getX() / tileWidth), (int) ((getY() + getHeight()) / tileHeight))
                         .getTile().getProperties().containsKey("collision");
 
-            
-            //Meio esquerdo
-            if(!collisionX)
+            // Meio esquerdo
+            if (!collisionX)
                 collisionX = collisionLayer.getCell((int) (getX() / tileWidth),(int) ((getY() + getHeight() / 2) / tileHeight))
                         .getTile().getProperties().containsKey("collision");
-            
-            //Canto inferior esquerdo
-            if(!collisionX)
+
+            // Canto inferior esquerdo
+            if (!collisionX)
                 collisionX = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight))
                         .getTile().getProperties().containsKey("collision");
         } else if (velocidade.x > 0) {
-            //Canto superior direito
+            // Canto superior direito
             collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) ((getY() + getHeight()) / tileHeight))
                         .getTile().getProperties().containsKey("collision");
-            
-            //Meio direito
-            if(!collisionX)
+
+            // Meio direito
+            if (!collisionX)
                 collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) ((getY() + getHeight() / 2) / tileHeight))
                         .getTile().getProperties().containsKey("collision");
-            
-            //Canto inferior direito
-            if(!collisionX)
+
+            // Canto inferior direito
+            if (!collisionX)
                 collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) (getY() / tileHeight))
                         .getTile().getProperties().containsKey("collision");
-            
         }
 
-        //Reage a uma colisão de X
-        if(collisionX) {
+        // Reagir a uma colisão em X
+        if (collisionX) {
             setX(oldX);
             velocidade.x = 0;
         }
 
-        //mova-se para Y
+        // Movimentar-se para Y
         setY(getY() + velocidade.y * delta);
 
-        if(velocidade.y < 0){
-
-            //Inferior esquerdo
+        if (velocidade.y < 0) {
+            // Inferior esquerdo
             collisionY = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight))
             .getTile().getProperties().containsKey("collision");
             TiledMapTile maptile = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight)).getTile();
-            
-            //Meio inferior
-            if(!collisionY)
+
+            // Meio inferior
+            if (!collisionY)
                 collisionY = collisionLayer.getCell((int) ((getX() + getWidth() / 2) / tileWidth),(int) (getY() / tileHeight)).getTile().getProperties().containsKey("collision");
-            
-            //Inferior direito
-            if(!collisionY)
+
+            // Inferior direito
+            if (!collisionY)
                 collisionY = collisionLayer.getCell((int) ((getX() + getWidth()) / tileHeight),(int) (getY() / tileHeight)).getTile().getProperties().containsKey("collision");
 
         } else if (velocidade.y > 0) {
-            
-            //Canto superior esquerdo
+
+            // Canto superior esquerdo
             collisionY = collisionLayer.getCell((int) ((getX()) / tileWidth),(int) ((getY() + getHeight()) / tileHeight)).getTile().getProperties().containsKey("collision");
-            
-            //Meio superior
-            if(!collisionY)
+
+            // Meio superior
+            if (!collisionY)
                 collisionY = collisionLayer.getCell((int) ((getX() + getWidth() / 2) / tileWidth),(int) ((getY() + getHeight() / 2) / tileHeight)).getTile().getProperties().containsKey("collision");
-            
-            //Canto superior direito
-            if(!collisionY)
+
+            // Canto superior direito
+            if (!collisionY)
                 collisionY = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) ((getY() + getHeight())/ tileHeight)).getTile().getProperties().containsKey("collision");
         }
 
-        //Reage a uma colisão de Y
-        if(collisionY){
+        // Reagir a uma colisão em Y
+        if (collisionY) {
             setY(oldY);
             velocidade.y = 0;
         }
@@ -138,14 +125,6 @@ public class Player extends Sprite implements InputProcessor{
         this.speed = speed;
     }
 
-    public float getGravidade() {
-        return gravidade;
-    }
-
-    public void setGravidade(float gravidade) {
-        this.gravidade = gravidade;
-    }
-
     public TiledMapTileLayer getCollisionLayer() {
         return collisionLayer;
     }
@@ -159,13 +138,15 @@ public class Player extends Sprite implements InputProcessor{
         switch(keyCode) {
             case Keys.W:
                 velocidade.y = speed;
-                gravidade = 0;
                 break;
                 // if(canJump){
                 //     velocidade.y = speed;
                 //     canJump = false;
                 // }
                 // break;
+            case Keys.S:
+                velocidade.y = -speed;
+                break;
             case Keys.A:
                 velocidade.x = -speed;
                 break;
@@ -181,7 +162,9 @@ public class Player extends Sprite implements InputProcessor{
         switch(keyCode) {
             case Keys.A:
             case Keys.D:
+            case Keys.W:
                 velocidade.x = 0;
+                velocidade.y = 0;
         }
         return true;
     }
