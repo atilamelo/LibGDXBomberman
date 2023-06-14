@@ -163,6 +163,7 @@ public class Player extends Sprite implements InputProcessor {
             case Keys.A:
             case Keys.D:
             case Keys.W:
+            case Keys.S:
                 velocidade.x = 0;
                 velocidade.y = 0;
         }
