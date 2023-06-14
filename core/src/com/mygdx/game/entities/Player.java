@@ -10,16 +10,19 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 
 public class Player extends Sprite implements InputProcessor {
     
     private Vector2 velocidade = new Vector2();
     private float speed = 60 * 2;
     private TiledMapTileLayer collisionLayer;
+    private String blockedKey = "collision";
     
     public Player(Sprite sprite, TiledMapTileLayer collisionLayer) {
         super(sprite);
         this.collisionLayer = collisionLayer;
+        //setScale(3);
     }
 
     public void draw(Batch batch) {
@@ -37,32 +40,26 @@ public class Player extends Sprite implements InputProcessor {
 
         if (velocidade.x < 0) {
             // Canto superior esquerdo
-            collisionX = collisionLayer.getCell((int) (getX() / tileWidth), (int) ((getY() + getHeight()) / tileHeight))
-                        .getTile().getProperties().containsKey("collision");
+            collisionX = isCellBlocked(getX(), getY() + getHeight());
 
             // Meio esquerdo
             if (!collisionX)
-                collisionX = collisionLayer.getCell((int) (getX() / tileWidth),(int) ((getY() + getHeight() / 2) / tileHeight))
-                        .getTile().getProperties().containsKey("collision");
+                collisionX = isCellBlocked(getX(), getY() + getHeight() / 2);
 
             // Canto inferior esquerdo
             if (!collisionX)
-                collisionX = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight))
-                        .getTile().getProperties().containsKey("collision");
+                collisionX = isCellBlocked(getX(), getY());
         } else if (velocidade.x > 0) {
             // Canto superior direito
-            collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) ((getY() + getHeight()) / tileHeight))
-                        .getTile().getProperties().containsKey("collision");
+            collisionX = isCellBlocked(getX() + getWidth(), getY() + getHeight());
 
             // Meio direito
             if (!collisionX)
-                collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) ((getY() + getHeight() / 2) / tileHeight))
-                        .getTile().getProperties().containsKey("collision");
+                collisionX = isCellBlocked(getX() + getWidth(), getY() + getHeight() / 2);
 
             // Canto inferior direito
             if (!collisionX)
-                collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) (getY() / tileHeight))
-                        .getTile().getProperties().containsKey("collision");
+                collisionX = isCellBlocked(getX() + getWidth(), getY());
         }
 
         // Reagir a uma colisão em X
@@ -76,30 +73,30 @@ public class Player extends Sprite implements InputProcessor {
 
         if (velocidade.y < 0) {
             // Inferior esquerdo
-            collisionY = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight))
-            .getTile().getProperties().containsKey("collision");
-            TiledMapTile maptile = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight)).getTile();
+            collisionY = isCellBlocked(getX(), getY());
+
+            //TiledMapTile maptile = collisionLayer.getCell((int) (getX() / tileWidth),(int) (getY() / tileHeight)).getTile();
 
             // Meio inferior
             if (!collisionY)
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth() / 2) / tileWidth),(int) (getY() / tileHeight)).getTile().getProperties().containsKey("collision");
+                collisionY = isCellBlocked(getX() + getWidth() / 2, getY());
 
             // Inferior direito
             if (!collisionY)
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth()) / tileHeight),(int) (getY() / tileHeight)).getTile().getProperties().containsKey("collision");
+                collisionY = isCellBlocked(getX() + getWidth(), getY());
 
         } else if (velocidade.y > 0) {
 
             // Canto superior esquerdo
-            collisionY = collisionLayer.getCell((int) ((getX()) / tileWidth),(int) ((getY() + getHeight()) / tileHeight)).getTile().getProperties().containsKey("collision");
+            collisionY = isCellBlocked(getX(), getY() + getHeight());
 
             // Meio superior
             if (!collisionY)
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth() / 2) / tileWidth),(int) ((getY() + getHeight() / 2) / tileHeight)).getTile().getProperties().containsKey("collision");
+                collisionY = isCellBlocked(getX() + getWidth() / 2, getY() + getHeight());
 
             // Canto superior direito
             if (!collisionY)
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidth),(int) ((getY() + getHeight())/ tileHeight)).getTile().getProperties().containsKey("collision");
+                collisionY = isCellBlocked(getX() + getWidth(), getY() + getHeight());
         }
 
         // Reagir a uma colisão em Y
@@ -107,6 +104,11 @@ public class Player extends Sprite implements InputProcessor {
             setY(oldY);
             velocidade.y = 0;
         }
+    }
+
+    private boolean isCellBlocked(float x, float y) {
+        Cell cell = collisionLayer.getCell((int) (x / collisionLayer.getTileWidth()), (int) (y / collisionLayer.getTileHeight()));
+        return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey(blockedKey);
     }
 
     public Vector2 getVelocidade() {
