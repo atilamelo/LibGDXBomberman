@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("My GDX Game");
-		config.setWindowedMode(Constants.APP_WIDTH, Constants.APP_HEIGHT);
+		config.setWindowedMode(Constants.GAME_WIDTH, Constants.GAME_HEIGHT);
 		new Lwjgl3Application(new Bomberman_Game(), config);
 	}
 }

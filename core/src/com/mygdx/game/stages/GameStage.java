@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -16,7 +18,7 @@ import com.mygdx.game.utils.WorldUtils;
 
 // Estrutura básica baseado no Runner feito por William Moura 
 // http://williammora.com/a-running-game-with-libgdx-part-1
-public class GameStage extends Stage{
+public class GameStage extends Stage {
 
     // This will be our viewport measurements while working with the debug renderer
     private static final int VIEWPORT_WIDTH = Constants.APP_WIDTH;
@@ -32,11 +34,15 @@ public class GameStage extends Stage{
 
     private OrthographicCamera camera;
     private Box2DDebugRenderer renderer;
+    private TiledMap map;
+    private Body collision_body;
 
     public GameStage() {
+        // Tiled Maps
+        map = new TmxMapLoader().load("maps/map_teste.tmx");
+
+        // Box2d
         world = WorldUtils.createWorld();
-        Body bombermanBody = WorldUtils.createBomberman(world);
-        bomberman = new Bomberman(bombermanBody);
         renderer = new Box2DDebugRenderer();
         setupCamera();
         setupWorld();
@@ -52,8 +58,20 @@ public class GameStage extends Stage{
         camera.update();
     }
 
-    private void setupWorld(){
+    private void setupWorld() {
+        world = WorldUtils.createWorld();
+        setupBomberman();
+        setupCollision();
+    }
+
+    private void setupBomberman() {
+        bomberman = new Bomberman(WorldUtils.createBomberman(world));
         addActor(bomberman);
+    }
+
+    private void setupCollision() {
+        WorldUtils.createMap(world, map);
+
     }
 
     @Override
@@ -113,7 +131,7 @@ public class GameStage extends Stage{
                 case Keys.UP:
                     bomberman.moveUp = false;
                 case Keys.DOWN:
-                    bomberman.moveDown = false; 
+                    bomberman.moveDown = false;
                     moving_y = 0;
                     break;
                 case Keys.LEFT:

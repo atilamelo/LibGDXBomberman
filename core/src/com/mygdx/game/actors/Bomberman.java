@@ -22,7 +22,6 @@ public class Bomberman extends GameActor {
     private Animation<TextureRegion> rightAnimation;
     private TextureRegion test;
     private float stateTime;
-    
 
     public Bomberman(Body body) {
         super(body);
@@ -59,7 +58,7 @@ public class Bomberman extends GameActor {
 
         stateTime = 0f;
     }
-    
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -69,7 +68,7 @@ public class Bomberman extends GameActor {
         float height = screenRectangle.height;
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = null;
-        
+
         // Choose the appropriate animation based on the movement direction
         if (moveUp) {
             currentFrame = upAnimation.getKeyFrame(stateTime, true);
@@ -83,9 +82,9 @@ public class Bomberman extends GameActor {
             // If no movement, use a default frame
             currentFrame = test;
         }
-        
+
         // Draw the current frame
-        batch.draw(currentFrame, x, y, width, height);            
+        // batch.draw(currentFrame, x, y, width, height);
     }
 
     @Override
@@ -93,27 +92,27 @@ public class Bomberman extends GameActor {
         return (BombermanUserData) userData;
     }
 
-    public void moveUp(){
-        body.setLinearVelocity(new Vector2(0, Constants.BOMBERMAN_VELOCITY));
+    public void moveUp() {
+        body.applyLinearImpulse(new Vector2(0, Constants.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
         moveUp = true;
     }
 
-    public void moveDown(){
-        body.setLinearVelocity(0, -Constants.BOMBERMAN_VELOCITY);
-        moveDown = true; 
-    }   
-    
-    public void moveLeft(){
-        body.setLinearVelocity(-Constants.BOMBERMAN_VELOCITY, 0);
-        moveLeft = true; 
+    public void moveDown() {
+        body.applyLinearImpulse(new Vector2(0, -Constants.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+        moveDown = true;
     }
 
-    public void moveRight(){
-        body.setLinearVelocity(Constants.BOMBERMAN_VELOCITY, 0);
+    public void moveLeft() {
+        body.applyLinearImpulse(new Vector2(-Constants.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+        moveLeft = true;
+    }
+
+    public void moveRight() {
+        body.applyLinearImpulse(new Vector2(Constants.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
         moveRight = true;
     }
 
-    public void move(Vector2 vector2){
+    public void move(Vector2 vector2) {
         body.setLinearVelocity(vector2);
     }
 

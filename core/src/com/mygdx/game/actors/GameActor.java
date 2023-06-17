@@ -44,7 +44,7 @@ public abstract class GameActor extends Actor {
     }
 
     protected float transformToScreen(float n) {
-        return Constants.WORLD_TO_SCREEN * n;
+        return Constants.PPM * n;
     }   
 
 }
