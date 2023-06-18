@@ -119,6 +119,8 @@ public class GameStage extends Stage {
 
     /*
      * Lida com a posição da câmera baseando-se na posição do Bomberman
+     * Baseado na solução do StackExchange de MattSams
+     * https://gamedev.stackexchange.com/a/74934
      */
     void handleCamera() {
         // Calcula a posição da câmera

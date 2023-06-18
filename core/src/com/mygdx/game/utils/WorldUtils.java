@@ -1,14 +1,18 @@
 package com.mygdx.game.utils;
 
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.box2d.BombermanUserData;
 
 public class WorldUtils {
@@ -48,34 +52,35 @@ public class WorldUtils {
         return body;
     }
 
+    /*
+     * CRÉDITOS: Baseado na solução de Brent Aureli Code
+     * https://www.youtube.com/watch?v=AmLDslUdepo&list=PLZm85UZQLd2SXQzsF-a0-pPF6IWDDdrXt&index=7
+     */
     public static void createMap(World world, TiledMap map) {
-        // TODO: ajustar colisões com as paredes laterais que garram o personagem
-        // create body and fixture variables
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         Body body;
-        float width = Constants.TILES_WIDTH;
-        float height = Constants.TILES_HEIGHT;
-        
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer) map.getLayers().get(0);
-        
-        for(int x = 0; x < mapLayer.getWidth(); x++){
-            for(int y = 0; y < mapLayer.getHeight(); y++){
-                Cell cell = mapLayer.getCell(x, y);
-                if(cell.getTile().getProperties().containsKey("collision")){
-                    bdef.type = BodyDef.BodyType.StaticBody;
-                    bdef.position.set((x + width / 2),
-                            (y + height / 2));
 
-                    body = world.createBody(bdef);
+        for(MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            rect.width = rect.width / Constants.PPM;
+            rect.height = rect.height / Constants.PPM;
+            rect.x = rect.x / Constants.PPM;
+            rect.y = rect.y / Constants.PPM;
 
-                    shape.setAsBox(width / 2, height / 2);
-                    fdef.shape = shape;
-                    body.createFixture(fdef);
-                }
-            }
+            bdef.type = BodyType.StaticBody;
+            bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
+            fdef.shape = shape; 
+            body.createFixture(fdef);
+
         }
+
+        shape.dispose();
     }
 
 }
