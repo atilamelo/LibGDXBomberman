@@ -50,7 +50,7 @@ public class GameStage extends Stage {
         box2drender = new Box2DDebugRenderer();
 
         // Setups
-        setupCamera();
+        setupViewPort();
         setupWorld();
 
         inputProcessor = new InputProcessor();
@@ -58,11 +58,12 @@ public class GameStage extends Stage {
 
     }
 
-    private void setupCamera() {
+    private void setupViewPort() {
         gamecam = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         gamecam.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        gamecam.zoom -= 0.25f;
+        gamecam.zoom -= Constants.GAME_ZOOM;
         gamecam.update();
+
         gameport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, gamecam);
         this.setViewport(gameport);
 
@@ -102,20 +103,62 @@ public class GameStage extends Stage {
 
     @Override
     public void draw() {
-        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
-        gamecam.position.x = bomberman.getScreenRectangle().x;
-        gamecam.position.y = bomberman.getScreenRectangle().y;
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        handleCamera();
 
         gameport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.setViewport(gameport);
-        
-        
+
         tiledRender.setView(gamecam);
-        tiledRender.render();   
+        tiledRender.render();
         box2drender.render(world, gamecam.combined);
-        
 
         super.draw();
+    }
+
+    /*
+     * Lida com a posição da câmera baseando-se na posição do Bomberman
+     */
+    void handleCamera() {
+        // Calcula a posição da câmera
+        float targetX = bomberman.getScreenRectangle().x;
+        float targetY = bomberman.getScreenRectangle().y;
+
+        // Centraliza a câmera
+        gamecam.position.set(targetX, targetY, 0);
+
+        // Calcula a metade da largura e altura da câmera
+        float cameraHalfWidth = gamecam.viewportWidth * gamecam.zoom * .5f;
+        float cameraHalfHeight = gamecam.viewportHeight * gamecam.zoom * .5f;
+
+        // Calcula os limites do mapa
+        int mapLeft = 0;
+        int mapRight = 0 + VIEWPORT_WIDTH;
+        int mapBottom = 0;
+        int mapTop = 0 + VIEWPORT_HEIGHT;
+
+        float cameraLeft = gamecam.position.x - cameraHalfWidth;
+        float cameraRight = gamecam.position.x + cameraHalfWidth;
+        float cameraBottom = gamecam.position.y - cameraHalfHeight;
+        float cameraTop = gamecam.position.y + cameraHalfHeight;
+
+        // Horizontal axis
+        if (cameraLeft <= mapLeft) {
+            targetX = mapLeft + cameraHalfWidth;
+        } else if (cameraRight >= mapRight) {
+            targetX = mapRight - cameraHalfWidth;
+        }
+
+        // Vertical axis
+        if (cameraBottom <= mapBottom) {
+            targetY = mapBottom + cameraHalfHeight;
+        } else if (cameraTop >= mapTop) {
+            targetY = mapTop - cameraHalfHeight;
+        }
+
+        // Atualiza a posição da câmera
+        gamecam.position.set(targetX, targetY, 0);
     }
 
     private class InputProcessor extends InputAdapter {

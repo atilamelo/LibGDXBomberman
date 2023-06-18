@@ -9,6 +9,7 @@ public class Constants {
     public static final int FPS = 60;
     public static final int GAME_WIDTH = APP_WIDTH * (int) PPM * 10;
     public static final int GAME_HEIGHT = APP_HEIGHT * (int) PPM * 10;
+    public static final float GAME_ZOOM = 0.25f;
 
     // Bomberman properties
     public static final float BOMBERMAN_X = 2;
