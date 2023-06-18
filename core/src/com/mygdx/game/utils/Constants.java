@@ -5,17 +5,19 @@ public class Constants {
 
     public static final int APP_WIDTH = 29;
     public static final int APP_HEIGHT = 13;
-    public static final float PPM = 30;
+    public static final float PPM = 16;
     public static final int FPS = 60;
-    public static final int GAME_WIDTH = APP_WIDTH * (int) PPM;
-    public static final int GAME_HEIGHT = APP_HEIGHT * (int) PPM;
+    public static final int GAME_WIDTH = APP_WIDTH * (int) PPM * 10;
+    public static final int GAME_HEIGHT = APP_HEIGHT * (int) PPM * 10;
 
     // Bomberman properties
     public static final float BOMBERMAN_X = 2;
     public static final float BOMBERMAN_Y = 2; 
     public static final float BOMBERMAN_WIDTH = 1f; 
     public static final float BOMBERMAN_HEIGHT = 0.8f;
-    public static final float BOMBERMAN_COLLISION_RADIUS = 0.4f;
+    public static final float BOMBERMAN_B2D_WIDTH = 0.3f; 
+    public static final float BOMBERMAN_B2D_HEIGHT = 0.4f;
+
     public static final float BOMBERMAN_VELOCITY = 2f;
     public static final float BOMBERMAN_DENSITY = 1f;
 

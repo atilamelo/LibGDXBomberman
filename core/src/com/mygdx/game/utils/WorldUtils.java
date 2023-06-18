@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -25,8 +24,10 @@ public class WorldUtils {
         bodyDef.position.set(new Vector2(Constants.BOMBERMAN_X, Constants.BOMBERMAN_Y));
         bodyDef.fixedRotation = true;
         bodyDef.linearDamping = 0f;
-        CircleShape shape = new CircleShape();
-        shape.setRadius(Constants.BOMBERMAN_COLLISION_RADIUS);
+
+        // Shape of Bomberman
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(Constants.BOMBERMAN_B2D_WIDTH, Constants.BOMBERMAN_B2D_HEIGHT);
         
         // Create body 
         Body body = world.createBody(bodyDef);
@@ -48,6 +49,7 @@ public class WorldUtils {
     }
 
     public static void createMap(World world, TiledMap map) {
+        // TODO: ajustar colisões com as paredes laterais que garram o personagem
         // create body and fixture variables
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();

@@ -84,7 +84,7 @@ public class Bomberman extends GameActor {
         }
 
         // Draw the current frame
-        // batch.draw(currentFrame, x, y, width, height);
+        batch.draw(currentFrame, x, y, width, height);
     }
 
     @Override
