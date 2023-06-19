@@ -2,9 +2,7 @@ package com.mygdx.game.stages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
-import com.mygdx.game.BombermanGame;;
 
 public class GameScreen implements Screen {
     private GameStage stage;
