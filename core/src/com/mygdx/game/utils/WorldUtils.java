@@ -3,8 +3,6 @@ package com.mygdx.game.utils;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -32,17 +30,16 @@ public class WorldUtils {
         // Shape of Bomberman
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(Constants.BOMBERMAN_B2D_WIDTH, Constants.BOMBERMAN_B2D_HEIGHT);
-        
-        // Create body 
+
+        // Create body
         Body body = world.createBody(bodyDef);
-        
-        // Fixture Def 
+
+        // Fixture Def
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f; 
-        fixtureDef.friction = 0.0f; 
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.0f;
         fixtureDef.restitution = 0.0f;
-
 
         body.createFixture(fixtureDef);
         body.resetMassData();
@@ -52,9 +49,35 @@ public class WorldUtils {
         return body;
     }
 
+    public static Body createBomb(World world, float x, float y) {
+        // Body Def
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(new Vector2(x, y));
+
+        // Shape of Bomberman
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(Constants.BOMB_B2D_WIDTH, Constants.BOMB_B2D_HEIGHT);
+
+        // Create body
+        Body body = world.createBody(bodyDef);
+
+        // Fixture Def
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        body.createFixture(fixtureDef);
+        body.resetMassData();
+        body.setUserData(new BombermanUserData(Constants.BOMB_WIDTH, Constants.BOMB_HEIGHT));
+        shape.dispose();
+
+
+        return body;
+    }
+
     /*
      * CRÉDITOS: Baseado na solução de Brent Aureli Code
-     * https://www.youtube.com/watch?v=AmLDslUdepo&list=PLZm85UZQLd2SXQzsF-a0-pPF6IWDDdrXt&index=7
+     * https://www.youtube.com/watch?v=AmLDslUdepo&list=PLZm85UZQLd2SXQzsF-a0-
+     * pPF6IWDDdrXt&index=7
      */
     public static void createMap(World world, TiledMap map) {
         BodyDef bdef = new BodyDef();
@@ -62,7 +85,7 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         Body body;
 
-        for(MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){
+        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             rect.width = rect.width / Constants.PPM;
             rect.height = rect.height / Constants.PPM;
@@ -75,7 +98,7 @@ public class WorldUtils {
             body = world.createBody(bdef);
 
             shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
-            fdef.shape = shape; 
+            fdef.shape = shape;
             body.createFixture(fdef);
 
         }

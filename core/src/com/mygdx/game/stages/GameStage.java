@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -26,6 +26,8 @@ public class GameStage extends Stage {
     private static final int VIEWPORT_WIDTH = Constants.APP_WIDTH;
     private static final int VIEWPORT_HEIGHT = Constants.APP_HEIGHT;
 
+    public GameScreen gameScreen;
+
     private World world;
     private Bomberman bomberman;
 
@@ -40,9 +42,11 @@ public class GameStage extends Stage {
     private OrthogonalTiledMapRenderer tiledRender;
     private TiledMap map;
 
-    public GameStage() {
+    public GameStage(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+
         // Tiled Maps
-        map = new TmxMapLoader().load("maps/map_teste.tmx");
+        map = gameScreen.getAssetManager().get("maps/map_teste.tmx");
         tiledRender = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM);
 
         // Box2d
@@ -76,7 +80,7 @@ public class GameStage extends Stage {
     }
 
     private void setupBomberman() {
-        bomberman = new Bomberman(WorldUtils.createBomberman(world));
+        bomberman = new Bomberman(WorldUtils.createBomberman(world), this);
         addActor(bomberman);
     }
 
@@ -99,6 +103,14 @@ public class GameStage extends Stage {
 
         // TODO: Implement interpolation
 
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public AssetManager getAssetManager(){
+        return gameScreen.getAssetManager();
     }
 
     @Override
@@ -187,8 +199,6 @@ public class GameStage extends Stage {
                     break;
             }
 
-            // bomberman.move(new Vector2(moving_x, moving_y));
-
             return true;
         }
 
@@ -207,6 +217,9 @@ public class GameStage extends Stage {
                     bomberman.moveRight = false;
                     moving_x = 0;
                     break;
+                case Keys.X:
+                    bomberman.placeBomb();
+                    break;
             }
 
             bomberman.move(new Vector2(moving_x, moving_y));
@@ -214,6 +227,15 @@ public class GameStage extends Stage {
             return true;
         }
 
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        box2drender.dispose();
+        tiledRender.dispose();
+        world.dispose();
+        map.dispose();
     }
 
 }

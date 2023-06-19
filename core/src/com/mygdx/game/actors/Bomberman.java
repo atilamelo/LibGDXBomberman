@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.Constants;
 
 public class Bomberman extends GameActor {
@@ -21,11 +22,15 @@ public class Bomberman extends GameActor {
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
     private TextureRegion test;
+    private TextureAtlas textureAtlas;
+    private GameStage game;
     private float stateTime;
 
-    public Bomberman(Body body) {
+    public Bomberman(Body body, GameStage game) {
         super(body);
-        TextureAtlas textureAtlas = new TextureAtlas(Constants.BOMBERMAN_ATLAS_PATH);
+        this.game = game;
+        this.textureAtlas = game.gameScreen.getAssetManager().get(Constants.BOMBERMAN_ATLAS_PATH);
+        
         Array<TextureRegion> upFrames = new Array<>();
         Array<TextureRegion> downFrames = new Array<>();
         Array<TextureRegion> leftFrames = new Array<>();
@@ -115,5 +120,16 @@ public class Bomberman extends GameActor {
     public void move(Vector2 vector2) {
         body.setLinearVelocity(vector2);
     }
+
+    public void placeBomb(){
+        // TODO: Implement functionality
+        int x, y; 
+        x = Math.round(screenRectangle.x); 
+        y = Math.round(screenRectangle.y);
+        System.out.println("Place bomb screenRectangle: " + screenRectangle.x + ", " + screenRectangle.y);
+        System.out.println("Place bomb at " + x + " " + y);
+        new Bomb(game, x, y);
+    }
+    
 
 }

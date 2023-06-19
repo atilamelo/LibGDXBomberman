@@ -12,9 +12,6 @@ public abstract class GameActor extends Actor {
     protected UserData userData;
     protected Rectangle screenRectangle;
 
-    public GameActor() {
-    }
-
     public GameActor(Body body) {
         this.body = body;
         this.userData = (UserData) body.getUserData();
@@ -39,7 +36,7 @@ public abstract class GameActor extends Actor {
         screenRectangle.y = body.getPosition().y - userData.getHeight() / 2; 
         screenRectangle.width = userData.getWidth();
         screenRectangle.height = userData.getHeight();
-        System.out.println("UpdateRectangle: " + screenRectangle.x + " " + screenRectangle.y + " " + screenRectangle.width + " " + screenRectangle.height);
+        // System.out.println("UpdateRectangle: " + screenRectangle.x + " " + screenRectangle.y + " " + screenRectangle.width + " " + screenRectangle.height);
     }
 
     public Rectangle getScreenRectangle() {

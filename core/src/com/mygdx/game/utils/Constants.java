@@ -15,7 +15,7 @@ public class Constants {
     public static final float BOMBERMAN_X = 2;
     public static final float BOMBERMAN_Y = 2; 
     public static final float BOMBERMAN_WIDTH = 1f; 
-    public static final float BOMBERMAN_HEIGHT = 0.8f;
+    public static final float BOMBERMAN_HEIGHT = 1f;
     public static final float BOMBERMAN_B2D_WIDTH = 0.3f; 
     public static final float BOMBERMAN_B2D_HEIGHT = 0.4f;
 
@@ -27,11 +27,16 @@ public class Constants {
     public static final float TILES_HEIGHT = 1f;
 
 
-    public static final String BOMBERMAN_ATLAS_PATH = "assets/BombermanAtlas.atlas";
-    public static final String[] BOMBERMAN_UP_REGION_NAMES = new String[] {"runningUp01", "runningUp02", "runningUp03"};
-    public static final String[] BOMBERMAN_DOWN_REGION_NAMES = new String[] {"runningDown01", "runningDown02", "runningDown03"};
-    public static final String[] BOMBERMAN_LEFT_REGION_NAMES = new String[] {"runningLeft01", "runningLeft02", "runningLeft03"};
-    public static final String[] BOMBERMAN_RIGHT_REGION_NAMES = new String[] {"runningRight01", "runningRight02", "runningRight03"};
+    public static final String BOMBERMAN_ATLAS_PATH = "assets/bombermanAtlas/bombermanAtlas.atlas";
+    public static final String[] BOMBERMAN_UP_REGION_NAMES = new String[] {"tile017", "tile018", "tile019"};
+    public static final String[] BOMBERMAN_DOWN_REGION_NAMES = new String[] {"tile003", "tile004", "tile005"};
+    public static final String[] BOMBERMAN_LEFT_REGION_NAMES = new String[] {"tile000", "tile001", "tile002"};
+    public static final String[] BOMBERMAN_RIGHT_REGION_NAMES = new String[] {"tile014", "tile015", "tile016"};
 
+    public static final String[] BOMB_ANIMATION = new String[] {"tile042", "tile043", "tile044"};
+    public static final float BOMB_WIDTH = 1f;
+    public static final float BOMB_HEIGHT = 1f;
+    public static final float BOMB_B2D_WIDTH = .5f;
+    public static final float BOMB_B2D_HEIGHT = .5f;
 
 }
