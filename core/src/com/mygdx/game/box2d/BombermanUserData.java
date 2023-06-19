@@ -1,7 +1,7 @@
 package com.mygdx.game.box2d;
 
 import com.mygdx.game.enums.UserDataType;
-import com.mygdx.game.utils.Constants;
+import com.mygdx.game.utils.GameManager;
 
 public class BombermanUserData extends UserData {
 
@@ -10,13 +10,13 @@ public class BombermanUserData extends UserData {
     public BombermanUserData(float width, float height) {
         super(width, height);
         userDataType = UserDataType.BOMBERMAN;
-        linearVelocity = Constants.BOMBERMAN_VELOCITY; 
+        linearVelocity = GameManager.BOMBERMAN_VELOCITY; 
     }
 
     public BombermanUserData() {
         super();
         userDataType = UserDataType.BOMBERMAN;
-        linearVelocity = Constants.BOMBERMAN_VELOCITY;
+        linearVelocity = GameManager.BOMBERMAN_VELOCITY;
     }
 
     public float getLinearVelocity() {

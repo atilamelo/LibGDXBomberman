@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.stages.GameStage;
-import com.mygdx.game.utils.Constants;
+import com.mygdx.game.utils.GameManager;
 
 public class Bomberman extends GameActor {
     public boolean moveUp;
@@ -29,34 +29,34 @@ public class Bomberman extends GameActor {
     public Bomberman(Body body, GameStage game) {
         super(body);
         this.game = game;
-        this.textureAtlas = game.gameScreen.getAssetManager().get(Constants.BOMBERMAN_ATLAS_PATH);
+        this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         
         Array<TextureRegion> upFrames = new Array<>();
         Array<TextureRegion> downFrames = new Array<>();
         Array<TextureRegion> leftFrames = new Array<>();
         Array<TextureRegion> rightFrames = new Array<>();
-        test = new TextureRegion(textureAtlas.findRegion(Constants.BOMBERMAN_DOWN_REGION_NAMES[0]));
+        test = new TextureRegion(textureAtlas.findRegion(GameManager.BOMBERMAN_DOWN_REGION_NAMES[0]));
 
         // Load up region into the animation
-        for (String path : Constants.BOMBERMAN_UP_REGION_NAMES) {
+        for (String path : GameManager.BOMBERMAN_UP_REGION_NAMES) {
             upFrames.add(textureAtlas.findRegion(path));
         }
         upAnimation = new Animation<>(0.1f, upFrames);
 
         // Load down region into the animation
-        for (String path : Constants.BOMBERMAN_DOWN_REGION_NAMES) {
+        for (String path : GameManager.BOMBERMAN_DOWN_REGION_NAMES) {
             downFrames.add(textureAtlas.findRegion(path));
         }
         downAnimation = new Animation<>(0.1f, downFrames);
 
         // Load left region into the animation
-        for (String path : Constants.BOMBERMAN_LEFT_REGION_NAMES) {
+        for (String path : GameManager.BOMBERMAN_LEFT_REGION_NAMES) {
             leftFrames.add(textureAtlas.findRegion(path));
         }
         leftAnimation = new Animation<>(0.1f, leftFrames);
 
         // Load right region into the animation
-        for (String path : Constants.BOMBERMAN_RIGHT_REGION_NAMES) {
+        for (String path : GameManager.BOMBERMAN_RIGHT_REGION_NAMES) {
             rightFrames.add(textureAtlas.findRegion(path));
         }
         rightAnimation = new Animation<>(0.1f, rightFrames);
@@ -98,22 +98,22 @@ public class Bomberman extends GameActor {
     }
 
     public void moveUp() {
-        body.applyLinearImpulse(new Vector2(0, Constants.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(0, GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
         moveUp = true;
     }
 
     public void moveDown() {
-        body.applyLinearImpulse(new Vector2(0, -Constants.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(0, -GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
         moveDown = true;
     }
 
     public void moveLeft() {
-        body.applyLinearImpulse(new Vector2(-Constants.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(-GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
         moveLeft = true;
     }
 
     public void moveRight() {
-        body.applyLinearImpulse(new Vector2(Constants.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
         moveRight = true;
     }
 

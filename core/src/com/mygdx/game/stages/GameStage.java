@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
-import com.mygdx.game.utils.Constants;
+import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 // Estrutura básica baseado no Runner feito por William Moura 
@@ -23,8 +23,8 @@ import com.mygdx.game.utils.WorldUtils;
 public class GameStage extends Stage {
 
     // This will be our viewport measurements while working with the debug renderer
-    private static final int VIEWPORT_WIDTH = Constants.APP_WIDTH;
-    private static final int VIEWPORT_HEIGHT = Constants.APP_HEIGHT;
+    private static final int VIEWPORT_WIDTH = GameManager.APP_WIDTH;
+    private static final int VIEWPORT_HEIGHT = GameManager.APP_HEIGHT;
 
     public GameScreen gameScreen;
 
@@ -46,8 +46,8 @@ public class GameStage extends Stage {
         this.gameScreen = gameScreen;
 
         // Tiled Maps
-        map = gameScreen.getAssetManager().get("maps/map_teste.tmx");
-        tiledRender = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM);
+        map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
+        tiledRender = new OrthogonalTiledMapRenderer(map, 1 / GameManager.PPM);
 
         // Box2d
         world = WorldUtils.createWorld();
@@ -65,7 +65,7 @@ public class GameStage extends Stage {
     private void setupViewPort() {
         gamecam = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         gamecam.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        gamecam.zoom -= Constants.GAME_ZOOM;
+        gamecam.zoom -= GameManager.GAME_ZOOM;
         gamecam.update();
 
         gameport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, gamecam);
@@ -107,10 +107,6 @@ public class GameStage extends Stage {
 
     public World getWorld() {
         return world;
-    }
-
-    public AssetManager getAssetManager(){
-        return gameScreen.getAssetManager();
     }
 
     @Override

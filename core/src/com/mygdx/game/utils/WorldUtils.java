@@ -23,13 +23,13 @@ public class WorldUtils {
         // Body Def
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(new Vector2(Constants.BOMBERMAN_X, Constants.BOMBERMAN_Y));
+        bodyDef.position.set(new Vector2(GameManager.BOMBERMAN_X, GameManager.BOMBERMAN_Y));
         bodyDef.fixedRotation = true;
         bodyDef.linearDamping = 0f;
 
         // Shape of Bomberman
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Constants.BOMBERMAN_B2D_WIDTH, Constants.BOMBERMAN_B2D_HEIGHT);
+        shape.setAsBox(GameManager.BOMBERMAN_B2D_WIDTH, GameManager.BOMBERMAN_B2D_HEIGHT);
 
         // Create body
         Body body = world.createBody(bodyDef);
@@ -43,7 +43,7 @@ public class WorldUtils {
 
         body.createFixture(fixtureDef);
         body.resetMassData();
-        body.setUserData(new BombermanUserData(Constants.BOMBERMAN_WIDTH, Constants.BOMBERMAN_HEIGHT));
+        body.setUserData(new BombermanUserData(GameManager.BOMBERMAN_WIDTH, GameManager.BOMBERMAN_HEIGHT));
         shape.dispose();
 
         return body;
@@ -57,7 +57,7 @@ public class WorldUtils {
 
         // Shape of Bomberman
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Constants.BOMB_B2D_WIDTH, Constants.BOMB_B2D_HEIGHT);
+        shape.setAsBox(GameManager.BOMB_B2D_WIDTH, GameManager.BOMB_B2D_HEIGHT);
 
         // Create body
         Body body = world.createBody(bodyDef);
@@ -67,7 +67,7 @@ public class WorldUtils {
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef);
         body.resetMassData();
-        body.setUserData(new BombermanUserData(Constants.BOMB_WIDTH, Constants.BOMB_HEIGHT));
+        body.setUserData(new BombermanUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
         shape.dispose();
 
 
@@ -87,10 +87,10 @@ public class WorldUtils {
 
         for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            rect.width = rect.width / Constants.PPM;
-            rect.height = rect.height / Constants.PPM;
-            rect.x = rect.x / Constants.PPM;
-            rect.y = rect.y / Constants.PPM;
+            rect.width = rect.width / GameManager.PPM;
+            rect.height = rect.height / GameManager.PPM;
+            rect.x = rect.x / GameManager.PPM;
+            rect.y = rect.y / GameManager.PPM;
 
             bdef.type = BodyType.StaticBody;
             bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);

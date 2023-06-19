@@ -7,24 +7,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.mygdx.game.stages.GameScreen;
-import com.mygdx.game.utils.Constants;;
+import com.mygdx.game.utils.GameManager;;
 
 public class BombermanGame extends Game {
 
-	public AssetManager assetManager;
-
 	@Override
 	public void create() {
-		assetManager = new AssetManager();
-		assetManager.load(Constants.BOMBERMAN_ATLAS_PATH, TextureAtlas.class);
-		
-		// Loading maps
-		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-		assetManager.load("maps/map_teste.tmx", TiledMap.class);
-		
-		assetManager.finishLoading();
+		setScreen(new GameScreen());
+	}
 
-		setScreen(new GameScreen(this));
+	@Override
+	public void dispose() {
+		GameManager.getInstance().getAssetManager().dispose();
 	}
 
 }

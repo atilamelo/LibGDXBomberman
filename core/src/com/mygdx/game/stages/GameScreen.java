@@ -8,19 +8,10 @@ import com.mygdx.game.BombermanGame;;
 
 public class GameScreen implements Screen {
     private GameStage stage;
-    private BombermanGame game;
-
-    public GameScreen(BombermanGame game) {
-        this.game = game;
-    }
 
     @Override
     public void show() {
         stage = new GameStage(this);
-    }
-
-    public AssetManager getAssetManager(){
-        return game.assetManager;
     }
 
     @Override

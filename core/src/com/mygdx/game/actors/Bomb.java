@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.stages.GameStage;
-import com.mygdx.game.utils.Constants;
+import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Bomb extends GameActor {
@@ -18,12 +18,12 @@ public class Bomb extends GameActor {
 
     public Bomb(GameStage gameStage, int x, int y) {
         super(WorldUtils.createBomb(gameStage.getWorld(), x + 0.5f, y + 0.5f));
-        this.textureAtlas = gameStage.getAssetManager().get(Constants.BOMBERMAN_ATLAS_PATH);
+        this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         stateTime = 0f;
         Array<TextureRegion> bombFrames = new Array<>();
         
         // Load frames of animation
-        for (String path : Constants.BOMB_ANIMATION) {
+        for (String path : GameManager.BOMB_ANIMATION) {
             bombFrames.add(textureAtlas.findRegion(path));
         }
 
@@ -36,8 +36,8 @@ public class Bomb extends GameActor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        float x = screenRectangle.x + (screenRectangle.width - Constants.BOMB_WIDTH) / 2;
-        float y = screenRectangle.y + (screenRectangle.height - Constants.BOMB_HEIGHT) / 2;
+        float x = screenRectangle.x + (screenRectangle.width - GameManager.BOMB_WIDTH) / 2;
+        float y = screenRectangle.y + (screenRectangle.height - GameManager.BOMB_HEIGHT) / 2;
         float width = screenRectangle.width;
         float height = screenRectangle.height;
         stateTime += Gdx.graphics.getDeltaTime();
