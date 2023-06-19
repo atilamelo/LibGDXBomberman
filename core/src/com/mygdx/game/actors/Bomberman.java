@@ -22,7 +22,8 @@ public class Bomberman extends GameActor {
         IDLE_UP,
         IDLE_DOWN,
         IDLE_LEFT,
-        IDLE_RIGHT
+        IDLE_RIGHT,
+        DYING
     }
 
     public State state;
@@ -103,7 +104,7 @@ public class Bomberman extends GameActor {
                 currentFrame = upAnimation.getKeyFrames()[1];
                 break;
             case IDLE_DOWN:
-                currentFrame = downAnimation.getKeyFrames()[0];
+                currentFrame = downAnimation.getKeyFrames()[1];
                 break;
             case IDLE_RIGHT:
                 currentFrame = rightAnimation.getKeyFrames()[1];
@@ -123,6 +124,12 @@ public class Bomberman extends GameActor {
     @Override
     public BombermanUserData getUserData() {
         return (BombermanUserData) userData;
+    }
+
+
+    @Override
+    public boolean isAlive() {
+        return !state.equals(State.DYING);
     }
 
     public void moveUp() {

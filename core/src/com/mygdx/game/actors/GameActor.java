@@ -21,15 +21,16 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (body.getUserData() != null) {
+        if (isAlive()) {
             updateRectangle();
         } else {
-            // This means the world destroyed the body (enemy or runner went out of bounds)
             remove();
         }
     }
 
     public abstract UserData getUserData();
+
+    public abstract boolean isAlive();
 
     private void updateRectangle() {
         screenRectangle.x = body.getPosition().x - userData.getWidth() / 2;

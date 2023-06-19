@@ -12,6 +12,14 @@ import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Bomb extends GameActor {
+
+    public enum State{
+        EXPLODED,
+        ACTIVE
+    }
+
+    public State state;
+
     private Animation<TextureRegion> bombAnimation;
     private TextureAtlas textureAtlas;
     private float stateTime;
@@ -19,7 +27,8 @@ public class Bomb extends GameActor {
     public Bomb(GameStage gameStage, int x, int y) {
         super(WorldUtils.createBomb(gameStage.getWorld(), x + 0.5f, y + 0.5f));
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        stateTime = 0f;
+        this.state = State.ACTIVE;
+        this.stateTime = 0f;
         Array<TextureRegion> bombFrames = new Array<>();
         
         // Load frames of animation
@@ -49,6 +58,11 @@ public class Bomb extends GameActor {
     @Override
     public UserData getUserData() {
         return userData;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return state.equals(State.ACTIVE);
     }
 
 }
