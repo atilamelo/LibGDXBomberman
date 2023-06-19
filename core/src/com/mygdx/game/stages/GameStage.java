@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.actors.Bomberman.State;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -201,15 +202,19 @@ public class GameStage extends Stage {
         public boolean keyUp(int keycode) {
             switch (keycode) {
                 case Keys.UP:
-                    bomberman.moveUp = false;
+                    bomberman.state = State.IDLE_UP;
+                    moving_y = 0;
+                    break;
                 case Keys.DOWN:
-                    bomberman.moveDown = false;
+                    bomberman.state = State.IDLE_DOWN;
                     moving_y = 0;
                     break;
                 case Keys.LEFT:
-                    bomberman.moveLeft = false;
+                    bomberman.state = State.IDLE_LEFT;
+                    moving_x = 0;
+                    break;
                 case Keys.RIGHT:
-                    bomberman.moveRight = false;
+                    bomberman.state = State.IDLE_RIGHT;
                     moving_x = 0;
                     break;
                 case Keys.X:

@@ -13,10 +13,20 @@ import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 
 public class Bomberman extends GameActor {
-    public boolean moveUp;
-    public boolean moveDown;
-    public boolean moveLeft;
-    public boolean moveRight;
+    
+    public enum State{
+        MOVE_UP,
+        MOVE_DOWN,
+        MOVE_LEFT,
+        MOVE_RIGHT,
+        IDLE_UP,
+        IDLE_DOWN,
+        IDLE_LEFT,
+        IDLE_RIGHT
+    }
+
+    public State state;
+
     private Animation<TextureRegion> upAnimation;
     private Animation<TextureRegion> downAnimation;
     private Animation<TextureRegion> leftAnimation;
@@ -30,36 +40,37 @@ public class Bomberman extends GameActor {
         super(body);
         this.game = game;
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        
-        Array<TextureRegion> upFrames = new Array<>();
-        Array<TextureRegion> downFrames = new Array<>();
-        Array<TextureRegion> leftFrames = new Array<>();
-        Array<TextureRegion> rightFrames = new Array<>();
+        this.state = State.IDLE_DOWN;
+
+        Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> downFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
         test = new TextureRegion(textureAtlas.findRegion(GameManager.BOMBERMAN_DOWN_REGION_NAMES[0]));
 
         // Load up region into the animation
         for (String path : GameManager.BOMBERMAN_UP_REGION_NAMES) {
             upFrames.add(textureAtlas.findRegion(path));
         }
-        upAnimation = new Animation<>(0.1f, upFrames);
+        upAnimation = new Animation<TextureRegion>(0.1f, upFrames);
 
         // Load down region into the animation
         for (String path : GameManager.BOMBERMAN_DOWN_REGION_NAMES) {
             downFrames.add(textureAtlas.findRegion(path));
         }
-        downAnimation = new Animation<>(0.1f, downFrames);
+        downAnimation = new Animation<TextureRegion>(0.1f, downFrames);
 
         // Load left region into the animation
         for (String path : GameManager.BOMBERMAN_LEFT_REGION_NAMES) {
             leftFrames.add(textureAtlas.findRegion(path));
         }
-        leftAnimation = new Animation<>(0.1f, leftFrames);
+        leftAnimation = new Animation<TextureRegion>(0.1f, leftFrames);
 
         // Load right region into the animation
         for (String path : GameManager.BOMBERMAN_RIGHT_REGION_NAMES) {
             rightFrames.add(textureAtlas.findRegion(path));
         }
-        rightAnimation = new Animation<>(0.1f, rightFrames);
+        rightAnimation = new Animation<TextureRegion>(0.1f, rightFrames);
 
         stateTime = 0f;
     }
@@ -75,17 +86,34 @@ public class Bomberman extends GameActor {
         TextureRegion currentFrame = null;
 
         // Choose the appropriate animation based on the movement direction
-        if (moveUp) {
-            currentFrame = upAnimation.getKeyFrame(stateTime, true);
-        } else if (moveDown) {
-            currentFrame = downAnimation.getKeyFrame(stateTime, true);
-        } else if (moveLeft) {
-            currentFrame = leftAnimation.getKeyFrame(stateTime, true);
-        } else if (moveRight) {
-            currentFrame = rightAnimation.getKeyFrame(stateTime, true);
-        } else {
-            // If no movement, use a default frame
-            currentFrame = test;
+        switch(state){
+            case MOVE_UP:
+                currentFrame = upAnimation.getKeyFrame(stateTime, true);
+                break;
+            case MOVE_DOWN:
+                currentFrame = downAnimation.getKeyFrame(stateTime, true);
+                break;
+            case MOVE_LEFT:
+                currentFrame = leftAnimation.getKeyFrame(stateTime, true);
+                break;
+            case MOVE_RIGHT:
+                currentFrame = rightAnimation.getKeyFrame(stateTime, true);
+                break;
+            case IDLE_UP:
+                currentFrame = upAnimation.getKeyFrames()[1];
+                break;
+            case IDLE_DOWN:
+                currentFrame = downAnimation.getKeyFrames()[0];
+                break;
+            case IDLE_RIGHT:
+                currentFrame = rightAnimation.getKeyFrames()[1];
+                break;
+            case IDLE_LEFT:
+                currentFrame = leftAnimation.getKeyFrames()[1];
+                break;
+            default:
+                currentFrame = test;
+                break;
         }
 
         // Draw the current frame
@@ -99,22 +127,22 @@ public class Bomberman extends GameActor {
 
     public void moveUp() {
         body.applyLinearImpulse(new Vector2(0, GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
-        moveUp = true;
+        state = State.MOVE_UP;
     }
 
     public void moveDown() {
         body.applyLinearImpulse(new Vector2(0, -GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
-        moveDown = true;
+        state = State.MOVE_DOWN;
     }
 
     public void moveLeft() {
         body.applyLinearImpulse(new Vector2(-GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
-        moveLeft = true;
+        state = State.MOVE_LEFT;
     }
 
     public void moveRight() {
         body.applyLinearImpulse(new Vector2(GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
-        moveRight = true;
+        state = State.MOVE_RIGHT;
     }
 
     public void move(Vector2 vector2) {
