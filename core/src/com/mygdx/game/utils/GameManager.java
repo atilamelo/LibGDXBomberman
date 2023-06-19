@@ -55,6 +55,13 @@ public class GameManager implements Disposable {
     public static final float BOMB_B2D_WIDTH = .5f;
     public static final float BOMB_B2D_HEIGHT = .5f;
 
+    // BOX 2D Collision Bits
+	public static final short NOTHING_BIT = 0;
+	public static final short WALL_BIT = 1;
+	public static final short BOMBERMAN_BIT = 2;
+	public static final short BOMB_BIT = 4;
+
+
     private GameManager() {
         // load resources
         assetManager = new AssetManager();

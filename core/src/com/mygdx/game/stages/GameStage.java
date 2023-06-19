@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Bomberman.State;
+import com.mygdx.game.listeners.WorldListener;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -49,13 +50,13 @@ public class GameStage extends Stage {
         map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
         tiledRender = new OrthogonalTiledMapRenderer(map, 1 / GameManager.PPM);
 
+        // Setups
+        setupWorld();
+        setupViewPort();
+
         // Box2d
-        world = WorldUtils.createWorld();
         box2drender = new Box2DDebugRenderer();
 
-        // Setups
-        setupViewPort();
-        setupWorld();
 
         inputProcessor = new InputProcessor();
         Gdx.input.setInputProcessor(inputProcessor);
@@ -75,6 +76,7 @@ public class GameStage extends Stage {
 
     private void setupWorld() {
         world = WorldUtils.createWorld();
+        world.setContactListener(new WorldListener());
         setupBomberman();
         setupCollision();
     }

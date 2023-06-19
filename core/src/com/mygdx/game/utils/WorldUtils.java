@@ -35,13 +35,15 @@ public class WorldUtils {
         Body body = world.createBody(bodyDef);
 
         // Fixture Def
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.0f;
-        fixtureDef.restitution = 0.0f;
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.density = 0.5f;
+        fdef.friction = 0.0f;
+        fdef.restitution = 0.0f;
+        fdef.filter.categoryBits = GameManager.BOMBERMAN_BIT;
+        body.setActive(true);
 
-        body.createFixture(fixtureDef);
+        body.createFixture(fdef);
         body.resetMassData();
         body.setUserData(new BombermanUserData(GameManager.BOMBERMAN_WIDTH, GameManager.BOMBERMAN_HEIGHT));
         shape.dispose();
@@ -52,10 +54,10 @@ public class WorldUtils {
     public static Body createBomb(World world, float x, float y) {
         // Body Def
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
 
-        // Shape of Bomberman
+        // Shape of Bomberman   
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(GameManager.BOMB_B2D_WIDTH, GameManager.BOMB_B2D_HEIGHT);
 
@@ -63,9 +65,12 @@ public class WorldUtils {
         Body body = world.createBody(bodyDef);
 
         // Fixture Def
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        body.createFixture(fixtureDef);
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.density = 1.0f;
+        fdef.filter.categoryBits = GameManager.BOMB_BIT;
+
+        body.createFixture(fdef);
         body.resetMassData();
         body.setUserData(new BombermanUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
         shape.dispose();
@@ -76,8 +81,7 @@ public class WorldUtils {
 
     /*
      * CRÉDITOS: Baseado na solução de Brent Aureli Code
-     * https://www.youtube.com/watch?v=AmLDslUdepo&list=PLZm85UZQLd2SXQzsF-a0-
-     * pPF6IWDDdrXt&index=7
+     * https://www.youtube.com/watch?v=AmLDslUdepo&list=PLZm85UZQLd2SXQzsF-a0-pPF6IWDDdrXt&index=7
      */
     public static void createMap(World world, TiledMap map) {
         BodyDef bdef = new BodyDef();
@@ -99,6 +103,8 @@ public class WorldUtils {
 
             shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
             fdef.shape = shape;
+            fdef.density = 1.0f;
+            fdef.filter.categoryBits = GameManager.WALL_BIT;    
             body.createFixture(fdef);
 
         }
