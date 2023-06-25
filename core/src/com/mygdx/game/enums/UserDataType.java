@@ -1,5 +1,5 @@
 package com.mygdx.game.enums;
 
 public enum UserDataType {
-    BOMBERMAN, WALL, BOMB
+    BOMBERMAN, WALL, BOMB, EXPLOSION
 }

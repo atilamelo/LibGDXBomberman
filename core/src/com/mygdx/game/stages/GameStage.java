@@ -28,6 +28,7 @@ public class GameStage extends Stage {
     private static final int VIEWPORT_HEIGHT = GameManager.APP_HEIGHT;
 
     public GameScreen gameScreen;
+    private GameManager gameManager;
 
     private World world;
     private Bomberman bomberman;
@@ -45,6 +46,7 @@ public class GameStage extends Stage {
 
     public GameStage(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
+        this.gameManager = GameManager.getInstance();
 
         // Tiled Maps
         map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
@@ -75,19 +77,18 @@ public class GameStage extends Stage {
     }
 
     private void setupWorld() {
-        world = WorldUtils.createWorld();
-        world.setContactListener(new WorldListener());
+        world = gameManager.getWorld();
         setupBomberman();
         setupCollision();
     }
 
     private void setupBomberman() {
-        bomberman = new Bomberman(WorldUtils.createBomberman(world), this);
+        bomberman = new Bomberman(WorldUtils.createBomberman(), this);
         addActor(bomberman);
     }
 
     private void setupCollision() {
-        WorldUtils.createMap(world, map);
+        WorldUtils.createMap(map);
 
     }
 
@@ -105,10 +106,6 @@ public class GameStage extends Stage {
 
         // TODO: Implement interpolation
 
-    }
-
-    public World getWorld() {
-        return world;
     }
 
     @Override

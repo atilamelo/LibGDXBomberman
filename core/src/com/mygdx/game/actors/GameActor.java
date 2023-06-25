@@ -24,6 +24,8 @@ public abstract class GameActor extends Actor {
         if (isAlive()) {
             updateRectangle();
         } else {
+            System.out.println("Corpo destruído: " + userData);
+            body.getWorld().destroyBody(body);
             remove();
         }
     }

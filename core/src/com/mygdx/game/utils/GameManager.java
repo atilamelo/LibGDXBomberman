@@ -5,7 +5,9 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import com.mygdx.game.listeners.WorldListener;
 
 /*
  * Responsável por gerenciar gerenciar recursos do jogo, como texturas, sons e músicas.
@@ -17,6 +19,7 @@ import com.badlogic.gdx.utils.Disposable;
 public class GameManager implements Disposable {
     private final AssetManager assetManager;
     private static final GameManager instance = new GameManager();
+    private World b2World;
 
     public static final String GAME_NAME = "Bomberman NES";
 
@@ -50,19 +53,48 @@ public class GameManager implements Disposable {
     public static final String[] BOMBERMAN_RIGHT_REGION_NAMES = new String[] { "tile014", "tile015", "tile016" };
 
     public static final String[] BOMB_ANIMATION = new String[] { "tile042", "tile043", "tile044" };
+    public static final String[] EXPLOSION_CENTER_REGION_NAMES = new String[] { "explosionCenter01",
+            "explosionCenter02", "explosionCenter03", "explosionCenter04" };
+
+    public static final String[] EXPLOSION_DOWN_REGION_NAMES = new String[] { "explosionDown01", "explosionDown02",
+            "explosionDown03", "explosionDown04" };
+    public static final String[] EXPLOSION_DOWN_CONTINUE_REGION_NAMES = new String[] { "explosionDownContinue01",
+            "explosionDownContinue02", "explosionDownContinue03", "explosionDownContinue04" };
+
+    public static final String[] EXPLOSION_UP_REGION_NAMES = new String[] { "explosionUp01", "explosionUp02",
+            "explosionUp03", "explosionUp04" };
+    public static final String[] EXPLOSION_UP_CONTINUE_REGION_NAMES = new String[] { "explosionUpContinue01",
+            "explosionUpContinue02",
+            "explosionUpContinue03", "explosionUpContinue04" };
+
+    public static final String[] EXPLOSION_RIGHT_REGION_NAMES = new String[] { "explosionRight01", "explosionRight02",
+            "explosionRight03", "explosionRight04" };
+    public static final String[] EXPLOSION_RIGHT_CONTINUE_REGION_NAMES = new String[] {
+            "explosionRightContinue01", "explosionRightContinue02", "explosionRightContinue03",
+            "explosionRightContinue04" };
+
+    public static final String[] EXPLOSION_LEFT_REGION_NAMES = new String[] { "explosionLeft01", "explosionLeft02",
+            "explosionLeft03", "explosionLeft04" };
+    public static final String[] EXPLOSION_LEFT_CONTINUE_REGION_NAMES = new String[] { "explosionLeftContinue01",
+            "explosionLeftContinue02", "explosionLeftContinue03", "explosionLeftContinue04" };
+
     public static final float BOMB_WIDTH = 1f;
     public static final float BOMB_HEIGHT = 1f;
     public static final float BOMB_B2D_WIDTH = .5f;
     public static final float BOMB_B2D_HEIGHT = .5f;
 
     // BOX 2D Collision Bits
-	public static final short NOTHING_BIT = 0;
-	public static final short WALL_BIT = 1;
-	public static final short BOMBERMAN_BIT = 2;
-	public static final short BOMB_BIT = 4;
-
+    public static final short NOTHING_BIT = 0x0001;
+    public static final short WALL_BIT = 0x0002;
+    public static final short BOMBERMAN_BIT = 0x0004;
+    public static final short BOMB_BIT = 0x0008;
+    public static final short EXPLOSION_BIT = 0x0010;
 
     private GameManager() {
+        // create box2d world
+        b2World = WorldUtils.createWorld();
+        b2World.setContactListener(new WorldListener());
+
         // load resources
         assetManager = new AssetManager();
 
@@ -82,6 +114,10 @@ public class GameManager implements Disposable {
 
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+
+    public World getWorld() {
+        return b2World;
     }
 
     @Override

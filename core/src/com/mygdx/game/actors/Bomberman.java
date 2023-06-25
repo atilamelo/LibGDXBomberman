@@ -36,12 +36,14 @@ public class Bomberman extends GameActor {
     private TextureAtlas textureAtlas;
     private GameStage game;
     private float stateTime;
+    private int power_bomb;
 
     public Bomberman(Body body, GameStage game) {
         super(body);
         this.game = game;
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         this.state = State.IDLE_DOWN;
+        this.power_bomb = 1;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> downFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -163,7 +165,7 @@ public class Bomberman extends GameActor {
         y = Math.round(screenRectangle.y);
         System.out.println("Place bomb screenRectangle: " + screenRectangle.x + ", " + screenRectangle.y);
         System.out.println("Place bomb at " + x + " " + y);
-        new Bomb(game, x, y);
+        new Bomb(game, x, y, power_bomb);
     }
     
 
