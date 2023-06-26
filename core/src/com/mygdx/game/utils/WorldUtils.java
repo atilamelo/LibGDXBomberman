@@ -152,9 +152,10 @@ public class WorldUtils {
         return body;
     }
 
-    public static boolean hasWallAtPosition(Vector2 position) {
+    public static boolean hasObjectAtPosition(Vector2 position, short categoryBits) {
         World world = GameManager.getInstance().getWorld();
         final boolean[] hasBody = { false };
+        final short categoryBitsFinal = categoryBits;
 
         // Define the AABB (Axis-Aligned Bounding Box) centered at the position
         float aabbHalfWidth = 0.05f;
@@ -165,9 +166,7 @@ public class WorldUtils {
         QueryCallback queryCallback = new QueryCallback() {
             @Override
             public boolean reportFixture(Fixture fixture) {
-                short categoryBits = fixture.getFilterData().categoryBits;
-
-                if(fixture.getFilterData().categoryBits == GameManager.WALL_BIT){
+                if(fixture.getFilterData().categoryBits == categoryBitsFinal){
                     hasBody[0] = true;
 
                     return false;

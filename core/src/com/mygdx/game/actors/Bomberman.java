@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
+import com.mygdx.game.utils.WorldUtils;
 
 public class Bomberman extends GameActor {
     
@@ -163,9 +164,12 @@ public class Bomberman extends GameActor {
         int x, y; 
         x = Math.round(screenRectangle.x); 
         y = Math.round(screenRectangle.y);
-        System.out.println("Place bomb screenRectangle: " + screenRectangle.x + ", " + screenRectangle.y);
-        System.out.println("Place bomb at " + x + " " + y);
-        new Bomb(game, x, y, power_bomb);
+        if(!WorldUtils.hasObjectAtPosition(new Vector2(x, y), GameManager.BOMB_BIT)){
+            System.out.println("Place bomb at " + x + " " + y);
+            new Bomb(game, x, y, power_bomb);
+        }else{
+            System.out.println("Já existe uma bomba no local! " + x + " " + y);
+        }
     }
     
 

@@ -106,7 +106,7 @@ public class Bomb extends GameActor {
         // Testa posição acima
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f, y + 0.5f + i + 1);
-            boolean hasWall = WorldUtils.hasWallAtPosition(position);
+            boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
             if (hasWall) {
                 break;
             }
@@ -138,7 +138,7 @@ public class Bomb extends GameActor {
         // Testa posição abaixo
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f, y + 0.5f - (i + 1));
-            boolean hasWall = WorldUtils.hasWallAtPosition(position);
+            boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
             if (hasWall) {
                 break;
             }
@@ -169,7 +169,7 @@ public class Bomb extends GameActor {
         // Testa posição à direita
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f + (i + 1), y + 0.5f);
-            boolean hasWall = WorldUtils.hasWallAtPosition(position);
+            boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
             if (hasWall) {
                 break;
             }
@@ -199,7 +199,7 @@ public class Bomb extends GameActor {
         // Testa posição à esquerda
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f - (i + 1), y + 0.5f);
-            boolean hasWall = WorldUtils.hasWallAtPosition(position);
+            boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
             if (hasWall) {
                 break;
             }
