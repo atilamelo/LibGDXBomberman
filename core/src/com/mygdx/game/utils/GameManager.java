@@ -86,7 +86,7 @@ public class GameManager implements Disposable {
     // BOX 2D Collision Bits
     public static final short NOTHING_BIT = 0x0001;
     public static final short WALL_BIT = 0x0002;
-    public static final short BOMBERMAN_BIT = 0x0004;
+    public static final short PLAYER_BIT = 0x0004;
     public static final short BOMB_BIT = 0x0008;
     public static final short EXPLOSION_BIT = 0x0010;
 

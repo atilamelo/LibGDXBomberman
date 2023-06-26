@@ -46,7 +46,7 @@ public class WorldUtils {
         fdef.density = 0.5f;
         fdef.friction = 0.0f;
         fdef.restitution = 0.0f;
-        fdef.filter.categoryBits = GameManager.BOMBERMAN_BIT;
+        fdef.filter.categoryBits = GameManager.PLAYER_BIT;
         body.setActive(true);
 
         body.createFixture(fdef);
@@ -75,6 +75,7 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.density = 1.0f;
+        fdef.isSensor = true;
         fdef.filter.categoryBits = GameManager.BOMB_BIT;
 
         body.createFixture(fdef);
@@ -113,6 +114,7 @@ public class WorldUtils {
             fdef.shape = shape;
             fdef.density = 1.0f;
             fdef.filter.categoryBits = GameManager.WALL_BIT;
+            fdef.isSensor = false;
             body.createFixture(fdef);
 
         }

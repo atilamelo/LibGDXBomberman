@@ -119,7 +119,7 @@ public class GameStage extends Stage {
 
         tiledRender.setView(gamecam);
         tiledRender.render();
-        box2drender.render(world, gamecam.combined);
+        // box2drender.render(world, gamecam.combined);
 
         super.draw();
     }
@@ -216,9 +216,11 @@ public class GameStage extends Stage {
                     bomberman.state = State.IDLE_RIGHT;
                     moving_x = 0;
                     break;
-                case Keys.X:
-                    bomberman.placeBomb();
-                    break;
+
+            }
+
+            if(keycode == Keys.X){
+                bomberman.placeBomb();
             }
 
             bomberman.move(new Vector2(moving_x, moving_y));
