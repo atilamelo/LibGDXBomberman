@@ -3,10 +3,7 @@ package com.mygdx.game.actors;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.box2d.ExplosionUserData;
-import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.enums.StateExplosion;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
@@ -20,11 +17,12 @@ public class Explosion extends GameActor {
 
     public Explosion(GameStage stage, int x, int y) {
         super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f));
-        this.state = ((ExplosionUserData) body.getUserData()).getState();
+        this.state = ((ExplosionUserData) getUserData()).getState();
         this.stage = stage;
         this.animation = null;
+        getUserData().setActor(this);
 
-        this.stage.addActor(this);
+        this.stage.background.addActor(this);
     }
 
     public Explosion(GameStage stage, float x, float y, Animation<TextureRegion> animation) {
@@ -32,7 +30,7 @@ public class Explosion extends GameActor {
         this.state = StateExplosion.EXPLODING;
         this.stage = stage;
 
-        this.stage.addActor(this);
+        this.stage.background.addActor(this);
         this.animation = animation;
     }
 

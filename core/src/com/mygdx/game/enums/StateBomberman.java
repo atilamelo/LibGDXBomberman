@@ -9,5 +9,6 @@ public enum StateBomberman{
     IDLE_DOWN,
     IDLE_LEFT,
     IDLE_RIGHT,
-    DYING
+    DYING,
+    DIE
 }

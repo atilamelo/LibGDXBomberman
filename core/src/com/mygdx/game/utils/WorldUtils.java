@@ -10,17 +10,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.box2d.ExplosionUserData;
 
 public class WorldUtils {
-
-    private boolean canExplodeThrough;
-
     public static World createWorld() {
         return new World(new Vector2(), true);
     }
@@ -40,6 +37,7 @@ public class WorldUtils {
 
         // Create body
         Body body = world.createBody(bodyDef);
+        body.setSleepingAllowed(false);
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();
@@ -52,7 +50,8 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new BombermanUserData(GameManager.BOMBERMAN_WIDTH, GameManager.BOMBERMAN_HEIGHT));
+        BombermanUserData userData = new BombermanUserData(GameManager.BOMBERMAN_WIDTH, GameManager.BOMBERMAN_HEIGHT);
+        body.setUserData(userData);
         shape.dispose();
 
         return body;
@@ -147,7 +146,7 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new BombermanUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
+        body.setUserData(new ExplosionUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
         shape.dispose();
 
         return body;

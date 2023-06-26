@@ -15,12 +15,12 @@ import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Bomberman extends GameActor {
-    public StateBomberman state;
 
     private Animation<TextureRegion> upAnimation;
     private Animation<TextureRegion> downAnimation;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
+    private Animation<TextureRegion> dyingAnimation;
     private TextureRegion test;
     private TextureAtlas textureAtlas;
     private GameStage game;
@@ -29,15 +29,16 @@ public class Bomberman extends GameActor {
 
     public Bomberman(Body body, GameStage game) {
         super(body);
+        getUserData().setActor(this);
         this.game = game;
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        this.state = ((BombermanUserData) body.getUserData()).getState();
         this.power_bomb = 1;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> downFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> dyingFrames = new Array<TextureRegion>(TextureRegion.class);
         test = new TextureRegion(textureAtlas.findRegion(GameManager.BOMBERMAN_DOWN_REGION_NAMES[0]));
 
         // Load up region into the animation
@@ -64,7 +65,14 @@ public class Bomberman extends GameActor {
         }
         rightAnimation = new Animation<TextureRegion>(0.1f, rightFrames);
 
+        // Load dying animation
+        for (String path : GameManager.BOMBERMAN_DYING_REGION_NAMES) {
+            dyingFrames.add(textureAtlas.findRegion(path));
+        }
+        dyingAnimation = new Animation<TextureRegion>(0.2f, dyingFrames);
+
         stateTime = 0f;
+
     }
 
     @Override
@@ -74,11 +82,10 @@ public class Bomberman extends GameActor {
         float y = screenRectangle.y;
         float width = screenRectangle.width;
         float height = screenRectangle.height;
-        stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = null;
 
         // Choose the appropriate animation based on the movement direction
-        switch(state){
+        switch (getUserData().getState()) {
             case MOVE_UP:
                 currentFrame = upAnimation.getKeyFrame(stateTime, true);
                 break;
@@ -103,6 +110,10 @@ public class Bomberman extends GameActor {
             case IDLE_LEFT:
                 currentFrame = leftAnimation.getKeyFrames()[1];
                 break;
+            case DYING:
+            case DIE:
+                currentFrame = dyingAnimation.getKeyFrame(stateTime, false);
+                break;
             default:
                 currentFrame = test;
                 break;
@@ -113,52 +124,83 @@ public class Bomberman extends GameActor {
     }
 
     @Override
+    public void act(float delta) {
+        super.act(delta);
+        if (getUserData().getState().equals(StateBomberman.DYING)) {
+            System.out.println("Dying");
+        }
+        // System.out.println("BombermanUserData state: " + state);
+        stateTime += Gdx.graphics.getDeltaTime();
+        if (getUserData().getState().equals(StateBomberman.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
+            getUserData().setState(StateBomberman.DIE);
+        }
+    }
+
+    @Override
     public BombermanUserData getUserData() {
         return (BombermanUserData) userData;
     }
 
-
     @Override
     public boolean isAlive() {
-        return !state.equals(StateBomberman.DYING);
+        return !getUserData().getState().equals(StateBomberman.DIE);
     }
 
     public void moveUp() {
-        body.applyLinearImpulse(new Vector2(0, GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
-        state = StateBomberman.MOVE_UP;
+        if (!getUserData().getState().equals(StateBomberman.DYING) && !getUserData().getState().equals(StateBomberman.DIE)) {
+            body.applyLinearImpulse(new Vector2(0, GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+            getUserData().setState(StateBomberman.MOVE_UP);
+        }
     }
 
     public void moveDown() {
-        body.applyLinearImpulse(new Vector2(0, -GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
-        state = StateBomberman.MOVE_DOWN;
+        if (!getUserData().getState().equals(StateBomberman.DYING) && !getUserData().getState().equals(StateBomberman.DIE)) {
+            body.applyLinearImpulse(new Vector2(0, -GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+            getUserData().setState(StateBomberman.MOVE_DOWN);
+        }
     }
 
     public void moveLeft() {
-        body.applyLinearImpulse(new Vector2(-GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
-        state = StateBomberman.MOVE_LEFT;
+        if (!getUserData().getState().equals(StateBomberman.DYING) && !getUserData().getState().equals(StateBomberman.DIE)) {
+            body.applyLinearImpulse(new Vector2(-GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+            getUserData().setState(StateBomberman.MOVE_LEFT);
+        }
     }
 
     public void moveRight() {
-        body.applyLinearImpulse(new Vector2(GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
-        state = StateBomberman.MOVE_RIGHT;
+        if (!getUserData().getState().equals(StateBomberman.DYING) && !getUserData().getState().equals(StateBomberman.DIE)) {
+            body.applyLinearImpulse(new Vector2(GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+            getUserData().setState(StateBomberman.MOVE_RIGHT);
+        }
     }
 
     public void move(Vector2 vector2) {
         body.setLinearVelocity(vector2);
     }
 
-    public void placeBomb(){
+    public void placeBomb() {
         // TODO: Implement functionality
-        int x, y; 
-        x = Math.round(screenRectangle.x); 
+        int x, y;
+        x = Math.round(screenRectangle.x);
         y = Math.round(screenRectangle.y);
-        if(!WorldUtils.hasObjectAtPosition(new Vector2(x, y), GameManager.BOMB_BIT)){
+        if (!WorldUtils.hasObjectAtPosition(new Vector2(x, y), GameManager.BOMB_BIT)) {
             System.out.println("Place bomb at " + x + " " + y);
             new Bomb(game, x, y, power_bomb);
-        }else{
+        } else {
             System.out.println("Já existe uma bomba no local! " + x + " " + y);
         }
     }
-    
 
+    public void die() {
+        if (!getUserData().equals(StateBomberman.DYING)) {
+            stateTime = 0f;
+            getUserData().setState(StateBomberman.DYING);
+        }
+    }
+
+    public void setState(StateBomberman state){
+        if (!getUserData().getState().equals(StateBomberman.DYING) && !getUserData().getState().equals(StateBomberman.DIE)) {
+            getUserData().setState(state);
+        }
+    }    
 }

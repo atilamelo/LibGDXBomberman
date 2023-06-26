@@ -15,11 +15,11 @@ public class BombermanUserData extends UserData {
         state = StateBomberman.IDLE_DOWN; 
     }
 
-    public BombermanUserData() {
-        super();
-        userDataType = UserDataType.BOMBERMAN;
-        linearVelocity = GameManager.BOMBERMAN_VELOCITY;
-    }
+    // public BombermanUserData() {
+    //     super();
+    //     userDataType = UserDataType.BOMBERMAN;
+    //     linearVelocity = GameManager.BOMBERMAN_VELOCITY;
+    // }
 
     public float getLinearVelocity() {
         return linearVelocity;
@@ -30,6 +30,11 @@ public class BombermanUserData extends UserData {
     }
     
     public StateBomberman getState() {
+        System.out.println("BombermanGetData state: " + state);
         return state;
+    }
+
+    public void setState(StateBomberman state){
+        this.state = state;
     }
 }

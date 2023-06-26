@@ -1,16 +1,12 @@
 package com.mygdx.game.actors;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombUserData;
-import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.stages.GameStage;
@@ -46,7 +42,7 @@ public class Bomb extends GameActor {
 
         bombAnimation = new Animation<>(0.1f, bombFrames);
 
-        gameStage.addActor(this);
+        gameStage.background.addActor(this);
     }
 
     @Override

@@ -11,11 +11,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.enums.StateBomberman;
-import com.mygdx.game.listeners.WorldListener;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -43,6 +43,8 @@ public class GameStage extends Stage {
     private Box2DDebugRenderer box2drender;
     private OrthogonalTiledMapRenderer tiledRender;
     private TiledMap map;
+    public Group elements;
+    public Group background;
 
     public GameStage(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -52,13 +54,18 @@ public class GameStage extends Stage {
         map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
         tiledRender = new OrthogonalTiledMapRenderer(map, 1 / GameManager.PPM);
 
+        // Layers
+        elements = new Group();
+        background = new Group();
+        addActor(background);
+        addActor(elements);
+
         // Setups
         setupWorld();
         setupViewPort();
 
         // Box2d
         box2drender = new Box2DDebugRenderer();
-
 
         inputProcessor = new InputProcessor();
         Gdx.input.setInputProcessor(inputProcessor);
@@ -84,7 +91,7 @@ public class GameStage extends Stage {
 
     private void setupBomberman() {
         bomberman = new Bomberman(WorldUtils.createBomberman(), this);
-        addActor(bomberman);
+        elements.addActor(bomberman);
     }
 
     private void setupCollision() {
@@ -201,25 +208,25 @@ public class GameStage extends Stage {
         public boolean keyUp(int keycode) {
             switch (keycode) {
                 case Keys.UP:
-                    bomberman.state = StateBomberman.IDLE_UP;
+                    bomberman.setState(StateBomberman.IDLE_UP);
                     moving_y = 0;
                     break;
                 case Keys.DOWN:
-                    bomberman.state = StateBomberman.IDLE_DOWN;
+                    bomberman.setState(StateBomberman.IDLE_DOWN);
                     moving_y = 0;
                     break;
                 case Keys.LEFT:
-                    bomberman.state = StateBomberman.IDLE_LEFT;
+                    bomberman.setState(StateBomberman.IDLE_LEFT);
                     moving_x = 0;
                     break;
                 case Keys.RIGHT:
-                    bomberman.state = StateBomberman.IDLE_RIGHT;
+                    bomberman.setState(StateBomberman.IDLE_RIGHT);
                     moving_x = 0;
                     break;
 
             }
 
-            if(keycode == Keys.X){
+            if (keycode == Keys.X) {
                 bomberman.placeBomb();
             }
 

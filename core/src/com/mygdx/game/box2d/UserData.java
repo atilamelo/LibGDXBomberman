@@ -1,5 +1,6 @@
 package com.mygdx.game.box2d;
 
+import com.mygdx.game.actors.GameActor;
 import com.mygdx.game.enums.UserDataType;
 
 public abstract class UserData {
@@ -7,10 +8,7 @@ public abstract class UserData {
     protected UserDataType userDataType;
     protected float width;
     protected float height;
-
-    public UserData() {
-
-    }
+    protected GameActor actor; 
 
     public UserData(float width, float height) {
         this.width = width;
@@ -35,6 +33,14 @@ public abstract class UserData {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+
+    public void setActor(GameActor actor) {
+        this.actor = actor;
+    }
+
+    public GameActor getActor(){
+        return actor;
     }
 
 }
