@@ -9,25 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Bomberman extends GameActor {
-    
-    public enum State{
-        MOVE_UP,
-        MOVE_DOWN,
-        MOVE_LEFT,
-        MOVE_RIGHT,
-        IDLE_UP,
-        IDLE_DOWN,
-        IDLE_LEFT,
-        IDLE_RIGHT,
-        DYING
-    }
-
-    public State state;
+    public StateBomberman state;
 
     private Animation<TextureRegion> upAnimation;
     private Animation<TextureRegion> downAnimation;
@@ -43,7 +31,7 @@ public class Bomberman extends GameActor {
         super(body);
         this.game = game;
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        this.state = State.IDLE_DOWN;
+        this.state = ((BombermanUserData) body.getUserData()).getState();
         this.power_bomb = 1;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -132,27 +120,27 @@ public class Bomberman extends GameActor {
 
     @Override
     public boolean isAlive() {
-        return !state.equals(State.DYING);
+        return !state.equals(StateBomberman.DYING);
     }
 
     public void moveUp() {
         body.applyLinearImpulse(new Vector2(0, GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
-        state = State.MOVE_UP;
+        state = StateBomberman.MOVE_UP;
     }
 
     public void moveDown() {
         body.applyLinearImpulse(new Vector2(0, -GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
-        state = State.MOVE_DOWN;
+        state = StateBomberman.MOVE_DOWN;
     }
 
     public void moveLeft() {
         body.applyLinearImpulse(new Vector2(-GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
-        state = State.MOVE_LEFT;
+        state = StateBomberman.MOVE_LEFT;
     }
 
     public void moveRight() {
         body.applyLinearImpulse(new Vector2(GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
-        state = State.MOVE_RIGHT;
+        state = StateBomberman.MOVE_RIGHT;
     }
 
     public void move(Vector2 vector2) {

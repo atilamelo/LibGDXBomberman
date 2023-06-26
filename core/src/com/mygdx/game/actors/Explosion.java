@@ -6,24 +6,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.box2d.ExplosionUserData;
+import com.mygdx.game.enums.StateBomb;
+import com.mygdx.game.enums.StateExplosion;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Explosion extends GameActor {
-    public enum State {
-        EXPLODING,
-        DEATH
-    }
-
-    public State state;
+    public StateExplosion state;
     private GameStage stage;
     private float stateTime;
     private Animation<TextureRegion> animation;
 
     public Explosion(GameStage stage, int x, int y) {
         super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f));
-        this.state = State.EXPLODING;
+        this.state = ((ExplosionUserData) body.getUserData()).getState();
         this.stage = stage;
         this.animation = null;
 
@@ -32,7 +29,7 @@ public class Explosion extends GameActor {
 
     public Explosion(GameStage stage, float x, float y, Animation<TextureRegion> animation) {
         super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f));
-        this.state = State.EXPLODING;
+        this.state = StateExplosion.EXPLODING;
         this.stage = stage;
 
         this.stage.addActor(this);
@@ -45,7 +42,7 @@ public class Explosion extends GameActor {
         stateTime += delta;
 
         if (stateTime > 0.7f) {
-            state = State.DEATH;
+            state = StateExplosion.DEATH;
         }
 
     }
@@ -70,7 +67,7 @@ public class Explosion extends GameActor {
 
     @Override
     public boolean isAlive() {
-        return state == State.EXPLODING;
+        return state == StateExplosion.EXPLODING;
     }
 
 }

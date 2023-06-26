@@ -1,10 +1,14 @@
 package com.mygdx.game.listeners;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.mygdx.game.actors.Explosion;
+import com.mygdx.game.box2d.ExplosionUserData;
+import com.mygdx.game.enums.StateExplosion;
 import com.mygdx.game.utils.GameManager;
 
 public class WorldListener implements ContactListener {
@@ -16,6 +20,13 @@ public class WorldListener implements ContactListener {
         short categoryBitsA = fixtureA.getFilterData().categoryBits;
         short categoryBitsB = fixtureB.getFilterData().categoryBits;
 
+        if(categoryBitsA == GameManager.PLAYER_BIT){
+            switch(categoryBitsB){
+                case GameManager.EXPLOSION_BIT:
+                    
+                    break;
+            }
+        }
 
     }
 

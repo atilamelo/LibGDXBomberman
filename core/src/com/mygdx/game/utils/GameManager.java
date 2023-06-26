@@ -52,7 +52,7 @@ public class GameManager implements Disposable {
     public static final String[] BOMBERMAN_LEFT_REGION_NAMES = new String[] { "tile000", "tile001", "tile002" };
     public static final String[] BOMBERMAN_RIGHT_REGION_NAMES = new String[] { "tile014", "tile015", "tile016" };
 
-    public static final String[] BOMB_ANIMATION = new String[] { "tile042", "tile043", "tile044" };
+    public static final String[] BOMB = new String[] { "bomb01", "bomb02", "bomb03" };
     public static final String[] EXPLOSION_CENTER_REGION_NAMES = new String[] { "explosionCenter01",
             "explosionCenter02", "explosionCenter03", "explosionCenter04" };
 

@@ -1,6 +1,7 @@
 package com.mygdx.game.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -8,19 +9,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.box2d.BombUserData;
+import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Bomb extends GameActor {
-
-    public enum State {
-        EXPLODED,
-        ACTIVE
-    }
-
-    public State state;
+    public StateBomb state;
 
     private Animation<TextureRegion> bombAnimation;
     private TextureAtlas textureAtlas;
@@ -33,8 +31,8 @@ public class Bomb extends GameActor {
     public Bomb(GameStage gameStage, int x, int y, int power) {
         super(WorldUtils.createBomb(x + 0.5f, y + 0.5f));
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        this.state = State.ACTIVE;
         this.stateTime = 0f;
+        this.state = ((BombUserData) body.getUserData()).getState();
         this.gameStage = gameStage;
         this.power = power;
         this.x = x;
@@ -42,7 +40,7 @@ public class Bomb extends GameActor {
         Array<TextureRegion> bombFrames = new Array<>();
 
         // Load frames of animation
-        for (String path : GameManager.BOMB_ANIMATION) {
+        for (String path : GameManager.BOMB) {
             bombFrames.add(textureAtlas.findRegion(path));
         }
 
@@ -81,12 +79,12 @@ public class Bomb extends GameActor {
 
     @Override
     public boolean isAlive() {
-        return state.equals(State.ACTIVE);
+        return state.equals(StateBomb.ACTIVE);
     }
 
     public void explode() {
         // Próprio local
-        state = State.EXPLODED;
+        state = StateBomb.EXPLODED;
 
         // Próprio local
         Array<TextureRegion> explosionFrames = new Array<>();

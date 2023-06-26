@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 
 public class WorldUtils {
@@ -80,7 +81,7 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new BombermanUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
+        body.setUserData(new BombUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
         shape.dispose();
 
         return body;
