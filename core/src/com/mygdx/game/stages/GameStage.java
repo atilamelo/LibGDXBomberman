@@ -161,7 +161,7 @@ public class GameStage extends Stage {
 
         tiledRender.setView(gamecam);
         tiledRender.render();
-        // box2drender.render(world, gamecam.combined);
+        box2drender.render(world, gamecam.combined);
 
         super.draw();
     }

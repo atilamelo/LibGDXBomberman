@@ -38,8 +38,10 @@ public class GameManager implements Disposable {
         public static final float BOMBERMAN_HEIGHT = 1f;
         public static final float BOMBERMAN_B2D_WIDTH = 0.3f;
         public static final float BOMBERMAN_B2D_HEIGHT = 0.4f;
+        public static final float BOMBERMAN_B2D_RADIUS = .15f;
 
-        public static final float BOMBERMAN_VELOCITY = 2f;
+
+        public static final float BOMBERMAN_VELOCITY = 6f;
         public static final float BOMBERMAN_DENSITY = 1f;
 
         // Tiled Maps properties

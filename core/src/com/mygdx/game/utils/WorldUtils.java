@@ -2,6 +2,7 @@ package com.mygdx.game.utils;
 
 import java.util.List;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -38,9 +40,24 @@ public class WorldUtils {
         bodyDef.fixedRotation = true;
         bodyDef.linearDamping = 0f;
 
-        // Shape of Bomberman
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(GameManager.BOMBERMAN_B2D_WIDTH, GameManager.BOMBERMAN_B2D_HEIGHT);
+
+        float halfWidth = GameManager.BOMBERMAN_B2D_WIDTH;
+        float halfHeight = GameManager.BOMBERMAN_B2D_HEIGHT;
+        float cornerRadius = GameManager.BOMBERMAN_B2D_RADIUS;
+
+        float[] vertices = new float[]{
+                -halfWidth + cornerRadius, -halfHeight,
+                halfWidth - cornerRadius, -halfHeight,
+                halfWidth, -halfHeight + cornerRadius,
+                halfWidth, halfHeight - cornerRadius,
+                halfWidth - cornerRadius, halfHeight,
+                -halfWidth + cornerRadius, halfHeight,
+                -halfWidth, halfHeight - cornerRadius,
+                -halfWidth, -halfHeight + cornerRadius
+        };
+
+        ChainShape chainShape = new ChainShape();
+        chainShape.createLoop(vertices);
 
         // Create body
         Body body = world.createBody(bodyDef);
@@ -48,7 +65,7 @@ public class WorldUtils {
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
+        fdef.shape = chainShape;
         fdef.density = 0.5f;
         fdef.friction = 0.0f;
         fdef.restitution = 0.0f;
@@ -59,7 +76,7 @@ public class WorldUtils {
         body.resetMassData();
         BombermanUserData userData = new BombermanUserData(GameManager.BOMBERMAN_WIDTH, GameManager.BOMBERMAN_HEIGHT);
         body.setUserData(userData);
-        shape.dispose();
+        chainShape.dispose();
 
         return body;
     }
