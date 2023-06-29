@@ -21,7 +21,7 @@ public class Bomberman extends GameActor {
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
     private Animation<TextureRegion> dyingAnimation;
-    private TextureRegion test;
+    private TextureRegion default_frame;
     private TextureAtlas textureAtlas;
     private GameStage game;
     private float stateTime;
@@ -39,7 +39,7 @@ public class Bomberman extends GameActor {
         Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> dyingFrames = new Array<TextureRegion>(TextureRegion.class);
-        test = new TextureRegion(textureAtlas.findRegion(GameManager.BOMBERMAN_DOWN_REGION_NAMES[0]));
+        default_frame = new TextureRegion(textureAtlas.findRegion(GameManager.BOMBERMAN_DOWN_REGION_NAMES[0]));
 
         // Load up region into the animation
         for (String path : GameManager.BOMBERMAN_UP_REGION_NAMES) {
@@ -115,7 +115,7 @@ public class Bomberman extends GameActor {
                 currentFrame = dyingAnimation.getKeyFrame(stateTime, false);
                 break;
             default:
-                currentFrame = test;
+                currentFrame = default_frame;
                 break;
         }
 

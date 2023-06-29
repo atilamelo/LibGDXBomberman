@@ -30,7 +30,6 @@ public class BombermanUserData extends UserData {
     }
     
     public StateBomberman getState() {
-        System.out.println("BombermanGetData state: " + state);
         return state;
     }
 

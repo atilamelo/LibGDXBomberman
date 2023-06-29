@@ -7,8 +7,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.actors.Brick;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.utils.GameManager;
 
@@ -35,6 +37,12 @@ public class WorldListener implements ContactListener {
                     BombUserData bombData = (BombUserData) fixB.getBody().getUserData();
                     Bomb bombActor = (Bomb) bombData.getActor();
                     bombActor.flagWillExploded = true;
+                    break;
+                case GameManager.BRICK_BIT:
+                    BrickUserData brickData = (BrickUserData) fixB.getBody().getUserData();
+                    Brick brickActor = (Brick) brickData.getActor();
+                    brickActor.explode();
+                    break;
             }
         }
 
@@ -49,6 +57,12 @@ public class WorldListener implements ContactListener {
                     BombUserData bombData = (BombUserData) fixA.getBody().getUserData();
                     Bomb bombActor = (Bomb) bombData.getActor();
                     bombActor.flagWillExploded = true;
+                    break;
+                case GameManager.BRICK_BIT:
+                    BrickUserData brickData = (BrickUserData) fixA.getBody().getUserData();
+                    Brick brickActor = (Brick) brickData.getActor();
+                    brickActor.explode();
+                    break;
             }
         }
 

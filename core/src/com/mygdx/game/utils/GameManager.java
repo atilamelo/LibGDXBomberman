@@ -83,10 +83,30 @@ public class GameManager implements Disposable {
         public static final String[] EXPLOSION_LEFT_CONTINUE_REGION_NAMES = new String[] { "explosionLeftContinue01",
                         "explosionLeftContinue02", "explosionLeftContinue03", "explosionLeftContinue04" };
 
+        public static final String[] BRICK_BREAKING_REGION_NAMES = new String[] { "brickExplosion01",
+                        "brickExplosion02", "brickExplosion03", "brickExplosion04", "brickExplosion05",
+                        "brickExplosion06"};
+        public static final String BRICK_TEXTURE = "brick";
+
+        // Bomb properties 
         public static final float BOMB_WIDTH = 1f;
         public static final float BOMB_HEIGHT = 1f;
         public static final float BOMB_B2D_WIDTH = .5f;
         public static final float BOMB_B2D_HEIGHT = .5f;
+
+        // Explosion properties 
+        public static final float EXPLOSION_WIDTH = 1f;
+        public static final float EXPLOSION_HEIGHT = 1f;
+        public static final float EXPLOSION_B2D_WIDTH = .5f;
+        public static final float EXPLOSION_B2D_HEIGHT = .5f;
+        public static final float EXPLOSION_RADIUS_CENTER = .5f;
+        public static final float GAP_EXPLOSION = 0.1f;
+
+        // Brick properties
+        public static final float BRICK_WIDTH = 1f;
+        public static final float BRICK_HEIGHT = 1f;
+        public static final float BRICK_B2D_WIDTH = .5f;
+        public static final float BRICK_B2D_HEIGHT = .5f;
 
         // BOX 2D Collision Bits
         public static final short NOTHING_BIT = 0x0001;
@@ -94,6 +114,7 @@ public class GameManager implements Disposable {
         public static final short PLAYER_BIT = 0x0004;
         public static final short BOMB_BIT = 0x0008;
         public static final short EXPLOSION_BIT = 0x0010;
+        public static final short BRICK_BIT = 0x0012;
 
         private GameManager() {
                 // create box2d world

@@ -15,8 +15,8 @@ public class Explosion extends GameActor {
     private float stateTime;
     private Animation<TextureRegion> animation;
 
-    public Explosion(GameStage stage, int x, int y) {
-        super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f));
+    public Explosion(GameStage stage, int x, int y, float width, float height, boolean isCenter) {
+        super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f, width, height, isCenter));
         this.state = ((ExplosionUserData) getUserData()).getState();
         this.stage = stage;
         this.animation = null;
@@ -25,8 +25,8 @@ public class Explosion extends GameActor {
         this.stage.background.addActor(this);
     }
 
-    public Explosion(GameStage stage, float x, float y, Animation<TextureRegion> animation) {
-        super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f));
+    public Explosion(GameStage stage, float x, float y, float width, float height, boolean isCenter, Animation<TextureRegion> animation) {
+        super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f, width, height, isCenter));
         this.state = StateExplosion.EXPLODING;
         this.stage = stage;
 

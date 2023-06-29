@@ -1,5 +1,7 @@
 package com.mygdx.game.utils;
 
+import java.util.List;
+
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
@@ -15,7 +18,11 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
+import com.mygdx.game.actors.Brick;
+import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.systems.BrickPlacement;
 
 public class WorldUtils {
     public static World createWorld() {
@@ -122,7 +129,7 @@ public class WorldUtils {
         shape.dispose();
     }
 
-    public static Body createExplosion(float x, float y) {
+    public static Body createExplosion(float x, float y, float width, float height, boolean isCenter) {
         // Get world
         World world = GameManager.getInstance().getWorld();
 
@@ -131,25 +138,68 @@ public class WorldUtils {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
 
-        // Shape of Bomb
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(GameManager.BOMB_B2D_WIDTH, GameManager.BOMB_B2D_HEIGHT);
+        // Shape of Explosion
+        PolygonShape boxShape = new PolygonShape();
+        boxShape.setAsBox(width, height);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(width + 0.1f);
 
         // Create body
         Body body = world.createBody(bodyDef);
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
+        if (isCenter) {
+            fdef.shape = circleShape;
+        } else {
+            fdef.shape = boxShape;
+        }
         fdef.filter.categoryBits = GameManager.EXPLOSION_BIT;
         fdef.isSensor = true;
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new ExplosionUserData(GameManager.BOMB_WIDTH, GameManager.BOMB_HEIGHT));
-        shape.dispose();
+        body.setUserData(new ExplosionUserData(GameManager.EXPLOSION_WIDTH, GameManager.EXPLOSION_HEIGHT));
+        boxShape.dispose();
+        circleShape.dispose();
 
         return body;
+    }
+
+    public static void createBricks(GameStage stage) {
+        List<BrickPlacement.Position> positions = BrickPlacement.generateBrickPositions();
+        BodyDef bdef = new BodyDef();
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fdef = new FixtureDef();
+        World world = GameManager.getInstance().getWorld();
+        Body body;
+
+        for (BrickPlacement.Position position : positions) {
+            // Body Def
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set(new Vector2(position.getX() + 0.5f, position.getY() + 0.5f));
+
+            // Shape of Bomb
+            shape = new PolygonShape();
+            shape.setAsBox(GameManager.BRICK_B2D_WIDTH, GameManager.BRICK_B2D_HEIGHT);
+
+            // Create body
+            body = world.createBody(bdef);
+
+            // Fixture Def
+            fdef = new FixtureDef();
+            fdef.shape = shape;
+            fdef.filter.categoryBits = GameManager.BRICK_BIT;
+            // fdef.isSensor = true;
+
+            body.createFixture(fdef);
+            body.resetMassData();
+            body.setUserData(new BrickUserData(GameManager.BRICK_WIDTH, GameManager.BRICK_HEIGHT));
+
+            new Brick(body, stage);
+        }
+
+        shape.dispose();
     }
 
     public static boolean hasObjectAtPosition(Vector2 position, short categoryBits) {
@@ -166,12 +216,12 @@ public class WorldUtils {
         QueryCallback queryCallback = new QueryCallback() {
             @Override
             public boolean reportFixture(Fixture fixture) {
-                if(fixture.getFilterData().categoryBits == categoryBitsFinal){
+                if (fixture.getFilterData().categoryBits == categoryBitsFinal) {
                     hasBody[0] = true;
 
                     return false;
                 }
-                
+
                 // Return false to terminate the query early if you only need to check for the
                 // presence of a body
                 return true;
@@ -185,3 +235,5 @@ public class WorldUtils {
     }
 
 }
+
+// public

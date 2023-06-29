@@ -85,6 +85,10 @@ public class Bomb extends GameActor {
     }
 
     private void explode() {
+        float width = GameManager.EXPLOSION_B2D_WIDTH;
+        float height = GameManager.EXPLOSION_B2D_HEIGHT;
+        float gap = GameManager.GAP_EXPLOSION;
+
         // Próprio local
         state = StateBomb.EXPLODED;
 
@@ -99,7 +103,7 @@ public class Bomb extends GameActor {
 
         Animation<TextureRegion> explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
-        new Explosion(gameStage, x, y, explosionAnimation);
+        new Explosion(gameStage, x, y, width - gap, height - gap, true, explosionAnimation);
 
         Vector2 position;
 
@@ -107,7 +111,8 @@ public class Bomb extends GameActor {
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f, y + 0.5f + i + 1);
             boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
-            if (hasWall) {
+            boolean hasBrick = WorldUtils.hasObjectAtPosition(position, GameManager.BRICK_BIT);
+            if (hasWall || hasBrick) {
                 break;
             }
 
@@ -132,14 +137,20 @@ public class Bomb extends GameActor {
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada em cima");
-            new Explosion(gameStage, x, y + i + 0.9f, explosionAnimation);
+            if (i == power - 1) {
+                new Explosion(gameStage, x, y + i + 1, width - gap, height - gap, false, explosionAnimation);
+            } else {
+                new Explosion(gameStage, x, y + i + 1, width - gap, height, false, explosionAnimation);
+            }
         }
 
         // Testa posição abaixo
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f, y + 0.5f - (i + 1));
             boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
-            if (hasWall) {
+            boolean hasBrick = WorldUtils.hasObjectAtPosition(position, GameManager.BRICK_BIT);
+
+            if (hasWall || hasBrick) {
                 break;
             }
 
@@ -165,14 +176,21 @@ public class Bomb extends GameActor {
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada abaixo");
-            new Explosion(gameStage, x, y - (i + 0.9f), explosionAnimation);
+
+            if (i == power - 1) {
+                new Explosion(gameStage, x, y - (i + 1), width - gap, height - gap, false, explosionAnimation);
+            } else {
+                new Explosion(gameStage, x, y - (i + 1), width - gap, height, false, explosionAnimation);
+            }
+
         }
 
         // Testa posição à direita
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f + (i + 1), y + 0.5f);
             boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
-            if (hasWall) {
+            boolean hasBrick = WorldUtils.hasObjectAtPosition(position, GameManager.BRICK_BIT);
+            if (hasWall || hasBrick) {
                 break;
             }
 
@@ -197,14 +215,19 @@ public class Bomb extends GameActor {
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada à direita");
-            new Explosion(gameStage, x + (i + 0.9f), y, explosionAnimation);
+            if (i == power - 1) {
+                new Explosion(gameStage, x + (i + 1), y, width - gap, height - gap, false, explosionAnimation);
+            } else {
+                new Explosion(gameStage, x + (i + 1), y, width, height - gap, false, explosionAnimation);
+            }
         }
 
         // Testa posição à esquerda
         for (int i = 0; i < power; i++) {
             position = new Vector2(x + 0.5f - (i + 1), y + 0.5f);
             boolean hasWall = WorldUtils.hasObjectAtPosition(position, GameManager.WALL_BIT);
-            if (hasWall) {
+            boolean hasBrick = WorldUtils.hasObjectAtPosition(position, GameManager.BRICK_BIT);
+            if (hasWall || hasBrick) {
                 break;
             }
 
@@ -229,7 +252,11 @@ public class Bomb extends GameActor {
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada à esquerda");
-            new Explosion(gameStage, x - (i + 0.9f), y, explosionAnimation);
+            if (i == power - 1) {
+                new Explosion(gameStage, x - (i + 1), y, width - gap, height - gap, false, explosionAnimation);
+            } else {
+                new Explosion(gameStage, x - (i + 1), y, width, height - gap, false, explosionAnimation);
+            }
         }
     }
 
