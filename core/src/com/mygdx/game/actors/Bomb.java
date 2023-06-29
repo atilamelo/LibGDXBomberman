@@ -34,6 +34,7 @@ public class Bomb extends GameActor {
         this.x = x;
         this.y = y;
         Array<TextureRegion> bombFrames = new Array<>();
+        getUserData().setActor(this);
 
         // Load frames of animation
         for (String path : GameManager.BOMB) {
@@ -69,8 +70,8 @@ public class Bomb extends GameActor {
     }
 
     @Override
-    public UserData getUserData() {
-        return userData;
+    public BombUserData getUserData() {
+        return (BombUserData) userData;
     }
 
     @Override
