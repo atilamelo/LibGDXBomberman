@@ -9,6 +9,7 @@ import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.utils.GameManager;
 
 public class WorldListener implements ContactListener {
@@ -29,11 +30,11 @@ public class WorldListener implements ContactListener {
                     BombermanUserData bombermanData = (BombermanUserData) fixB.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
                     bombermanActor.die();
-                    break; 
+                    break;
                 case GameManager.BOMB_BIT:
                     BombUserData bombData = (BombUserData) fixB.getBody().getUserData();
                     Bomb bombActor = (Bomb) bombData.getActor();
-                    bombActor.explode();
+                    bombActor.flagWillExploded = true;
             }
         }
 
@@ -43,13 +44,14 @@ public class WorldListener implements ContactListener {
                     BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
                     bombermanActor.die();
-                    break; 
+                    break;
                 case GameManager.BOMB_BIT:
                     BombUserData bombData = (BombUserData) fixA.getBody().getUserData();
                     Bomb bombActor = (Bomb) bombData.getActor();
-                    bombActor.explode();
+                    bombActor.flagWillExploded = true;
             }
         }
+
     }
 
     @Override
@@ -59,11 +61,13 @@ public class WorldListener implements ContactListener {
         short categoryBitsA = fixtureA.getFilterData().categoryBits;
         short categoryBitsB = fixtureB.getFilterData().categoryBits;
 
-        if (categoryBitsA == GameManager.PLAYER_BIT && categoryBitsB == GameManager.BOMB_BIT) {
-            fixtureB.setSensor(false);
-        } else if (categoryBitsA == GameManager.BOMB_BIT && categoryBitsB == GameManager.PLAYER_BIT) {
-            fixtureA.setSensor(false);
-        }
+        // if (categoryBitsA == GameManager.PLAYER_BIT && categoryBitsB ==
+        // GameManager.BOMB_BIT) {
+        // fixtureB.setSensor(false);
+        // } else if (categoryBitsA == GameManager.BOMB_BIT && categoryBitsB ==
+        // GameManager.PLAYER_BIT) {
+        // fixtureA.setSensor(false);
+        // }
 
     }
 

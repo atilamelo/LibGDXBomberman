@@ -60,7 +60,7 @@ public class WorldUtils {
     public static Body createBomb(float x, float y) {
         // Body Def
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
         World world = GameManager.getInstance().getWorld();
 
@@ -128,7 +128,7 @@ public class WorldUtils {
 
         // Body Def
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(x, y));
 
         // Shape of Bomb

@@ -15,5 +15,10 @@ public class BombUserData extends UserData{
     public StateBomb getState() {
         return state;
     }
+
+    public void setState(StateBomb state) {
+        this.state = state;
+    }
+    
     
 }

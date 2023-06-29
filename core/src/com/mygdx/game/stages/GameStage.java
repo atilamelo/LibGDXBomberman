@@ -1,5 +1,8 @@
 package com.mygdx.game.stages;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -9,12 +12,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
@@ -85,6 +91,7 @@ public class GameStage extends Stage {
 
     private void setupWorld() {
         world = gameManager.getWorld();
+
         setupBomberman();
         setupCollision();
     }
@@ -108,11 +115,38 @@ public class GameStage extends Stage {
 
         while (accumulator >= delta) {
             world.step(TIME_STEP, 6, 2);
+            sweepDeadBodies();
             accumulator -= TIME_STEP;
         }
 
+
         // TODO: Implement interpolation
 
+    }
+
+    /*
+     * Adaptado de:
+     * https://gamedev.stackexchange.com/questions/27113/how-do-i-destroy-a-box2d-
+     * body-on-contact-without-getting-an-islocked-assertion-e
+     */
+    public void sweepDeadBodies() {
+        Array<Body> bodies = new Array<Body>();
+        world.getBodies(bodies);
+
+        if (bodies.size == 0)
+            return;
+
+        for (Iterator<Body> iter = bodies.iterator(); iter.hasNext();) {
+            Body body = iter.next();
+            if (body != null) {
+                UserData data = (UserData) body.getUserData();
+                if (data != null && data.isFlaggedForDelete) {
+                    world.destroyBody(body);
+                    body.setUserData(null);
+                    body = null;
+                }
+            }
+        }
     }
 
     @Override
@@ -126,7 +160,7 @@ public class GameStage extends Stage {
 
         tiledRender.setView(gamecam);
         tiledRender.render();
-        // box2drender.render(world, gamecam.combined);
+        box2drender.render(world, gamecam.combined);
 
         super.draw();
     }

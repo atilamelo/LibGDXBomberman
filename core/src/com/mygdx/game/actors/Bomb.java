@@ -23,6 +23,7 @@ public class Bomb extends GameActor {
     private int power;
     private int x;
     private int y;
+    public boolean flagWillExploded = false;
 
     public Bomb(GameStage gameStage, int x, int y, int power) {
         super(WorldUtils.createBomb(x + 0.5f, y + 0.5f));
@@ -67,6 +68,10 @@ public class Bomb extends GameActor {
         if (stateTime >= 3f) {
             explode();
         }
+
+        if (flagWillExploded) {
+            explode();
+        }
     }
 
     @Override
@@ -79,7 +84,7 @@ public class Bomb extends GameActor {
         return state.equals(StateBomb.ACTIVE);
     }
 
-    public void explode() {
+    private void explode() {
         // Próprio local
         state = StateBomb.EXPLODED;
 
@@ -115,7 +120,7 @@ public class Bomb extends GameActor {
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
                     explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_UP_REGION_NAMES[iAnim]));
                 }
-            }else{
+            } else {
                 for (int iAnim = 0; iAnim < 4; iAnim++) {
                     explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_UP_CONTINUE_REGION_NAMES[iAnim]));
                 }
@@ -127,7 +132,7 @@ public class Bomb extends GameActor {
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada em cima");
-            new Explosion(gameStage, x, y + i + 1, explosionAnimation);
+            new Explosion(gameStage, x, y + i + 0.9f, explosionAnimation);
         }
 
         // Testa posição abaixo
@@ -147,18 +152,20 @@ public class Bomb extends GameActor {
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
                     explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_DOWN_REGION_NAMES[iAnim]));
                 }
-            }else{
+            } else {
                 for (int iAnim = 0; iAnim < 4; iAnim++) {
-                    explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_DOWN_CONTINUE_REGION_NAMES[iAnim]));
+                    explosionFrames
+                            .add(textureAtlas.findRegion(GameManager.EXPLOSION_DOWN_CONTINUE_REGION_NAMES[iAnim]));
                 }
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
-                    explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_DOWN_CONTINUE_REGION_NAMES[iAnim]));
+                    explosionFrames
+                            .add(textureAtlas.findRegion(GameManager.EXPLOSION_DOWN_CONTINUE_REGION_NAMES[iAnim]));
                 }
             }
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada abaixo");
-            new Explosion(gameStage, x, y - (i + 1), explosionAnimation);
+            new Explosion(gameStage, x, y - (i + 0.9f), explosionAnimation);
         }
 
         // Testa posição à direita
@@ -177,18 +184,20 @@ public class Bomb extends GameActor {
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
                     explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_RIGHT_REGION_NAMES[iAnim]));
                 }
-            }else{
+            } else {
                 for (int iAnim = 0; iAnim < 4; iAnim++) {
-                    explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_RIGHT_CONTINUE_REGION_NAMES[iAnim]));
+                    explosionFrames
+                            .add(textureAtlas.findRegion(GameManager.EXPLOSION_RIGHT_CONTINUE_REGION_NAMES[iAnim]));
                 }
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
-                    explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_RIGHT_CONTINUE_REGION_NAMES[iAnim]));
+                    explosionFrames
+                            .add(textureAtlas.findRegion(GameManager.EXPLOSION_RIGHT_CONTINUE_REGION_NAMES[iAnim]));
                 }
             }
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada à direita");
-            new Explosion(gameStage, x + (i + 1), y, explosionAnimation);
+            new Explosion(gameStage, x + (i + 0.9f), y, explosionAnimation);
         }
 
         // Testa posição à esquerda
@@ -207,18 +216,20 @@ public class Bomb extends GameActor {
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
                     explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_LEFT_REGION_NAMES[iAnim]));
                 }
-            }else{
+            } else {
                 for (int iAnim = 0; iAnim < 4; iAnim++) {
-                    explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_LEFT_CONTINUE_REGION_NAMES[iAnim]));
+                    explosionFrames
+                            .add(textureAtlas.findRegion(GameManager.EXPLOSION_LEFT_CONTINUE_REGION_NAMES[iAnim]));
                 }
                 for (int iAnim = 2; iAnim >= 0; iAnim--) {
-                    explosionFrames.add(textureAtlas.findRegion(GameManager.EXPLOSION_LEFT_CONTINUE_REGION_NAMES[iAnim]));
+                    explosionFrames
+                            .add(textureAtlas.findRegion(GameManager.EXPLOSION_LEFT_CONTINUE_REGION_NAMES[iAnim]));
                 }
             }
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
             System.out.println("Explosão criada à esquerda");
-            new Explosion(gameStage, x - (i + 1), y, explosionAnimation);
+            new Explosion(gameStage, x - (i + 0.9f), y, explosionAnimation);
         }
     }
 

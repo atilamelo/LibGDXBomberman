@@ -9,10 +9,12 @@ public abstract class UserData {
     protected float width;
     protected float height;
     protected GameActor actor; 
+    public boolean isFlaggedForDelete;
 
     public UserData(float width, float height) {
         this.width = width;
         this.height = height;
+        isFlaggedForDelete = false;
     }
 
     public UserDataType getUserDataType() {
