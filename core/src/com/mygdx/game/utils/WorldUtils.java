@@ -1,7 +1,5 @@
 package com.mygdx.game.utils;
 
-import java.util.List;
-
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -21,11 +19,8 @@ import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
+import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
-import com.mygdx.game.actors.Brick;
-import com.mygdx.game.actors.enemies.Ballom;
-import com.mygdx.game.stages.GameStage;
-import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class WorldUtils {
@@ -244,6 +239,39 @@ public class WorldUtils {
         body.createFixture(fdef);
         body.resetMassData();
         body.setUserData(new BallomUserData(GameManager.BALLON_WIDTH, GameManager.BALLON_HEIGHT));
+
+        shape.dispose();
+
+        return body;
+    }
+
+    public static Body createDoor(Position pos) {
+        BodyDef bdef = new BodyDef();
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fdef = new FixtureDef();
+        World world = GameManager.getInstance().getWorld();
+        Body body;
+
+        // Body Def
+        bdef.type = BodyDef.BodyType.StaticBody;
+        bdef.position.set(new Vector2(pos.getX() + 0.5f, pos.getY() + 0.5f));
+
+        // Shape of Bomb
+        shape = new PolygonShape();
+        shape.setAsBox(GameManager.DOOR_WIDTH / 2, GameManager.DOOR_HEIGHT / 2);
+
+        // Create body
+        body = world.createBody(bdef);
+
+        // Fixture Def
+        fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.filter.categoryBits = GameManager.DOOR_BIT;
+        fdef.isSensor = true;
+
+        body.createFixture(fdef);
+        body.resetMassData();
+        body.setUserData(new DoorUserData(GameManager.DOOR_WIDTH, GameManager.DOOR_HEIGHT));
 
         shape.dispose();
 

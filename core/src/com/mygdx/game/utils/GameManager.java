@@ -116,7 +116,8 @@ public class GameManager implements Disposable {
         public static final short EXPLOSION_BIT = 0x0010;
         public static final short BRICK_BIT = 0x0012;
         public static final short ENEMY_BIT = 0x0014;
-        public static final short BITS[] = {NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT, ENEMY_BIT};
+        public static final short DOOR_BIT = 0x0016;
+        public static final short BITS[] = {NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT, ENEMY_BIT, DOOR_BIT};
 
         // Ballon Enemy properties
         public static final int BALLON_HP = 1;
@@ -130,6 +131,11 @@ public class GameManager implements Disposable {
                         "ballomRight03" };
         public static final String[] BALLON_LEFT_REGION_NAMES = new String[] { "ballomLeft01", "ballomLeft02",
                         "ballomLeft03" };
+
+        // Door properties
+        public static final String DOOR_TEXTURE = "door";
+        public static final float DOOR_WIDTH = 1f;
+        public static final float DOOR_HEIGHT = 1f;
 
         public int bombsOnScreen;
         public int enemiesLeft;

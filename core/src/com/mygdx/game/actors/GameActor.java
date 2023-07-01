@@ -5,8 +5,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
+import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.utils.GameManager;
+import com.mygdx.game.utils.WorldUtils;
 
 
 public abstract class GameActor extends Actor {
@@ -38,6 +40,14 @@ public abstract class GameActor extends Actor {
             }else if(userData instanceof BombUserData){
                 gameManager.bombsOnScreen--;
                 System.out.println("Bombas ativas restantes: " + gameManager.bombsOnScreen);
+            }else if(userData instanceof BrickUserData){
+                BrickUserData brickUserData = (BrickUserData) userData;
+                Brick brick = (Brick) brickUserData.getActor();
+                if(brick.haveDoor()){
+                    Body doorBody = WorldUtils.createDoor(brick.getPosition());
+                    Door door = new Door(doorBody);
+                    brick.getParent().addActor(door);
+                }
             }
             remove();
         }

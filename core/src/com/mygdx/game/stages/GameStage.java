@@ -2,6 +2,7 @@ package com.mygdx.game.stages;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -119,10 +120,19 @@ public class GameStage extends Stage {
     }
 
     private void setupBricks(){
+        Random random = new Random();
+
         List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks);
+
+        // Get random location for the door
+        RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
+
         for(RandomPlacement.Position pos : positions){
             Body bodyBrick = WorldUtils.createBrick(pos);
-            background.addActor(new Brick(bodyBrick));
+            if(pos == doorPosition)
+                background.addActor(new Brick(bodyBrick, true));
+            else
+                background.addActor(new Brick(bodyBrick));
         }
     }
 

@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.enums.StateBrick;
-import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 
 public class Brick extends GameActor {
@@ -16,11 +16,13 @@ public class Brick extends GameActor {
     private TextureRegion brickTexture;
     private float stateTime;
     private TextureAtlas textureAtlas;
+    private boolean door;
 
     public Brick(Body body) {
         super(body);
         getUserData().setActor(this);
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
+        this.door = false;
 
         // Load textures
         Array<TextureRegion> breakingFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -34,6 +36,11 @@ public class Brick extends GameActor {
         // Load default texture 
         brickTexture = textureAtlas.findRegion(GameManager.BRICK_TEXTURE);
 
+    }
+
+    public Brick(Body body, boolean haveDoor){
+        this(body);
+        this.door = true; 
     }
 
     @Override
@@ -86,7 +93,16 @@ public class Brick extends GameActor {
             getUserData().setState(StateBrick.EXPLODING);
             stateTime = 0f; 
         }
-        
+    }
+
+    public boolean haveDoor(){
+        return this.door;
+    }
+
+    public Position getPosition(){
+        int x = Math.round(screenRectangle.x);
+        int y = Math.round(screenRectangle.y);
+        return new Position(x, y);
     }
 
 }

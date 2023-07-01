@@ -9,7 +9,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        LevelConfiguration levelOne = new LevelConfiguration(50, 10);
+        LevelConfiguration levelOne = new LevelConfiguration(1, 0);
         stage = new GameStage(this, levelOne);
     }
 
