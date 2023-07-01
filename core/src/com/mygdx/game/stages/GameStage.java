@@ -1,8 +1,6 @@
 package com.mygdx.game.stages;
 
-import java.util.Arrays;
 import java.util.Iterator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -95,6 +93,7 @@ public class GameStage extends Stage {
         setupBomberman();
         setupCollision();
         WorldUtils.createBricks(this);
+        WorldUtils.createEnemy(this);
     }
 
     private void setupBomberman() {

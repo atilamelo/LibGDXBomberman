@@ -39,8 +39,6 @@ public class GameManager implements Disposable {
         public static final float BOMBERMAN_B2D_WIDTH = 0.3f;
         public static final float BOMBERMAN_B2D_HEIGHT = 0.4f;
         public static final float BOMBERMAN_B2D_RADIUS = .15f;
-
-
         public static final float BOMBERMAN_VELOCITY = 6f;
         public static final float BOMBERMAN_DENSITY = 1f;
 
@@ -87,16 +85,16 @@ public class GameManager implements Disposable {
 
         public static final String[] BRICK_BREAKING_REGION_NAMES = new String[] { "brickExplosion01",
                         "brickExplosion02", "brickExplosion03", "brickExplosion04", "brickExplosion05",
-                        "brickExplosion06"};
+                        "brickExplosion06" };
         public static final String BRICK_TEXTURE = "brick";
 
-        // Bomb properties 
+        // Bomb properties
         public static final float BOMB_WIDTH = 1f;
         public static final float BOMB_HEIGHT = 1f;
         public static final float BOMB_B2D_WIDTH = .5f;
         public static final float BOMB_B2D_HEIGHT = .5f;
 
-        // Explosion properties 
+        // Explosion properties
         public static final float EXPLOSION_WIDTH = 1f;
         public static final float EXPLOSION_HEIGHT = 1f;
         public static final float EXPLOSION_B2D_WIDTH = .5f;
@@ -117,6 +115,16 @@ public class GameManager implements Disposable {
         public static final short BOMB_BIT = 0x0008;
         public static final short EXPLOSION_BIT = 0x0010;
         public static final short BRICK_BIT = 0x0012;
+        public static final short ENEMY_BIT = 0x0014;
+
+
+        // Ballon Enemy properties
+        public static final int BALLON_HP = 1;
+        public static final float BALLON_WIDTH = .7f;
+        public static final float BALLON_HEIGHT = 1f;
+        public static final float BALLON_B2D_WIDTH = 0.3f;
+        public static final float BALLON_B2D_HEIGHT = 0.4f;
+        public static final float BALLON_SPEED = 3f;
 
         private GameManager() {
                 // create box2d world

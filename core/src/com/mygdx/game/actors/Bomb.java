@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombUserData;
-import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;

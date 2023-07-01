@@ -2,7 +2,6 @@ package com.mygdx.game.utils;
 
 import java.util.List;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -18,11 +17,13 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
 import com.mygdx.game.actors.Brick;
+import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.systems.BrickPlacement;
 
@@ -40,12 +41,11 @@ public class WorldUtils {
         bodyDef.fixedRotation = true;
         bodyDef.linearDamping = 0f;
 
-
         float halfWidth = GameManager.BOMBERMAN_B2D_WIDTH;
         float halfHeight = GameManager.BOMBERMAN_B2D_HEIGHT;
         float cornerRadius = GameManager.BOMBERMAN_B2D_RADIUS;
 
-        float[] vertices = new float[]{
+        float[] vertices = new float[] {
                 -halfWidth + cornerRadius, -halfHeight,
                 halfWidth - cornerRadius, -halfHeight,
                 halfWidth, -halfHeight + cornerRadius,
@@ -219,6 +219,40 @@ public class WorldUtils {
         shape.dispose();
     }
 
+    public static void createEnemy(GameStage stage) {
+        // Get world
+        World world = GameManager.getInstance().getWorld();
+
+        // Body Def
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        // TODO: Ajustar posição inicial de maneira aleatória
+        bodyDef.position.set(new Vector2(1.5f, 1.5f));
+
+        // Shape of Explosion
+        PolygonShape boxShape = new PolygonShape();
+        boxShape.setAsBox(GameManager.BALLON_B2D_WIDTH, GameManager.BALLON_B2D_HEIGHT);
+
+        // Create body
+        Body body = world.createBody(bodyDef);
+
+        // Fixture Def
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = boxShape;
+        fdef.filter.categoryBits = GameManager.ENEMY_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT;
+        // fdef.isSensor = true;
+
+        body.createFixture(fdef);
+        body.resetMassData();
+        body.setUserData(new BallomUserData(GameManager.EXPLOSION_WIDTH, GameManager.EXPLOSION_HEIGHT));
+
+        boxShape.dispose();
+
+        new Ballom(body, stage);
+
+    }
+
     public static boolean hasObjectAtPosition(Vector2 position, short categoryBits) {
         World world = GameManager.getInstance().getWorld();
         final boolean[] hasBody = { false };
@@ -251,6 +285,18 @@ public class WorldUtils {
         return hasBody[0];
     }
 
-}
+    public static boolean hitSomething(Vector2 position) {
+        boolean hit = false;
+        short[] categoryBits = { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT };
 
-// public
+        for (short categoryBit : categoryBits) {
+            hit = hasObjectAtPosition(position, categoryBit);
+            if (hit) {
+                break;
+            }
+        }
+
+        return hit;
+    }
+
+}
