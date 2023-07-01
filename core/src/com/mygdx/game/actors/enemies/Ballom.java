@@ -86,7 +86,7 @@ public class Ballom extends Enemy {
 
         switch (state) {
             case WALKING_UP:
-                pos = new Vector2(body.getPosition().x, body.getPosition().y + .4f);
+                pos = new Vector2(body.getPosition().x, body.getPosition().y + .3f);
 
                 if (body.getLinearVelocity().y != speed) {
                     body.setLinearVelocity(new Vector2(0, speed * body.getMass()));
@@ -97,7 +97,7 @@ public class Ballom extends Enemy {
                 }
                 break;
             case WALKING_DOWN:
-                pos = new Vector2(body.getPosition().x, body.getPosition().y - .4f);
+                pos = new Vector2(body.getPosition().x, body.getPosition().y - .3f);
 
                 if (body.getLinearVelocity().y != -speed) {
                     body.setLinearVelocity(new Vector2(0, -speed * body.getMass()));
@@ -108,7 +108,7 @@ public class Ballom extends Enemy {
                 }
                 break;
             case WALKING_LEFT:
-                pos = new Vector2(body.getPosition().x - .5f, body.getPosition().y);
+                pos = new Vector2(body.getPosition().x - .3f, body.getPosition().y);
 
                 if (body.getLinearVelocity().x != -speed) {
                     body.setLinearVelocity(new Vector2(-speed * body.getMass(), 0));
@@ -124,7 +124,7 @@ public class Ballom extends Enemy {
 
                     body.setLinearVelocity(new Vector2(speed * body.getMass(), 0));
                 }
-                pos = new Vector2(body.getPosition().x + .5f, body.getPosition().y);
+                pos = new Vector2(body.getPosition().x + .3f, body.getPosition().y);
                 if (WorldUtils.hitSomething(pos)) {
                     changeWalkingState();
                 }

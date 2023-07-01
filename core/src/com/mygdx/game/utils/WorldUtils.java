@@ -230,24 +230,23 @@ public class WorldUtils {
         bodyDef.position.set(new Vector2(1.5f, 1.5f));
 
         // Shape of Explosion
-        PolygonShape boxShape = new PolygonShape();
-        boxShape.setAsBox(GameManager.BALLON_B2D_WIDTH, GameManager.BALLON_B2D_HEIGHT);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(GameManager.BALLON_B2D_RADIUS);
 
         // Create body
         Body body = world.createBody(bodyDef);
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();
-        fdef.shape = boxShape;
+        fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
         fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT;
-        // fdef.isSensor = true;
 
         body.createFixture(fdef);
         body.resetMassData();
         body.setUserData(new BallomUserData(GameManager.BALLON_WIDTH, GameManager.BALLON_HEIGHT));
 
-        boxShape.dispose();
+        shape.dispose();
 
         new Ballom(body, stage);
 
