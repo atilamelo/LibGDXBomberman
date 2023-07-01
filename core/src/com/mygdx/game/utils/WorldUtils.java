@@ -25,7 +25,7 @@ import com.mygdx.game.box2d.ExplosionUserData;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.stages.GameStage;
-import com.mygdx.game.systems.BrickPlacement;
+import com.mygdx.game.systems.RandomPlacement;
 
 public class WorldUtils {
     public static World createWorld() {
@@ -184,14 +184,14 @@ public class WorldUtils {
     }
 
     public static void createBricks(GameStage stage) {
-        List<BrickPlacement.Position> positions = BrickPlacement.generateBrickPositions();
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(25);
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         World world = GameManager.getInstance().getWorld();
         Body body;
 
-        for (BrickPlacement.Position position : positions) {
+        for (RandomPlacement.Position position : positions) {
             // Body Def
             bdef.type = BodyDef.BodyType.StaticBody;
             bdef.position.set(new Vector2(position.getX() + 0.5f, position.getY() + 0.5f));

@@ -116,6 +116,7 @@ public class GameManager implements Disposable {
         public static final short EXPLOSION_BIT = 0x0010;
         public static final short BRICK_BIT = 0x0012;
         public static final short ENEMY_BIT = 0x0014;
+        public static final short BITS[] = {NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT, ENEMY_BIT};
 
         // Ballon Enemy properties
         public static final int BALLON_HP = 1;

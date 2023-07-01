@@ -9,17 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
-public class BrickPlacement {
+public class RandomPlacement {
 
     private static final int MAP_WIDTH = 29;
     private static final int MAP_HEIGHT = 13;
 
-    public static List<Position> generateBrickPositions() {
+    public static List<Position> generateRandomPositions(int quantity) {
         List<Position> brickPositions = new ArrayList<>();
 
         Random random = new Random();
 
-        while (brickPositions.size() < 25) {
+        while (brickPositions.size() < quantity) {
             int x = random.nextInt(MAP_WIDTH);
             int y = random.nextInt(MAP_HEIGHT);
             Position position = new Position(x, y);
@@ -41,16 +41,25 @@ public class BrickPlacement {
 
         // Verifica se a posição está ocupada por uma parede
         // Substitua essa lógica com a verificação do seu mapa de paredes
-        if (isWall(position)) {
+        if (alreadyOcupped(position)) {
             return false;
         }
 
         return true;
-    }
+    }final
 
-    private static boolean isWall(Position position) {
+    private static boolean alreadyOcupped(Position position) {
+        boolean ocupped = false; 
         Vector2 vectorPosition = new Vector2(position.getX() + .5f, position.getY() + .5f);
-        return WorldUtils.hasObjectAtPosition(vectorPosition, GameManager.WALL_BIT);
+
+        for(short BIT : GameManager.BITS) {
+            if(WorldUtils.hasObjectAtPosition(vectorPosition, BIT)){
+                ocupped = true;
+                break;
+            }
+        }
+        
+        return ocupped;
     }
 
     public static class Position {
