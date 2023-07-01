@@ -26,6 +26,7 @@ import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.systems.RandomPlacement;
+import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class WorldUtils {
     public static World createWorld() {
@@ -37,7 +38,7 @@ public class WorldUtils {
         BodyDef bodyDef = new BodyDef();
         World world = GameManager.getInstance().getWorld();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(new Vector2(GameManager.BOMBERMAN_X, GameManager.BOMBERMAN_Y));
+        bodyDef.position.set(new Vector2(GameManager.BOMBERMAN_SPAWN_X, GameManager.BOMBERMAN_SPAWN_Y));
         bodyDef.fixedRotation = true;
         bodyDef.linearDamping = 0f;
 
@@ -183,43 +184,40 @@ public class WorldUtils {
         return body;
     }
 
-    public static void createBricks(GameStage stage) {
-        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(25);
+    public static Body createBrick(Position pos) {
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         World world = GameManager.getInstance().getWorld();
         Body body;
 
-        for (RandomPlacement.Position position : positions) {
-            // Body Def
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set(new Vector2(position.getX() + 0.5f, position.getY() + 0.5f));
+        // Body Def
+        bdef.type = BodyDef.BodyType.StaticBody;
+        bdef.position.set(new Vector2(pos.getX() + 0.5f, pos.getY() + 0.5f));
 
-            // Shape of Bomb
-            shape = new PolygonShape();
-            shape.setAsBox(GameManager.BRICK_B2D_WIDTH, GameManager.BRICK_B2D_HEIGHT);
+        // Shape of Bomb
+        shape = new PolygonShape();
+        shape.setAsBox(GameManager.BRICK_B2D_WIDTH, GameManager.BRICK_B2D_HEIGHT);
 
-            // Create body
-            body = world.createBody(bdef);
+        // Create body
+        body = world.createBody(bdef);
 
-            // Fixture Def
-            fdef = new FixtureDef();
-            fdef.shape = shape;
-            fdef.filter.categoryBits = GameManager.BRICK_BIT;
-            // fdef.isSensor = true;
+        // Fixture Def
+        fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.filter.categoryBits = GameManager.BRICK_BIT;
+        // fdef.isSensor = true;
 
-            body.createFixture(fdef);
-            body.resetMassData();
-            body.setUserData(new BrickUserData(GameManager.BRICK_WIDTH, GameManager.BRICK_HEIGHT));
-
-            new Brick(body, stage);
-        }
+        body.createFixture(fdef);
+        body.resetMassData();
+        body.setUserData(new BrickUserData(GameManager.BRICK_WIDTH, GameManager.BRICK_HEIGHT));
 
         shape.dispose();
+
+        return body;
     }
 
-    public static void createEnemy(GameStage stage) {
+    public static Body createEnemy(Position pos) {
         // Get world
         World world = GameManager.getInstance().getWorld();
 
@@ -227,7 +225,7 @@ public class WorldUtils {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         // TODO: Ajustar posição inicial de maneira aleatória
-        bodyDef.position.set(new Vector2(6.5f, 1.5f));
+        bodyDef.position.set(new Vector2(pos.getX() + 0.5f, pos.getY() + 0.5f));
 
         // Shape of Explosion
         CircleShape shape = new CircleShape();
@@ -249,8 +247,7 @@ public class WorldUtils {
 
         shape.dispose();
 
-        new Ballom(body, stage);
-
+        return body;
     }
 
     public static boolean hasObjectAtPosition(Vector2 position, short categoryBits) {

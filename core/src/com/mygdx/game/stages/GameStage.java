@@ -1,6 +1,8 @@
 package com.mygdx.game.stages;
 
 import java.util.Iterator;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -18,8 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.actors.Brick;
+import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
+import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -50,9 +55,15 @@ public class GameStage extends Stage {
     public Group elements;
     public Group background;
 
+    private int amountOfBricks; 
+    private int amountOfEnemies;
+
     public GameStage(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
+
+        this.amountOfBricks = 25;
+        this.amountOfEnemies = 6;
 
         // Tiled Maps
         map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
@@ -91,9 +102,9 @@ public class GameStage extends Stage {
         world = gameManager.getWorld();
 
         setupBomberman();
-        setupCollision();
-        WorldUtils.createBricks(this);
-        WorldUtils.createEnemy(this);
+        setupMapCollision();
+        setupBricks();
+        setupEnemies();
     }
 
     private void setupBomberman() {
@@ -101,9 +112,25 @@ public class GameStage extends Stage {
         elements.addActor(bomberman);
     }
 
-    private void setupCollision() {
+    private void setupMapCollision() {
         WorldUtils.createMap(map);
 
+    }
+
+    private void setupBricks(){
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks);
+        for(RandomPlacement.Position pos : positions){
+            Body bodyBrick = WorldUtils.createBrick(pos);
+            background.addActor(new Brick(bodyBrick));
+        }
+    }
+
+    private void setupEnemies(){
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfEnemies);
+        for(RandomPlacement.Position pos : positions){
+            Body bodyEnemy = WorldUtils.createEnemy(pos);
+            elements.addActor(new Ballom(bodyEnemy));
+        }
     }
 
     @Override
@@ -260,7 +287,7 @@ public class GameStage extends Stage {
 
             }
 
-            if (keycode == Keys.X) {
+            if (keycode == Keys.SPACE) {
                 bomberman.placeBomb();
             }
 

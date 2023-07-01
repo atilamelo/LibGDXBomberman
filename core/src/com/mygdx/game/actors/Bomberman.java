@@ -183,7 +183,7 @@ public class Bomberman extends GameActor {
         int x, y;
         x = Math.round(screenRectangle.x);
         y = Math.round(screenRectangle.y);
-        if (!WorldUtils.hasObjectAtPosition(new Vector2(x, y), GameManager.BOMB_BIT)) {
+        if (!WorldUtils.hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.BOMB_BIT)) {
             System.out.println("Place bomb at " + x + " " + y);
             new Bomb(game, x, y, power_bomb);
         } else {

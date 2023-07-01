@@ -14,13 +14,11 @@ import com.mygdx.game.utils.GameManager;
 public class Brick extends GameActor {
     private Animation<TextureRegion> breakingAnimation;
     private TextureRegion brickTexture;
-    private GameStage game;
     private float stateTime;
     private TextureAtlas textureAtlas;
 
-    public Brick(Body body, GameStage game) {
+    public Brick(Body body) {
         super(body);
-        this.game = game;
         getUserData().setActor(this);
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
 
@@ -36,7 +34,6 @@ public class Brick extends GameActor {
         // Load default texture 
         brickTexture = textureAtlas.findRegion(GameManager.BRICK_TEXTURE);
 
-        game.addActor(this);
     }
 
     @Override

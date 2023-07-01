@@ -36,7 +36,7 @@ public class Ballom extends Enemy {
         }
     }
 
-    public Ballom(Body body, GameStage stage) {
+    public Ballom(Body body) {
         super(body, GameManager.BALLON_HP, GameManager.BALLON_SPEED);
         state = StateBallom.getRandomWalkingState();
         getUserData().setActor(this);
@@ -64,7 +64,6 @@ public class Ballom extends Enemy {
         }
         dyingAnimation = new Animation<TextureRegion>(0.2f, dyingFrames);
 
-        stage.addActor(this);
     }
 
     private void changeWalkingState() {

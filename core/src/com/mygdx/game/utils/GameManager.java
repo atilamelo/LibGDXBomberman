@@ -32,8 +32,8 @@ public class GameManager implements Disposable {
         public static final float GAME_ZOOM = 0.25f;
 
         // Bomberman properties
-        public static final float BOMBERMAN_X = 2;
-        public static final float BOMBERMAN_Y = 2;
+        public static final float BOMBERMAN_SPAWN_X = 1.5f;
+        public static final float BOMBERMAN_SPAWN_Y = 11.5f;
         public static final float BOMBERMAN_WIDTH = .7f;
         public static final float BOMBERMAN_HEIGHT = 1f;
         public static final float BOMBERMAN_B2D_WIDTH = 0.3f;
