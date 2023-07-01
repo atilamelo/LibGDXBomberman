@@ -83,7 +83,7 @@ public class Bomb extends GameActor {
         return state.equals(StateBomb.ACTIVE);
     }
 
-    private void explode() {
+    private void explode() {        
         float width = GameManager.EXPLOSION_B2D_WIDTH;
         float height = GameManager.EXPLOSION_B2D_HEIGHT;
         float gap = GameManager.GAP_EXPLOSION;

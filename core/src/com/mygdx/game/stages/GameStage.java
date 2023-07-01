@@ -36,7 +36,7 @@ public class GameStage extends Stage {
     private static final int VIEWPORT_WIDTH = GameManager.APP_WIDTH;
     private static final int VIEWPORT_HEIGHT = GameManager.APP_HEIGHT;
 
-    public GameScreen gameScreen;
+    private GameScreen gameScreen;
     private GameManager gameManager;
 
     private World world;
@@ -64,9 +64,10 @@ public class GameStage extends Stage {
 
         this.amountOfBricks = levelConfiguration.amountOfBricks;
         this.amountOfEnemies = levelConfiguration.amountOfEnemies;
+        gameManager.enemiesLeft = amountOfEnemies;
 
         // Tiled Maps
-        map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
+        map = gameManager.getAssetManager().get("maps/map_teste.tmx");
         tiledRender = new OrthogonalTiledMapRenderer(map, 1 / GameManager.PPM);
 
         // Layers

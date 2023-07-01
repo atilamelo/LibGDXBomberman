@@ -131,10 +131,15 @@ public class GameManager implements Disposable {
         public static final String[] BALLON_LEFT_REGION_NAMES = new String[] { "ballomLeft01", "ballomLeft02",
                         "ballomLeft03" };
 
+        public int bombsOnScreen;
+        public int enemiesLeft;
+
         private GameManager() {
                 // create box2d world
                 b2World = WorldUtils.createWorld();
                 b2World.setContactListener(new WorldListener());
+                bombsOnScreen = 0;
+                enemiesLeft = 0;
 
                 // load resources
                 assetManager = new AssetManager();

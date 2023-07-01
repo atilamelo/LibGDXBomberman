@@ -3,7 +3,10 @@ package com.mygdx.game.actors;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game.box2d.BallomUserData;
+import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.utils.GameManager;
 
 
 public abstract class GameActor extends Actor {
@@ -11,11 +14,14 @@ public abstract class GameActor extends Actor {
     protected Body body;
     protected UserData userData;
     protected Rectangle screenRectangle;
+    protected GameManager gameManager;
 
     public GameActor(Body body) {
         this.body = body;
         this.userData = (UserData) body.getUserData();
+        this.gameManager = GameManager.getInstance();
         screenRectangle = new Rectangle();
+        
     }
 
     @Override
@@ -24,8 +30,15 @@ public abstract class GameActor extends Actor {
         if (isAlive()) {
             updateRectangle();
         } else {
-            System.out.println("Corpo destruído: " + userData);
+            // System.out.println("Corpo destruído: " + userData);
             userData.isFlaggedForDelete = true;
+            if(userData instanceof BallomUserData){
+                gameManager.enemiesLeft--;
+                System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
+            }else if(userData instanceof BombUserData){
+                gameManager.bombsOnScreen--;
+                System.out.println("Bombas ativas restantes: " + gameManager.bombsOnScreen);
+            }
             remove();
         }
     }
