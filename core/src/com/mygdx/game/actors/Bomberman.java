@@ -33,7 +33,7 @@ public class Bomberman extends GameActor {
         getUserData().setActor(this);
         this.game = game;
         this.textureAtlas = gameManager.getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        this.powerBomb = 1;
+        this.powerBomb = 3;
         this.bombCount = 1;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);

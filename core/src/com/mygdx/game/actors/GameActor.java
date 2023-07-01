@@ -3,6 +3,7 @@ package com.mygdx.game.actors;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BrickUserData;
@@ -34,7 +35,8 @@ public abstract class GameActor extends Actor {
         } else {
             // System.out.println("Corpo destruído: " + userData);
             userData.isFlaggedForDelete = true;
-            if(userData instanceof BallomUserData){
+            GameActor actor = (GameActor) userData.getActor();
+            if(actor instanceof Enemy){
                 gameManager.enemiesLeft--;
                 System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
             }else if(userData instanceof BombUserData){

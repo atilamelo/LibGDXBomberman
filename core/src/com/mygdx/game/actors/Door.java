@@ -1,14 +1,10 @@
 package com.mygdx.game.actors;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.DoorUserData;
-import com.mygdx.game.enums.StateBrick;
 import com.mygdx.game.utils.GameManager;
 
 public class Door extends GameActor {

@@ -9,10 +9,12 @@ import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
+import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
+import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.utils.GameManager;
 
 public class WorldListener implements ContactListener {
@@ -45,9 +47,9 @@ public class WorldListener implements ContactListener {
                     brickActor.explode();
                     break;
                 case GameManager.ENEMY_BIT:
-                    BallomUserData ballomData = (BallomUserData) fixB.getBody().getUserData();
-                    Ballom ballomActor = (Ballom) ballomData.getActor();
-                    ballomActor.takeDamage(1);
+                    UserData enemyData = (UserData) fixB.getBody().getUserData();
+                    Enemy enemyActor = (Enemy) enemyData.getActor();
+                    enemyActor.takeDamage(1);
                     break;
             }
         }

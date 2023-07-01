@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
+import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.systems.RandomPlacement;
@@ -57,15 +58,18 @@ public class GameStage extends Stage {
     public Group background;
 
     private int amountOfBricks; 
-    private int amountOfEnemies;
+    private int amountOfBalloms;
+    private int amountOfOnils;
+
 
     public GameStage(GameScreen gameScreen, LevelConfiguration levelConfiguration) {
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
 
         this.amountOfBricks = levelConfiguration.amountOfBricks;
-        this.amountOfEnemies = levelConfiguration.amountOfEnemies;
-        gameManager.enemiesLeft = amountOfEnemies;
+        this.amountOfBalloms = levelConfiguration.amountOfBalloms;
+        this.amountOfOnils = levelConfiguration.amountOfOnils;
+        gameManager.enemiesLeft = amountOfBalloms + amountOfOnils;
 
         // Tiled Maps
         map = gameManager.getAssetManager().get("maps/map_teste.tmx");
@@ -137,11 +141,22 @@ public class GameStage extends Stage {
     }
 
     private void setupEnemies(){
-        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfEnemies);
+        List<RandomPlacement.Position> positions;
+
+        /* Balloms */
+        positions = RandomPlacement.generateRandomPositions(amountOfBalloms);
         for(RandomPlacement.Position pos : positions){
-            Body bodyEnemy = WorldUtils.createEnemy(pos);
+            Body bodyEnemy = WorldUtils.createBallom(pos);
             elements.addActor(new Ballom(bodyEnemy));
         }
+
+        /* Onils */
+        positions = RandomPlacement.generateRandomPositions(amountOfOnils);
+        for(RandomPlacement.Position pos : positions){
+            Body bodyEnemy = WorldUtils.createOnil(pos);
+            elements.addActor(new Onil(bodyEnemy));
+        }
+
     }
 
     @Override

@@ -24,7 +24,7 @@ public abstract class Enemy extends GameActor{
     @Override
     public boolean isAlive(){
         /* Wait animation of dying finish to remove Actor of stage and body of world */
-        return hp > 0 || !isAnimationFinished();
+        return hp > 0 || !isDyingFinished();
     };
 
     @Override
@@ -41,7 +41,7 @@ public abstract class Enemy extends GameActor{
         }
     }
 
-    public abstract boolean isAnimationFinished();
+    public abstract boolean isDyingFinished();
 
 
 

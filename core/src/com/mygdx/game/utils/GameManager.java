@@ -117,7 +117,8 @@ public class GameManager implements Disposable {
         public static final short BRICK_BIT = 0x0012;
         public static final short ENEMY_BIT = 0x0014;
         public static final short DOOR_BIT = 0x0016;
-        public static final short BITS[] = {NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT, ENEMY_BIT, DOOR_BIT};
+        public static final short BITS[] = { NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT,
+                        ENEMY_BIT, DOOR_BIT };
 
         // Ballon Enemy properties
         public static final int BALLON_HP = 1;
@@ -126,11 +127,23 @@ public class GameManager implements Disposable {
         public static final float BALLON_B2D_RADIUS = 0.45f;
         public static final float BALLON_SPEED = 1.7f;
         public static final String[] BALLON_DYING_REGION_NAMES = new String[] { "ballomDying01", "ballomDying02",
-                        "ballomDying03", "ballomDying04", "ballomDying05"};
+                        "ballomDying03", "ballomDying04", "ballomDying05" };
         public static final String[] BALLON_RIGHT_REGION_NAMES = new String[] { "ballomRight01", "ballomRight02",
                         "ballomRight03" };
         public static final String[] BALLON_LEFT_REGION_NAMES = new String[] { "ballomLeft01", "ballomLeft02",
                         "ballomLeft03" };
+
+        // Onil Enemy Properties
+        public static final int ONIL_HP = 1;
+        public static final float ONIL_WIDTH = .8f;
+        public static final float ONIL_HEIGHT = 1f;
+        public static final float ONIL_B2D_RADIUS = 0.45f;
+        public static final float ONIL_SPEED = 0f;
+        public static final float ONIL_DYING_TIME = 1.5f;
+        public static final String ONIL_DYING_TEXTURE = "onilDying";
+        public static final String[] ONIL_RIGHT_REGION_NAMES = new String[] { "onilRight01", "onilRight02",
+                        "onilRight03" };
+        public static final String[] ONIL_LEFT_REGION_NAMES = new String[] { "onilLeft01", "onilLeft02", "onilLeft03" };
 
         // Door properties
         public static final String DOOR_TEXTURE = "door";

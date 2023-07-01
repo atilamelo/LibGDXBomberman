@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.box2d.BallomUserData;
+import com.mygdx.game.box2d.OnilUserData;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -15,14 +15,14 @@ import com.mygdx.game.utils.WorldUtils;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public class Ballom extends Enemy {
-    private StateBallom state;
+public class Onil extends Enemy {
+    private StateOnil state;
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
-    private Animation<TextureRegion> dyingAnimation;
+    private TextureRegion dyingTexture;
 
-    public static enum StateBallom {
+    public static enum StateOnil {
         WALKING_UP,
         WALKING_DOWN,
         WALKING_LEFT,
@@ -30,48 +30,43 @@ public class Ballom extends Enemy {
         DYING,
         DIE;
 
-        public static StateBallom getRandomWalkingState() {
+        public static StateOnil getRandomWalkingState() {
             return values()[(int) (Math.random() * 4)];
         }
     }
 
-    public Ballom(Body body) {
-        super(body, GameManager.BALLON_HP, GameManager.BALLON_SPEED);
-        state = StateBallom.getRandomWalkingState();
+    public Onil(Body body) {
+        super(body, GameManager.ONIL_HP, GameManager.ONIL_SPEED);
+        state = StateOnil.getRandomWalkingState();
         getUserData().setActor(this);
 
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
-        Array<TextureRegion> dyingFrames = new Array<TextureRegion>(TextureRegion.class);
 
         // Load left region into the animation
-        for (String path : GameManager.BALLON_LEFT_REGION_NAMES) {
+        for (String path : GameManager.ONIL_LEFT_REGION_NAMES) {
             leftFrames.add(textureAtlas.findRegion(path));
         }
         leftAnimation = new Animation<TextureRegion>(0.1f, leftFrames);
 
         // Load right region into the animation
-        for (String path : GameManager.BALLON_RIGHT_REGION_NAMES) {
+        for (String path : GameManager.ONIL_RIGHT_REGION_NAMES) {
             rightFrames.add(textureAtlas.findRegion(path));
         }
         rightAnimation = new Animation<TextureRegion>(0.1f, rightFrames);
 
-        // Load dying animation
-        for (String path : GameManager.BALLON_DYING_REGION_NAMES) {
-            dyingFrames.add(textureAtlas.findRegion(path));
-        }
-        dyingAnimation = new Animation<TextureRegion>(0.2f, dyingFrames);
+        dyingTexture = textureAtlas.findRegion(GameManager.ONIL_DYING_TEXTURE);
 
     }
 
     private void changeWalkingState() {
-        state = StateBallom.getRandomWalkingState();
+        state = StateOnil.getRandomWalkingState();
     }
 
     @Override
-    public BallomUserData getUserData() {
-        return (BallomUserData) userData;
+    public OnilUserData getUserData() {
+        return (OnilUserData) userData;
     }
 
     @Override
@@ -79,9 +74,9 @@ public class Ballom extends Enemy {
         super.act(delta);
         Vector2 pos;
 
-        if (hp == 0 && !state.equals(StateBallom.DYING) & !state.equals(StateBallom.DIE)) {
+        if (hp == 0 && !state.equals(StateOnil.DYING) & !state.equals(StateOnil.DIE)) {
             stateTime = 0f;
-            state = StateBallom.DYING;
+            state = StateOnil.DYING;
         }
 
         switch (state) {
@@ -131,8 +126,8 @@ public class Ballom extends Enemy {
                 break;
             case DYING:
                 body.setActive(false);
-                if (dyingAnimation.isAnimationFinished(stateTime)) {
-                    state = StateBallom.DIE;
+                if (stateTime > GameManager.ONIL_DYING_TIME) {
+                    state = StateOnil.DIE;
                 }
                 break;
             case DIE:
@@ -161,10 +156,9 @@ public class Ballom extends Enemy {
                 break;
             case DYING:
             case DIE:
-                currentFrame = dyingAnimation.getKeyFrame(stateTime, false);
+                currentFrame = dyingTexture;
                 break;
             default:
-                // currentFrame = leftAnimation.getKeyFrame(stateTime, true);
                 break;
         }
 
@@ -175,11 +169,7 @@ public class Ballom extends Enemy {
 
     @Override
     public boolean isDyingFinished() {
-        if (state.equals(StateBallom.DIE) || state.equals(StateBallom.DYING)) {
-            return dyingAnimation.isAnimationFinished(stateTime);
-        }else{
-            return false;
-        }
+        return state.equals(StateOnil.DIE);
     }
 
 }
