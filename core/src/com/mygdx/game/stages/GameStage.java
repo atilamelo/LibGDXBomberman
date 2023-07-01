@@ -58,12 +58,12 @@ public class GameStage extends Stage {
     private int amountOfBricks; 
     private int amountOfEnemies;
 
-    public GameStage(GameScreen gameScreen) {
+    public GameStage(GameScreen gameScreen, LevelConfiguration levelConfiguration) {
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
 
-        this.amountOfBricks = 25;
-        this.amountOfEnemies = 6;
+        this.amountOfBricks = levelConfiguration.amountOfBricks;
+        this.amountOfEnemies = levelConfiguration.amountOfEnemies;
 
         // Tiled Maps
         map = GameManager.getInstance().getAssetManager().get("maps/map_teste.tmx");
