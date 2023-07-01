@@ -245,7 +245,7 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new BallomUserData(GameManager.EXPLOSION_WIDTH, GameManager.EXPLOSION_HEIGHT));
+        body.setUserData(new BallomUserData(GameManager.BALLON_WIDTH, GameManager.BALLON_HEIGHT));
 
         boxShape.dispose();
 
