@@ -227,7 +227,7 @@ public class WorldUtils {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         // TODO: Ajustar posição inicial de maneira aleatória
-        bodyDef.position.set(new Vector2(1.5f, 1.5f));
+        bodyDef.position.set(new Vector2(6.5f, 1.5f));
 
         // Shape of Explosion
         CircleShape shape = new CircleShape();
@@ -240,7 +240,8 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT;
+        fdef.isSensor = true;
 
         body.createFixture(fdef);
         body.resetMassData();

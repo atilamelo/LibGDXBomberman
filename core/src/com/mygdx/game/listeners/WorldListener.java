@@ -8,10 +8,11 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
+import com.mygdx.game.actors.enemies.Ballom;
+import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
-import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.utils.GameManager;
 
 public class WorldListener implements ContactListener {
@@ -43,6 +44,21 @@ public class WorldListener implements ContactListener {
                     Brick brickActor = (Brick) brickData.getActor();
                     brickActor.explode();
                     break;
+                case GameManager.ENEMY_BIT:
+                    BallomUserData ballomData = (BallomUserData) fixB.getBody().getUserData();
+                    Ballom ballomActor = (Ballom) ballomData.getActor();
+                    ballomActor.takeDamage(1);
+                    break;
+            }
+        }
+
+        if (categoryBitsA == GameManager.ENEMY_BIT) {
+            switch (categoryBitsB) {
+                case GameManager.PLAYER_BIT:
+                    BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
+                    Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
+                    bombermanActor.die();
+                    break;
             }
         }
 
@@ -62,6 +78,21 @@ public class WorldListener implements ContactListener {
                     BrickUserData brickData = (BrickUserData) fixA.getBody().getUserData();
                     Brick brickActor = (Brick) brickData.getActor();
                     brickActor.explode();
+                    break;
+                case GameManager.ENEMY_BIT:
+                    BallomUserData ballomData = (BallomUserData) fixA.getBody().getUserData();
+                    Ballom ballomActor = (Ballom) ballomData.getActor();
+                    ballomActor.takeDamage(1);
+                    break;
+            }
+        }
+
+        if (categoryBitsB == GameManager.ENEMY_BIT) {
+            switch (categoryBitsA) {
+                case GameManager.PLAYER_BIT:
+                    BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
+                    Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
+                    bombermanActor.die();
                     break;
             }
         }

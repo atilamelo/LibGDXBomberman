@@ -7,11 +7,15 @@ import com.mygdx.game.box2d.UserData;
 public abstract class Enemy extends GameActor{
     protected int hp; 
     protected float speed;
+    protected float stateTime;
+    protected float lastHit;
 
     public Enemy(Body body, int hp, float speed) {
         super(body);
         this.hp = hp;
         this.speed = speed;
+        this.stateTime = 0;
+        this.lastHit = 0f;
     }
 
     @Override
@@ -19,11 +23,26 @@ public abstract class Enemy extends GameActor{
 
     @Override
     public boolean isAlive(){
-        return hp > 0;
+        /* Wait animation of dying finish to remove Actor of stage and body of world */
+        return hp > 0 || !isAnimationFinished();
     };
 
-    public void takeDamage(int damage){
-        hp -= damage;
+    @Override
+    public void act(float delta) {
+        stateTime += delta;
+        super.act(delta);
     }
+
+    public void takeDamage(int damage){ 
+        /* Add 3 second more of wait to avoid double damage */
+        if(lastHit + 3f < stateTime){
+            hp -= damage;
+            lastHit = stateTime;
+        }
+    }
+
+    public abstract boolean isAnimationFinished();
+
+
 
 }

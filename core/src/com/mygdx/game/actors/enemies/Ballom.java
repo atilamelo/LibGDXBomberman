@@ -17,7 +17,6 @@ import com.mygdx.game.utils.WorldUtils;
  * Link: TODO: INSERIR LINK
  */
 public class Ballom extends Enemy {
-    private float stateTime;
     private StateBallom state;
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
@@ -40,6 +39,7 @@ public class Ballom extends Enemy {
     public Ballom(Body body, GameStage stage) {
         super(body, GameManager.BALLON_HP, GameManager.BALLON_SPEED);
         state = StateBallom.getRandomWalkingState();
+        getUserData().setActor(this);
 
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -64,8 +64,6 @@ public class Ballom extends Enemy {
         }
         dyingAnimation = new Animation<TextureRegion>(0.2f, dyingFrames);
 
-        stateTime = 0f;
-
         stage.addActor(this);
     }
 
@@ -80,9 +78,13 @@ public class Ballom extends Enemy {
 
     @Override
     public void act(float delta) {
-        Vector2 pos;
-        stateTime += delta;
         super.act(delta);
+        Vector2 pos;
+
+        if (hp == 0 && !state.equals(StateBallom.DYING) & !state.equals(StateBallom.DIE)) {
+            stateTime = 0f;
+            state = StateBallom.DYING;
+        }
 
         switch (state) {
             case WALKING_UP:
@@ -130,6 +132,10 @@ public class Ballom extends Enemy {
                 }
                 break;
             case DYING:
+                body.setActive(false);
+                if (dyingAnimation.isAnimationFinished(stateTime)) {
+                    state = StateBallom.DIE;
+                }
                 break;
             case DIE:
                 break;
@@ -167,6 +173,15 @@ public class Ballom extends Enemy {
         // Draw the current frame
         batch.draw(currentFrame, x, y, width, height);
 
+    }
+
+    @Override
+    public boolean isAnimationFinished() {
+        if (state.equals(StateBallom.DIE) || state.equals(StateBallom.DYING)) {
+            return dyingAnimation.isAnimationFinished(stateTime);
+        }else{
+            return false;
+        }
     }
 
 }

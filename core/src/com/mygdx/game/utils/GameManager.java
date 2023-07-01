@@ -122,7 +122,7 @@ public class GameManager implements Disposable {
         public static final float BALLON_WIDTH = .8f;
         public static final float BALLON_HEIGHT = 1f;
         public static final float BALLON_B2D_RADIUS = 0.45f;
-        public static final float BALLON_SPEED = 3f;
+        public static final float BALLON_SPEED = 1.7f;
         public static final String[] BALLON_DYING_REGION_NAMES = new String[] { "ballomDying01", "ballomDying02",
                         "ballomDying03", "ballomDying04", "ballomDying05"};
         public static final String[] BALLON_RIGHT_REGION_NAMES = new String[] { "ballomRight01", "ballomRight02",
