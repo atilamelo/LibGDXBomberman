@@ -33,7 +33,7 @@ public class Bomberman extends GameActor {
         getUserData().setActor(this);
         this.game = game;
         this.textureAtlas = gameManager.getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        this.powerBomb = 3;
+        this.powerBomb = 1;
         this.bombCount = 1;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -200,7 +200,7 @@ public class Bomberman extends GameActor {
     }
 
     public void die() {
-        if (!getUserData().equals(StateBomberman.DYING)) {
+        if (!getUserData().getState().equals(StateBomberman.DYING)) {
             stateTime = 0f;
             getUserData().setState(StateBomberman.DYING);
         }

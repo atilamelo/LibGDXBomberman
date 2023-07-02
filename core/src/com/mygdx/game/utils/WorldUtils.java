@@ -304,7 +304,7 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new DoorUserData(GameManager.DOOR_WIDTH, GameManager.DOOR_HEIGHT));
+        body.setUserData(new DoorUserData(GameManager.DOOR_WIDTH, GameManager.DOOR_HEIGHT, pos));
 
         shape.dispose();
 

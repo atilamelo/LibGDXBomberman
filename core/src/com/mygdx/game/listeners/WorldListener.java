@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
+import com.mygdx.game.actors.Door;
 import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.BallomUserData;
@@ -51,6 +52,11 @@ public class WorldListener implements ContactListener {
                     Enemy enemyActor = (Enemy) enemyData.getActor();
                     enemyActor.takeDamage(1);
                     break;
+                case GameManager.DOOR_BIT:
+                    UserData doorData = (UserData) fixB.getBody().getUserData();
+                    Door doorActor = (Door) doorData.getActor();
+                    doorActor.hit();
+                    break;
             }
         }
 
@@ -82,9 +88,14 @@ public class WorldListener implements ContactListener {
                     brickActor.explode();
                     break;
                 case GameManager.ENEMY_BIT:
-                    BallomUserData ballomData = (BallomUserData) fixA.getBody().getUserData();
-                    Ballom ballomActor = (Ballom) ballomData.getActor();
-                    ballomActor.takeDamage(1);
+                    UserData enemyData = (UserData) fixA.getBody().getUserData();
+                    Enemy enemyActor = (Enemy) enemyData.getActor();
+                    enemyActor.takeDamage(1);
+                    break;
+                case GameManager.DOOR_BIT:
+                    UserData doorData = (UserData) fixA.getBody().getUserData();
+                    Door doorActor = (Door) doorData.getActor();
+                    doorActor.hit();
                     break;
             }
         }

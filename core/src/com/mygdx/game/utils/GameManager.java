@@ -138,7 +138,7 @@ public class GameManager implements Disposable {
         public static final float ONIL_WIDTH = .8f;
         public static final float ONIL_HEIGHT = 1f;
         public static final float ONIL_B2D_RADIUS = 0.45f;
-        public static final float ONIL_SPEED = 0f;
+        public static final float ONIL_SPEED = 3f;
         public static final float ONIL_DYING_TIME = 1.5f;
         public static final String ONIL_DYING_TEXTURE = "onilDying";
         public static final String[] ONIL_RIGHT_REGION_NAMES = new String[] { "onilRight01", "onilRight02",

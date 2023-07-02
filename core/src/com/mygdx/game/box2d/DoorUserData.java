@@ -1,8 +1,12 @@
 package com.mygdx.game.box2d;
 
-public class DoorUserData extends UserData{
+import com.mygdx.game.systems.RandomPlacement.Position;
 
-    public DoorUserData(float width, float height) {
+public class DoorUserData extends UserData{
+    public Position position;
+
+    public DoorUserData(float width, float height, Position position) {
         super(width, height);
+        this.position = position;
     }
 }
