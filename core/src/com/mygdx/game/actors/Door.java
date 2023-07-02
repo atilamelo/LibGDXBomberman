@@ -6,13 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.DoorUserData;
-import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Door extends GameActor {
     private TextureRegion doorTexture;
-    private Position position;
     private float stateTime;
     private boolean isHit; // Door is hit by bomb
     private float lastHit; // Last time door is hit by bomb

@@ -236,7 +236,7 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
         fdef.isSensor = true;
 
         body.createFixture(fdef);
@@ -268,7 +268,7 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
         fdef.isSensor = true;
 
         body.createFixture(fdef);

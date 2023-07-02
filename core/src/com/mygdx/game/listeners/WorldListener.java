@@ -1,6 +1,5 @@
 package com.mygdx.game.listeners;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -11,9 +10,7 @@ import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.Door;
 import com.mygdx.game.actors.PowerUp;
-import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.actors.enemies.Enemy;
-import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
@@ -127,18 +124,6 @@ public class WorldListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        Fixture fixtureA = contact.getFixtureA();
-        Fixture fixtureB = contact.getFixtureB();
-        short categoryBitsA = fixtureA.getFilterData().categoryBits;
-        short categoryBitsB = fixtureB.getFilterData().categoryBits;
-
-        // if (categoryBitsA == GameManager.PLAYER_BIT && categoryBitsB ==
-        // GameManager.BOMB_BIT) {
-        // fixtureB.setSensor(false);
-        // } else if (categoryBitsA == GameManager.BOMB_BIT && categoryBitsB ==
-        // GameManager.PLAYER_BIT) {
-        // fixtureA.setSensor(false);
-        // }
 
     }
 

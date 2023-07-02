@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.box2d.PowerUpUserData;
-import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.utils.GameManager;
 
 public class PowerUp extends GameActor {
