@@ -21,14 +21,11 @@ public class PowerUp extends GameActor {
         SPEED_UP,
         REMOTE_CONTROL,
         BRICK_PASS,
-        BOMB_PASS,
         FLAME_PASS,
         INVENCIBLE;
 
         public static PowerUpType getRandomPowerUp() {
-            return values()[(int) (0)];
-
-            // return values()[(int) (Math.random() * values().length)];
+            return values()[(int) (Math.random() * values().length)];
         }
 
     }
@@ -42,9 +39,6 @@ public class PowerUp extends GameActor {
         TextureAtlas textureAtlas = assetManager.get(GameManager.BOMBERMAN_ATLAS_PATH);
 
         switch (powerUpType) {
-            case BOMB_PASS:
-                this.texture = textureAtlas.findRegion(GameManager.POWER_UP_BOMB_PASS);
-                break;
             case BOMB_UP:
                 this.texture = textureAtlas.findRegion(GameManager.POWER_UP_BOMB_UP);
                 break;

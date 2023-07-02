@@ -1,5 +1,8 @@
 package com.mygdx.game.actors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -7,9 +10,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.enums.StateBomberman;
+import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
@@ -24,17 +30,28 @@ public class Bomberman extends GameActor {
     private TextureRegion default_frame;
     private TextureAtlas textureAtlas;
     private GameStage game;
+    private List<Bomb> bombsList;
     private float stateTime;
     private int bombRange;
     private int bombCount;
+    private boolean remoteControl;
+    private boolean flamePass;
+    private boolean brickPass;
+    private boolean invencible;
+    private float speed;
+    private boolean bombPass;
 
     public Bomberman(Body body, GameStage game) {
         super(body);
         getUserData().setActor(this);
         this.game = game;
         this.textureAtlas = gameManager.getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
+        this.speed = GameManager.BOMBERMAN_INITIAL_SPEED;
         this.bombRange = 1;
         this.bombCount = 1;
+        this.bombsList = new ArrayList<Bomb>();
+        this.remoteControl = false;
+        this.invencible = false;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> downFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -128,6 +145,10 @@ public class Bomberman extends GameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        if (invencible == true && stateTime > GameManager.INVENCIBLE_TIME) {
+            invencible = false;
+        }
+
         if (getUserData().getState().equals(StateBomberman.DYING)) {
             System.out.println("Dying");
         }
@@ -151,7 +172,7 @@ public class Bomberman extends GameActor {
     public void moveUp() {
         if (!getUserData().getState().equals(StateBomberman.DYING)
                 && !getUserData().getState().equals(StateBomberman.DIE)) {
-            body.applyLinearImpulse(new Vector2(0, GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, speed), body.getWorldCenter(), true);
             getUserData().setState(StateBomberman.MOVE_UP);
         }
     }
@@ -159,7 +180,7 @@ public class Bomberman extends GameActor {
     public void moveDown() {
         if (!getUserData().getState().equals(StateBomberman.DYING)
                 && !getUserData().getState().equals(StateBomberman.DIE)) {
-            body.applyLinearImpulse(new Vector2(0, -GameManager.BOMBERMAN_VELOCITY), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, -speed), body.getWorldCenter(), true);
             getUserData().setState(StateBomberman.MOVE_DOWN);
         }
     }
@@ -167,7 +188,7 @@ public class Bomberman extends GameActor {
     public void moveLeft() {
         if (!getUserData().getState().equals(StateBomberman.DYING)
                 && !getUserData().getState().equals(StateBomberman.DIE)) {
-            body.applyLinearImpulse(new Vector2(-GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(-speed, 0), body.getWorldCenter(), true);
             getUserData().setState(StateBomberman.MOVE_LEFT);
         }
     }
@@ -175,7 +196,7 @@ public class Bomberman extends GameActor {
     public void moveRight() {
         if (!getUserData().getState().equals(StateBomberman.DYING)
                 && !getUserData().getState().equals(StateBomberman.DIE)) {
-            body.applyLinearImpulse(new Vector2(GameManager.BOMBERMAN_VELOCITY, 0), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(speed, 0), body.getWorldCenter(), true);
             getUserData().setState(StateBomberman.MOVE_RIGHT);
         }
     }
@@ -185,24 +206,29 @@ public class Bomberman extends GameActor {
     }
 
     public void placeBomb() {
-        if (gameManager.bombsOnScreen < bombCount) {
+        if (bombsList.size() < bombCount) {
             int x, y;
             x = Math.round(screenRectangle.x);
             y = Math.round(screenRectangle.y);
             if (!WorldUtils.hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.BOMB_BIT)) {
-                System.out.println("Place bomb at " + x + " " + y);
-                gameManager.bombsOnScreen++;
-                new Bomb(game, x, y, bombRange);
+                System.out.println("Bomba colocada em: " + x + " " + y);
+                bombsList.add(new Bomb(game, x, y, bombRange));
             } else {
                 System.out.println("Já existe uma bomba no local! " + x + " " + y);
             }
         }
     }
 
-    public void die() {
-        if (!getUserData().getState().equals(StateBomberman.DYING)) {
-            stateTime = 0f;
-            getUserData().setState(StateBomberman.DYING);
+    public List<Bomb> getBombsList() {
+        return bombsList;
+    }
+
+    public void die(UserDataType cause) {
+        if (((cause.equals(UserDataType.EXPLOSION) && !flamePass) || cause.equals(UserDataType.ENEMY)) && !invencible) {
+            if (!getUserData().getState().equals(StateBomberman.DYING)) {
+                stateTime = 0f;
+                getUserData().setState(StateBomberman.DYING);
+            }
         }
     }
 
@@ -213,11 +239,53 @@ public class Bomberman extends GameActor {
         }
     }
 
-    public void increaseBombRange(){
+    public void increaseBombRange() {
         bombRange++;
     }
 
-    public void increaseBombCount(){
+    public void increaseBombCount() {
         bombCount++;
+    }
+
+    public void activateRemoteControl() {
+        remoteControl = true;
+    }
+
+    public void activateFlamePass() {
+        flamePass = true;
+    }
+
+    public void activateBrickPass() {
+        brickPass = true;
+        short newMaskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
+                | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT;
+
+        for (Fixture fixture : body.getFixtureList()) {
+            Filter oldFilter = fixture.getFilterData();
+            Filter newFilter = new Filter();
+
+            newFilter.categoryBits = oldFilter.categoryBits; // Keep the existing category bits unchanged
+            newFilter.maskBits = newMaskBits; // Set the new mask bits
+
+            fixture.setFilterData(newFilter);
+        }
+
+    }
+
+    public void explodeAllBombs() {
+        if (remoteControl) {
+            for (Bomb bomb : bombsList) {
+                bomb.flagWillExploded = true;
+            }
+        }
+    }
+
+    public void invencible() {
+        stateTime = 0f;
+        invencible = true;
+    }
+
+    public void speedUp(){
+        speed += GameManager.SPEED_UP_VALUE;
     }
 }

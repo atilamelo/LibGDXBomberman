@@ -43,8 +43,13 @@ public abstract class GameActor extends Actor {
                 gameManager.enemiesLeft--;
                 System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
             }else if(userData instanceof BombUserData){
-                gameManager.bombsOnScreen--;
-                System.out.println("Bombas ativas restantes: " + gameManager.bombsOnScreen);
+                BombUserData bombUserData = (BombUserData) userData;
+                Bomb bomb = (Bomb) bombUserData.getActor();
+                GameStage stage = (GameStage) bomb.getStage();
+                Bomberman bomberman = stage.getBomberman();
+
+                bomberman.getBombsList().remove(bomb);
+                System.out.println("Bombas ativas restantes: " + bomberman.getBombsList().size());
             }else if(userData instanceof BrickUserData){
                 BrickUserData brickUserData = (BrickUserData) userData;
                 Brick brick = (Brick) brickUserData.getActor();
@@ -55,7 +60,7 @@ public abstract class GameActor extends Actor {
                 }
 
                 /* Chance to generate Power Up */
-                if(true){
+                if(Math.random() < GameManager.POWER_UP_CHANCE){
                     Body powerUpBody = WorldUtils.createPowerUp(brick.getPosition());
                     brick.getParent().addActor(new PowerUp(powerUpBody));
                 }
@@ -67,23 +72,26 @@ public abstract class GameActor extends Actor {
                 Bomberman bomberman = stage.getBomberman();
 
                 switch(type){
-                    case BOMB_PASS:
-                        break;
                     case BOMB_UP:
                         bomberman.increaseBombCount();
                         break;
                     case BRICK_PASS:
+                        bomberman.activateBrickPass();
                         break;
                     case FIRE_UP:
                         bomberman.increaseBombRange();
                         break;
                     case FLAME_PASS:
+                        bomberman.activateFlamePass();
                         break;
                     case INVENCIBLE:
+                        bomberman.invencible();
                         break;
                     case REMOTE_CONTROL:
+                        bomberman.activateRemoteControl();
                         break;
                     case SPEED_UP:
+                        bomberman.speedUp();
                         break;
                 }
                 

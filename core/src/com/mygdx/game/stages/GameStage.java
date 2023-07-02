@@ -314,11 +314,13 @@ public class GameStage extends Stage {
                     bomberman.setState(StateBomberman.IDLE_RIGHT);
                     moving_x = 0;
                     break;
+                case Keys.SPACE:
+                    bomberman.placeBomb();
+                    break;
+                case Keys.Z:
+                    bomberman.explodeAllBombs();
+                    break;
 
-            }
-
-            if (keycode == Keys.SPACE) {
-                bomberman.placeBomb();
             }
 
             bomberman.move(new Vector2(moving_x, moving_y));

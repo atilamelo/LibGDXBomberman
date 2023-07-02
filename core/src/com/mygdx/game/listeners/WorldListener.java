@@ -18,6 +18,7 @@ import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.utils.GameManager;
 
 public class WorldListener implements ContactListener {
@@ -31,13 +32,14 @@ public class WorldListener implements ContactListener {
 
         if (fixA == null || fixB == null)
             return;
+        
 
         if (categoryBitsA == GameManager.EXPLOSION_BIT) {
             switch (categoryBitsB) {
                 case GameManager.PLAYER_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixB.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
-                    bombermanActor.die();
+                    bombermanActor.die(UserDataType.EXPLOSION);
                     break;
                 case GameManager.BOMB_BIT:
                     BombUserData bombData = (BombUserData) fixB.getBody().getUserData();
@@ -67,7 +69,7 @@ public class WorldListener implements ContactListener {
                 case GameManager.PLAYER_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
-                    bombermanActor.die();
+                    bombermanActor.die(UserDataType.EXPLOSION);
                     break;
                 case GameManager.BOMB_BIT:
                     BombUserData bombData = (BombUserData) fixA.getBody().getUserData();
@@ -94,10 +96,10 @@ public class WorldListener implements ContactListener {
 
         if (categoryBitsA == GameManager.PLAYER_BIT) {
             switch (categoryBitsB) {
-                case GameManager.EXPLOSION_BIT:
+                case GameManager.ENEMY_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
-                    bombermanActor.die();
+                    bombermanActor.die(UserDataType.ENEMY);
                     break;
                 case GameManager.POWER_UP_BIT:
                     UserData powerUpData = (UserData) fixB.getBody().getUserData();
@@ -108,10 +110,10 @@ public class WorldListener implements ContactListener {
         }
         if (categoryBitsB == GameManager.PLAYER_BIT) {
             switch (categoryBitsA) {
-                case GameManager.EXPLOSION_BIT:
+                case GameManager.ENEMY_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixB.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
-                    bombermanActor.die();
+                    bombermanActor.die(UserDataType.ENEMY);
                     break;
                 case GameManager.POWER_UP_BIT:
                     UserData powerUpData = (UserData) fixA.getBody().getUserData();

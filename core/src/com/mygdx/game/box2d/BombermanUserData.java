@@ -11,7 +11,7 @@ public class BombermanUserData extends UserData {
     public BombermanUserData(float width, float height) {
         super(width, height);
         userDataType = UserDataType.BOMBERMAN;
-        linearVelocity = GameManager.BOMBERMAN_VELOCITY;
+        linearVelocity = GameManager.BOMBERMAN_INITIAL_SPEED;
         state = StateBomberman.IDLE_DOWN; 
     }
 

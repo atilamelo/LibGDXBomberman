@@ -68,6 +68,7 @@ public class WorldUtils {
         fdef.friction = 0.0f;
         fdef.restitution = 0.0f;
         fdef.filter.categoryBits = GameManager.PLAYER_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT | GameManager.BRICK_BIT;
         body.setActive(true);
 
         body.createFixture(fdef);
@@ -312,7 +313,7 @@ public class WorldUtils {
         return body;
     }
 
-    public static Body createPowerUp(Position pos){
+    public static Body createPowerUp(Position pos) {
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
@@ -334,6 +335,7 @@ public class WorldUtils {
         fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.POWER_UP_BIT;
+        // fdef.filter.maskBits = GameManager.PLAYER_BIT;
         fdef.isSensor = true;
 
         body.createFixture(fdef);
