@@ -353,7 +353,7 @@ public class WorldUtils {
         final short categoryBitsFinal = categoryBits;
 
         // Define the AABB (Axis-Aligned Bounding Box) centered at the position
-        float aabbHalfWidth = 0.05f;
+        float aabbHalfWidth = 0.3f;
         Vector2 lowerBound = new Vector2(position.x - aabbHalfWidth, position.y - aabbHalfWidth);
         Vector2 upperBound = new Vector2(position.x + aabbHalfWidth, position.y + aabbHalfWidth);
 
@@ -391,6 +391,21 @@ public class WorldUtils {
         }
 
         return hit;
+    }
+
+    public static boolean bombermanWithinRange(Position fromV)   {
+        boolean inRange = false;
+
+        for(int x = fromV.getX() - 1; x <= fromV.getX() + 1; x++){
+            for(int y = fromV.getY() + 1; y >= fromV.getY() - 1; y--){
+                if (hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.PLAYER_BIT)) {
+                    inRange = true;
+                    break;
+                }
+            }
+        }
+
+        return inRange;
     }
 
 }

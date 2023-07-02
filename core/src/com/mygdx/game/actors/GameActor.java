@@ -9,6 +9,7 @@ import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -19,18 +20,26 @@ public abstract class GameActor extends Actor {
     protected UserData userData;
     protected Rectangle screenRectangle;
     protected GameManager gameManager;
+    protected Position tilePosition;
 
     public GameActor(Body body) {
         this.body = body;
         this.userData = (UserData) body.getUserData();
         this.gameManager = GameManager.getInstance();
         screenRectangle = new Rectangle();
+        int x = Math.round(body.getPosition().x);
+        int y = Math.round(body.getPosition().y);
+        tilePosition = new Position(x, y);
         
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
+        
+        tilePosition.setX(Math.round(screenRectangle.x));
+        tilePosition.setY(Math.round(screenRectangle.y));
+
         if (isAlive()) {
             updateRectangle();
         } else {
@@ -114,6 +123,10 @@ public abstract class GameActor extends Actor {
 
     public Rectangle getScreenRectangle() {
         return screenRectangle;
+    }
+
+    public Position getPosition(){
+        return tilePosition;
     }
 
 

@@ -99,10 +99,4 @@ public class Brick extends GameActor {
         return this.door;
     }
 
-    public Position getPosition(){
-        int x = Math.round(screenRectangle.x);
-        int y = Math.round(screenRectangle.y);
-        return new Position(x, y);
-    }
-
 }
