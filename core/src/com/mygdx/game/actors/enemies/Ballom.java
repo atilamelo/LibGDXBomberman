@@ -22,6 +22,8 @@ public class Ballom extends Enemy {
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
     private Animation<TextureRegion> dyingAnimation;
+    private short[] maskBits = { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT };
+
 
     public static enum StateBallom {
         WALKING_UP,
@@ -93,7 +95,7 @@ public class Ballom extends Enemy {
                     body.setLinearVelocity(new Vector2(0, speed * body.getMass()));
                 }
 
-                if (WorldUtils.hitSomething(pos)) {
+                if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
                 }
                 break;
@@ -104,7 +106,7 @@ public class Ballom extends Enemy {
                     body.setLinearVelocity(new Vector2(0, -speed * body.getMass()));
                 }
 
-                if (WorldUtils.hitSomething(pos)) {
+                if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
                 }
                 break;
@@ -114,7 +116,7 @@ public class Ballom extends Enemy {
                 if (body.getLinearVelocity().x != -speed) {
                     body.setLinearVelocity(new Vector2(-speed * body.getMass(), 0));
                 }
-                if (WorldUtils.hitSomething(pos)) {
+                if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
                 }
                 break;
@@ -126,7 +128,7 @@ public class Ballom extends Enemy {
                     body.setLinearVelocity(new Vector2(speed * body.getMass(), 0));
                 }
                 pos = new Vector2(body.getPosition().x + .3f, body.getPosition().y);
-                if (WorldUtils.hitSomething(pos)) {
+                if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
                 }
                 break;

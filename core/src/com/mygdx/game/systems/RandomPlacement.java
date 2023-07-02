@@ -68,10 +68,16 @@ public class RandomPlacement {
     public static class Position {
         private int x;
         private int y;
+        private boolean ocupped;
 
         public Position(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        public Position(int x, int y, boolean ocupped) {
+            this(x, y);
+            this.ocupped = ocupped;
         }
 
         public int getX() {
@@ -105,6 +111,10 @@ public class RandomPlacement {
         @Override
         public int hashCode() {
             return Objects.hash(x, y);
+        }
+
+        public boolean isOccuped(){
+            return ocupped;
         }
     }
 }

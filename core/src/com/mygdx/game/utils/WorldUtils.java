@@ -379,9 +379,8 @@ public class WorldUtils {
         return hasBody[0];
     }
 
-    public static boolean hitSomething(Vector2 position) {
+    public static boolean hitSomething(Vector2 position, short categoryBits[]) {
         boolean hit = false;
-        short[] categoryBits = { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT };
 
         for (short categoryBit : categoryBits) {
             hit = hasObjectAtPosition(position, categoryBit);
