@@ -14,7 +14,7 @@ public class RandomPlacement {
     private static final int MAP_WIDTH = 29;
     private static final int MAP_HEIGHT = 13;
 
-    public static List<Position> generateRandomPositions(int quantity) {
+    public static List<Position> generateRandomPositions(int quantity, List<Position> invalidPositions) {
         List<Position> brickPositions = new ArrayList<>();
 
         Random random = new Random();
@@ -24,7 +24,7 @@ public class RandomPlacement {
             int y = random.nextInt(MAP_HEIGHT);
             Position position = new Position(x, y);
 
-            if (isValidPosition(position) && !brickPositions.contains(position)) {
+            if (isValidPosition(position, invalidPositions) && !brickPositions.contains(position)) {
                 brickPositions.add(position);
             }
         }
@@ -32,7 +32,7 @@ public class RandomPlacement {
         return brickPositions;
     }
 
-    private static boolean isValidPosition(Position position) {
+    private static boolean isValidPosition(Position position, List<Position> invalidPositions) {
         // Verifica se a posição está dentro dos limites do mapa
         if (position.getX() < 0 || position.getX() >= MAP_WIDTH || position.getY() < 0
                 || position.getY() >= MAP_HEIGHT) {
@@ -40,8 +40,11 @@ public class RandomPlacement {
         }
 
         // Verifica se a posição está ocupada por uma parede
-        // Substitua essa lógica com a verificação do seu mapa de paredes
         if (alreadyOcupped(position)) {
+            return false;
+        }
+
+        if(invalidPositions.contains(position)){
             return false;
         }
 

@@ -57,10 +57,9 @@ public class GameStage extends Stage {
     public Group elements;
     public Group background;
 
-    private int amountOfBricks; 
+    private int amountOfBricks;
     private int amountOfBalloms;
     private int amountOfOnils;
-
 
     public GameStage(GameScreen gameScreen, LevelConfiguration levelConfiguration) {
         this.gameScreen = gameScreen;
@@ -123,36 +122,37 @@ public class GameStage extends Stage {
 
     }
 
-    private void setupBricks(){
+    private void setupBricks() {
         Random random = new Random();
 
-        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks);
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks,
+                GameManager.generateSpawnArea());
 
         // Get random location for the door
         RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
 
-        for(RandomPlacement.Position pos : positions){
+        for (RandomPlacement.Position pos : positions) {
             Body bodyBrick = WorldUtils.createBrick(pos);
-            if(pos == doorPosition)
+            if (pos == doorPosition)
                 background.addActor(new Brick(bodyBrick, true));
             else
                 background.addActor(new Brick(bodyBrick));
         }
     }
 
-    private void setupEnemies(){
+    private void setupEnemies() {
         List<RandomPlacement.Position> positions;
 
         /* Balloms */
-        positions = RandomPlacement.generateRandomPositions(amountOfBalloms);
-        for(RandomPlacement.Position pos : positions){
+        positions = RandomPlacement.generateRandomPositions(amountOfBalloms, GameManager.generateSpawnArea());
+        for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createBallom(pos);
             elements.addActor(new Ballom(bodyEnemy));
         }
 
         /* Onils */
-        positions = RandomPlacement.generateRandomPositions(amountOfOnils);
-        for(RandomPlacement.Position pos : positions){
+        positions = RandomPlacement.generateRandomPositions(amountOfOnils, GameManager.generateSpawnArea());
+        for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createOnil(pos);
             elements.addActor(new Onil(bodyEnemy));
         }
@@ -171,7 +171,6 @@ public class GameStage extends Stage {
             sweepDeadBodies();
             accumulator -= TIME_STEP;
         }
-
 
         // TODO: Implement interpolation
 
