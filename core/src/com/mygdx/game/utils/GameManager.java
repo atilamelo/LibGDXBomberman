@@ -117,8 +117,9 @@ public class GameManager implements Disposable {
         public static final short BRICK_BIT = 0x0012;
         public static final short ENEMY_BIT = 0x0014;
         public static final short DOOR_BIT = 0x0016;
+        public static final short POWER_UP_BIT = 0x0018;
         public static final short BITS[] = { NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT,
-                        ENEMY_BIT, DOOR_BIT };
+                        ENEMY_BIT, DOOR_BIT, POWER_UP_BIT};
 
         // Ballon Enemy properties
         public static final int BALLON_HP = 1;
@@ -149,6 +150,21 @@ public class GameManager implements Disposable {
         public static final String DOOR_TEXTURE = "door";
         public static final float DOOR_WIDTH = 1f;
         public static final float DOOR_HEIGHT = 1f;
+
+        // Power Up characteristics
+        public static final float POWER_UP_WIDTH = 1f;
+        public static final float POWER_UP_HEIGHT = 1f;
+        public static final double POWER_UP_CHANCE = 1.2; // 20% of chance
+
+        // Power Ups Texture Adress
+        public static final String POWER_UP_BOMB_UP = "powerUpBombUp";
+        public static final String POWER_UP_SPEED_UP = "powerUpSpeed";
+        public static final String POWER_UP_BOMB_PASS = "powerUpBombPass";
+        public static final String POWER_UP_BRICK_PASS = "powerUpbrickPass";
+        public static final String POWER_UP_FIRE_UP = "powerUpFire";
+        public static final String POWER_UP_FLAME_PASS = "powerUpFlamePass";
+        public static final String POWER_UP_REMOTE_CONTROL = "powerUpRemoteControl";
+        public static final String POWER_UP_INVENCIBLE = "powerUpInvencible";
 
         public int bombsOnScreen;
         public int enemiesLeft;

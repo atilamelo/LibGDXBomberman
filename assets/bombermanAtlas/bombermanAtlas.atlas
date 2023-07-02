@@ -508,147 +508,147 @@ playerDying07
   orig: 16, 16
   offset: 2, 0
   index: -1
-tile000
+powerUpBombPass
   rotate: false
   xy: 1154, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpBombUp
+  rotate: false
+  xy: 1172, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpFire
+  rotate: false
+  xy: 1190, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpFlamePass
+  rotate: false
+  xy: 1208, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpInvencible
+  rotate: false
+  xy: 1226, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpRemoteControl
+  rotate: false
+  xy: 1244, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpSpeed
+  rotate: false
+  xy: 1262, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+powerUpbrickPass
+  rotate: false
+  xy: 1280, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tile000
+  rotate: false
+  xy: 1298, 4
   size: 11, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile001
   rotate: false
-  xy: 1172, 4
+  xy: 1316, 4
   size: 10, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile002
   rotate: false
-  xy: 1190, 4
+  xy: 1334, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile003
   rotate: false
-  xy: 1208, 4
+  xy: 1352, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile004
   rotate: false
-  xy: 1226, 4
+  xy: 1370, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile005
   rotate: false
-  xy: 1244, 4
+  xy: 1388, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile014
   rotate: false
-  xy: 1262, 4
+  xy: 1406, 4
   size: 11, 16
   orig: 16, 16
   offset: 3, 0
   index: -1
 tile015
   rotate: false
-  xy: 1280, 4
+  xy: 1424, 4
   size: 10, 16
   orig: 16, 16
   offset: 4, 0
   index: -1
 tile016
   rotate: false
-  xy: 1298, 4
+  xy: 1442, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile017
   rotate: false
-  xy: 1316, 4
+  xy: 1460, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile018
   rotate: false
-  xy: 1334, 4
+  xy: 1478, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile019
   rotate: false
-  xy: 1352, 4
+  xy: 1496, 4
   size: 12, 16
   orig: 16, 16
   offset: 2, 0
   index: -1
 tile045
-  rotate: false
-  xy: 1370, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile196
-  rotate: false
-  xy: 1388, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile197
-  rotate: false
-  xy: 1406, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile198
-  rotate: false
-  xy: 1424, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile199
-  rotate: false
-  xy: 1442, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile200
-  rotate: false
-  xy: 1460, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile201
-  rotate: false
-  xy: 1478, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile202
-  rotate: false
-  xy: 1496, 4
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile203
   rotate: false
   xy: 1514, 4
   size: 16, 16

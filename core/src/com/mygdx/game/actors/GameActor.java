@@ -7,7 +7,9 @@ import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BrickUserData;
+import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -36,6 +38,7 @@ public abstract class GameActor extends Actor {
             // System.out.println("Corpo destruído: " + userData);
             userData.isFlaggedForDelete = true;
             GameActor actor = (GameActor) userData.getActor();
+
             if(actor instanceof Enemy){
                 gameManager.enemiesLeft--;
                 System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
@@ -50,7 +53,43 @@ public abstract class GameActor extends Actor {
                     Door door = new Door(doorBody);
                     brick.getParent().addActor(door);
                 }
+
+                /* Chance to generate Power Up */
+                if(true){
+                    Body powerUpBody = WorldUtils.createPowerUp(brick.getPosition());
+                    brick.getParent().addActor(new PowerUp(powerUpBody));
+                }
+            }else if(userData instanceof PowerUpUserData){
+                PowerUpUserData powerUpUserData = (PowerUpUserData) userData;
+                PowerUp powerUp = (PowerUp) powerUpUserData.getActor();
+                PowerUp.PowerUpType type = powerUp.getPowerUpType();
+                GameStage stage = (GameStage) powerUp.getStage();
+                Bomberman bomberman = stage.getBomberman();
+
+                switch(type){
+                    case BOMB_PASS:
+                        break;
+                    case BOMB_UP:
+                        bomberman.increaseBombCount();
+                        break;
+                    case BRICK_PASS:
+                        break;
+                    case FIRE_UP:
+                        bomberman.increaseBombRange();
+                        break;
+                    case FLAME_PASS:
+                        break;
+                    case INVENCIBLE:
+                        break;
+                    case REMOTE_CONTROL:
+                        break;
+                    case SPEED_UP:
+                        break;
+                }
+                
+                System.out.println("Power Up coletado: " + type);
             }
+            
             remove();
         }
     }

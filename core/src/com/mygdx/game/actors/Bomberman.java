@@ -25,7 +25,7 @@ public class Bomberman extends GameActor {
     private TextureAtlas textureAtlas;
     private GameStage game;
     private float stateTime;
-    private int powerBomb;
+    private int bombRange;
     private int bombCount;
 
     public Bomberman(Body body, GameStage game) {
@@ -33,7 +33,7 @@ public class Bomberman extends GameActor {
         getUserData().setActor(this);
         this.game = game;
         this.textureAtlas = gameManager.getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        this.powerBomb = 1;
+        this.bombRange = 1;
         this.bombCount = 1;
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -192,7 +192,7 @@ public class Bomberman extends GameActor {
             if (!WorldUtils.hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.BOMB_BIT)) {
                 System.out.println("Place bomb at " + x + " " + y);
                 gameManager.bombsOnScreen++;
-                new Bomb(game, x, y, powerBomb);
+                new Bomb(game, x, y, bombRange);
             } else {
                 System.out.println("Já existe uma bomba no local! " + x + " " + y);
             }
@@ -211,5 +211,13 @@ public class Bomberman extends GameActor {
                 && !getUserData().getState().equals(StateBomberman.DIE)) {
             getUserData().setState(state);
         }
+    }
+
+    public void increaseBombRange(){
+        bombRange++;
+    }
+
+    public void increaseBombCount(){
+        bombCount++;
     }
 }

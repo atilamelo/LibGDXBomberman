@@ -202,6 +202,10 @@ public class GameStage extends Stage {
         }
     }
 
+    public Bomberman getBomberman() {
+        return bomberman;
+    }
+
     @Override
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);

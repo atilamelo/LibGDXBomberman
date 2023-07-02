@@ -1,5 +1,6 @@
 package com.mygdx.game.listeners;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -9,6 +10,7 @@ import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.Door;
+import com.mygdx.game.actors.PowerUp;
 import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.BallomUserData;
@@ -60,16 +62,6 @@ public class WorldListener implements ContactListener {
             }
         }
 
-        if (categoryBitsA == GameManager.ENEMY_BIT) {
-            switch (categoryBitsB) {
-                case GameManager.PLAYER_BIT:
-                    BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
-                    Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
-                    bombermanActor.die();
-                    break;
-            }
-        }
-
         if (categoryBitsB == GameManager.EXPLOSION_BIT) {
             switch (categoryBitsA) {
                 case GameManager.PLAYER_BIT:
@@ -100,12 +92,31 @@ public class WorldListener implements ContactListener {
             }
         }
 
-        if (categoryBitsB == GameManager.ENEMY_BIT) {
-            switch (categoryBitsA) {
-                case GameManager.PLAYER_BIT:
+        if (categoryBitsA == GameManager.PLAYER_BIT) {
+            switch (categoryBitsB) {
+                case GameManager.EXPLOSION_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
                     bombermanActor.die();
+                    break;
+                case GameManager.POWER_UP_BIT:
+                    UserData powerUpData = (UserData) fixB.getBody().getUserData();
+                    PowerUp powerUp = (PowerUp) powerUpData.getActor();
+                    powerUp.pick();
+                    break;
+            }
+        }
+        if (categoryBitsB == GameManager.PLAYER_BIT) {
+            switch (categoryBitsA) {
+                case GameManager.EXPLOSION_BIT:
+                    BombermanUserData bombermanData = (BombermanUserData) fixB.getBody().getUserData();
+                    Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
+                    bombermanActor.die();
+                    break;
+                case GameManager.POWER_UP_BIT:
+                    UserData powerUpData = (UserData) fixA.getBody().getUserData();
+                    PowerUp powerUp = (PowerUp) powerUpData.getActor();
+                    powerUp.pick();
                     break;
             }
         }

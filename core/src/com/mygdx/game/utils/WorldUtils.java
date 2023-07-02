@@ -22,6 +22,7 @@ import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
 import com.mygdx.game.box2d.OnilUserData;
+import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class WorldUtils {
@@ -305,6 +306,39 @@ public class WorldUtils {
         body.createFixture(fdef);
         body.resetMassData();
         body.setUserData(new DoorUserData(GameManager.DOOR_WIDTH, GameManager.DOOR_HEIGHT, pos));
+
+        shape.dispose();
+
+        return body;
+    }
+
+    public static Body createPowerUp(Position pos){
+        BodyDef bdef = new BodyDef();
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fdef = new FixtureDef();
+        World world = GameManager.getInstance().getWorld();
+        Body body;
+
+        // Body Def
+        bdef.type = BodyDef.BodyType.StaticBody;
+        bdef.position.set(new Vector2(pos.getX() + 0.5f, pos.getY() + 0.5f));
+
+        // Shape of Bomb
+        shape = new PolygonShape();
+        shape.setAsBox(GameManager.POWER_UP_WIDTH / 2, GameManager.POWER_UP_HEIGHT / 2);
+
+        // Create body
+        body = world.createBody(bdef);
+
+        // Fixture Def
+        fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.filter.categoryBits = GameManager.POWER_UP_BIT;
+        fdef.isSensor = true;
+
+        body.createFixture(fdef);
+        body.resetMassData();
+        body.setUserData(new PowerUpUserData(GameManager.POWER_UP_WIDTH, GameManager.POWER_UP_HEIGHT, pos));
 
         shape.dispose();
 
