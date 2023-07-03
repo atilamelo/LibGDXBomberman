@@ -17,13 +17,17 @@ public class GameScreen implements Screen {
     private BombermanConfig currentBombermanConfig;
     
     public GameScreen(BombermanGame game) {
-        currentLevel = 0;
+        currentLevel = 1;
         this.game = game;
-        currentBombermanConfig = BombermanConfig.bombermanCheatConfig;
+        currentBombermanConfig = BombermanConfig.initialBombermanConfig;
     }
 
     @Override
     public void show() {
+        if(currentLevel > 50){
+            System.out.println("Jogo terminado!");
+            Gdx.app.exit();
+        }
         stage = new GameStage(this, LevelConfig.getLevelConfig(currentLevel), currentBombermanConfig);
     }
 
@@ -60,7 +64,7 @@ public class GameScreen implements Screen {
 
     public void gameOver(){
         System.out.println("Game Over");
-        game.dispose();
+        Gdx.app.exit();
         
     }
 

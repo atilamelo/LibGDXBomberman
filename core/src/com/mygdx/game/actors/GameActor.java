@@ -56,6 +56,7 @@ public abstract class GameActor extends Actor {
         } else {
             userData.isFlaggedForDelete = true;
             if(userData instanceof EnemyUserData){
+                gameManager.addScore(100);
                 gameManager.enemiesLeft--;
             }
             else if(userData instanceof BombUserData){

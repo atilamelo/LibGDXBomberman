@@ -67,6 +67,7 @@ public class Enemy extends GameActor {
         this.lastBombermanPosPursue = tilePosition.deepCopy();
         this.lastBombermanPosInter = tilePosition.deepCopy();
         this.state = State.getRandomWalkingState();
+        
 
         getUserData().setActor(this);
 

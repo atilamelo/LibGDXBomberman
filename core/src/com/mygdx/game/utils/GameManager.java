@@ -43,8 +43,8 @@ public class GameManager implements Disposable {
     public static final float BOMBERMAN_SPAWN_Y = 11.5f;
     public static final float BOMBERMAN_WIDTH = .7f;
     public static final float BOMBERMAN_HEIGHT = 1f;
-    public static final float BOMBERMAN_B2D_RADIUS = .4f;
-    public static final float BOMBERMAN_INITIAL_SPEED = 1f;
+    public static final float BOMBERMAN_B2D_RADIUS = .35f;
+    public static final float BOMBERMAN_INITIAL_SPEED = 0.8f;
     public static final float BOMBERMAN_DENSITY = 1f;
     public static final short BOMBERMAN_MASK_BITS = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
     | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT | GameManager.BRICK_BIT | GameManager.DOOR_BIT;
@@ -217,7 +217,7 @@ public class GameManager implements Disposable {
     public static final short MASK_BITS_PASS_BRICK = GameManager.WALL_BIT | GameManager.BOMB_BIT
             | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
     /* Speed of each enemy */
-    public static final float ENEMY_SLOWEST_SPEED = 1f;
+    public static final float ENEMY_SLOWEST_SPEED = 0.6f;
     public static final float ENEMY_SLOW_SPEED = ENEMY_SLOWEST_SPEED * 2;
     public static final float ENEMY_NORMAL_SPEED = ENEMY_SLOW_SPEED * 2;
     public static final float ENEMY_FAST_SPEED = ENEMY_SLOW_SPEED * 3;
@@ -276,10 +276,12 @@ public class GameManager implements Disposable {
 
     public int enemiesLeft;
     private String currentMusic = "";
+    private int score;
 
     private GameManager() {
         // create box2d world
         enemiesLeft = 0;
+        score = 0;
 
         assetManager = new AssetManager();
 
@@ -362,6 +364,14 @@ public class GameManager implements Disposable {
 
     public void playEffect(String effect, float volume) {
         assetManager.get(effect, Sound.class).play(volume);
+    }
+
+    public void addScore(int score) {
+        this.score += score;
+    }
+
+    public int getScore(){
+        return score;
     }
 
     public static List<Position> generateSpawnArea(Position fromv, Position toV) {

@@ -29,7 +29,7 @@ public class Hud implements Disposable {
 
     public Hud(SpriteBatch sb, int livesBomberman) {
         // define tracking variables
-        worldTimer = 5;
+        worldTimer = 200;
         timeCount = 0;
         score = 0;
 
@@ -89,7 +89,6 @@ public class Hud implements Disposable {
 
     public static void addScore(int value) {
         score += value;
-        scoreLabel.setText(String.format("%06d", score));
     }
 
     @Override
@@ -108,5 +107,10 @@ public class Hud implements Disposable {
     public static Integer getScore() {
         return score;
 
+    }
+
+    public void setScore(Integer score) {
+        Hud.score = score;
+        scoreLabel.setText(String.format("%06d", score));
     }
 }

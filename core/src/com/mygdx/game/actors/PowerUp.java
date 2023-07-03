@@ -22,9 +22,6 @@ public class PowerUp extends GameActor {
         BRICK_PASS,
         FLAME_PASS,
         INVENCIBLE;
-
-
-
     }
 
     public PowerUp(Body body, PowerUpType powerUpType) {

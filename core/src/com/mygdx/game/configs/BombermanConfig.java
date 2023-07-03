@@ -1,5 +1,7 @@
 package com.mygdx.game.configs;
 
+import com.mygdx.game.utils.GameManager;
+
 public class BombermanConfig {
     public int bombRange;
     public int bombCount;
@@ -34,5 +36,16 @@ public class BombermanConfig {
             2.5f,
             true,
             100);
+
+    public static BombermanConfig initialBombermanConfig = new BombermanConfig(
+            1,
+            1,
+            false,
+            false,
+            false,
+            false,
+            GameManager.BOMBERMAN_INITIAL_SPEED,
+            false,
+            3);
 
 }

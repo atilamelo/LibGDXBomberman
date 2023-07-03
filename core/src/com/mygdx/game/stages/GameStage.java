@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -110,7 +109,6 @@ public class GameStage extends Stage {
 
         gameport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, gamecam);
         this.setViewport(gameport);
-
     }
 
     private void setupWorld() {
@@ -258,6 +256,8 @@ public class GameStage extends Stage {
             spawnPontan();
             flagSpawnedTimeUp = true;
         }
+
+        hud.setScore(gameManager.getScore());
 
         // Fixed timestep
         acumullator += delta;
@@ -464,6 +464,7 @@ public class GameStage extends Stage {
         }
 
     }
+
 
     @Override
     public void dispose() {
