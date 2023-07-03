@@ -280,8 +280,6 @@ public class GameManager implements Disposable {
 
     private GameManager() {
         // create box2d world
-        b2World = WorldUtils.createWorld();
-        b2World.setContactListener(new WorldListener());
         enemiesLeft = 0;
 
         assetManager = new AssetManager();
@@ -322,6 +320,10 @@ public class GameManager implements Disposable {
 
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+
+    public void setWorld(World world) {
+        this.b2World = world;
     }
 
     public World getWorld() {

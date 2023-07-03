@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
+import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
@@ -68,6 +69,8 @@ public class Bomberman extends GameActor {
         this.bombsList = new ArrayList<Bomb>();
         this.remoteControl = false;
         this.invencible = false;
+        this.brickPass = false;
+        this.bombPass = false;
         this.lastPlayedSound = 0f;
         this.lifes = 3;
 
@@ -114,6 +117,21 @@ public class Bomberman extends GameActor {
 
         stateTime = 0f;
 
+    }
+
+    public Bomberman(Body body, GameStage game, BombermanConfig config) {
+        this(body, game);
+        this.speed = config.speed;
+        this.bombRange = config.bombRange;
+        this.bombCount = config.bombCount;
+        this.remoteControl = config.remoteControl;
+        this.invencible = config.invencible;
+        if (config.brickPass)
+            activateBrickPass();
+        if (config.bombPass)
+            activateBombPass();
+        if (config.flamePass)
+            activateFlamePass();
     }
 
     @Override
@@ -202,12 +220,39 @@ public class Bomberman extends GameActor {
         return (BombermanUserData) userData;
     }
 
+    public BombermanConfig getConfig(boolean bombermanIsDead) {
+        /* If bomberman is dead, he lost some items */
+        if (bombermanIsDead) {
+            return new BombermanConfig(
+                    bombRange,
+                    bombCount,
+                    false,
+                    false,
+                    false,
+                    false,
+                    speed,
+                    false,
+                    lifes);
+        } else {
+            return new BombermanConfig(
+                    bombRange,
+                    bombCount,
+                    remoteControl,
+                    flamePass,
+                    brickPass,
+                    invencible,
+                    speed,
+                    bombPass,
+                    lifes);
+        }
+    }
+
     @Override
     public boolean isAlive() {
         return !getUserData().getState().equals(State.DIE);
     }
 
-    public boolean isDying(){
+    public boolean isDying() {
         return getUserData().getState().equals(State.DYING);
     }
 
@@ -270,6 +315,7 @@ public class Bomberman extends GameActor {
         if (((cause.equals(UserDataType.EXPLOSION) && !flamePass) || cause.equals(UserDataType.ENEMY)) && !invencible) {
             if (!getUserData().getState().equals(State.DYING)) {
                 stateTime = 0f;
+                lifes--;
                 getUserData().setState(State.DYING);
             }
         }
@@ -300,16 +346,17 @@ public class Bomberman extends GameActor {
 
     public void activateBrickPass() {
         brickPass = true;
-        short newMaskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
-                | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT;
+        Filter oldFilter = body.getFixtureList().get(0).getFilterData();
+        short olderMaskBits = oldFilter.maskBits;
+        short newMaskBits = (short) (olderMaskBits &  (~GameManager.BRICK_BIT));
         updateMaskBits(newMaskBits);
     }
 
     public void activateBombPass() {
         bombPass = true;
-        short newMaskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT
-                | GameManager.POWER_UP_BIT;
-
+        Filter oldFilter = body.getFixtureList().get(0).getFilterData();
+        short olderMaskBits = oldFilter.maskBits;
+        short newMaskBits = (short) (olderMaskBits &  (~GameManager.BOMB_BIT));
         updateMaskBits(newMaskBits);
     }
 

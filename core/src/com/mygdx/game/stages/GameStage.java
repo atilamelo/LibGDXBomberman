@@ -23,10 +23,11 @@ import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.Enemy;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
+import com.mygdx.game.listeners.WorldListener;
 import com.mygdx.game.systems.RandomPlacement;
-import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -57,13 +58,15 @@ public class GameStage extends Stage {
     public Group elements;
     public Group background;
     private LevelConfig config;
+    private BombermanConfig bombermanConfig = null;
 
     private boolean isSoundClearEnemiesPlayed = false;
 
-    public GameStage(GameScreen gameScreen, LevelConfig levelConfig) {
+    public GameStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
         this.config = levelConfig;
+        this.bombermanConfig = bombermanConfig;
 
         gameManager.enemiesLeft = levelConfig.getTotalOfEnemies();
 
@@ -86,8 +89,8 @@ public class GameStage extends Stage {
 
         inputProcessor = new InputProcessor();
         Gdx.input.setInputProcessor(inputProcessor);
-        
-        // Music of stage 
+
+        // Music of stage
         gameManager.playMusic(GameManager.MUSIC_MAIN, true);
 
     }
@@ -104,7 +107,10 @@ public class GameStage extends Stage {
     }
 
     private void setupWorld() {
-        world = gameManager.getWorld();
+        world = WorldUtils.createWorld();
+        world.setContactListener(new WorldListener());
+        gameManager.setWorld(world);
+;
 
         setupBomberman();
         setupMapCollision();
@@ -113,7 +119,11 @@ public class GameStage extends Stage {
     }
 
     private void setupBomberman() {
-        bomberman = new Bomberman(WorldUtils.createBomberman(), this);
+        if (bombermanConfig == null) {
+            bomberman = new Bomberman(WorldUtils.createBomberman(), this);
+        }else{
+            bomberman = new Bomberman(WorldUtils.createBomberman(), this, bombermanConfig);
+        }
         elements.addActor(bomberman);
     }
 
@@ -204,16 +214,15 @@ public class GameStage extends Stage {
         super.act(delta);
 
         // Stop song if player dies
-        if(bomberman.isDying() && gameManager.musicIsPlaying()){
+        if (bomberman.isDying() && gameManager.musicIsPlaying()) {
             gameManager.stopMusic();
             gameManager.playEffect(GameManager.SOUND_MISS);
         }
 
-        if(gameManager.enemiesLeft == 0 && !isSoundClearEnemiesPlayed){
+        if (gameManager.enemiesLeft == 0 && !isSoundClearEnemiesPlayed) {
             gameManager.playEffect(GameManager.SOUND_CLEAR_ENEMIES);
             isSoundClearEnemiesPlayed = true;
         }
-
 
         // Fixed timestep
         accumulator += delta;
@@ -228,10 +237,12 @@ public class GameStage extends Stage {
 
     }
 
-    public void nextLevel(){
+    public void nextLevel() {
         System.out.println("Parabéns venceu!");
         gameManager.stopMusic();
         gameManager.playEffect(GameManager.SOUND_STAGE_CLEAR);
+        BombermanConfig bombermanConfig = bomberman.getConfig(false);
+        gameScreen.nextLevel(bombermanConfig);
     }
 
     /*

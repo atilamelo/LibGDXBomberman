@@ -14,6 +14,7 @@ public class Door extends GameActor {
     private TextureRegion doorTexture;
     private boolean isHit; // Door is hit by bomb
     private float lastHit; // Last time door is hit by bomb
+    private boolean flagEntered; // Door is entered by bomberman
 
     public Door(Body body) {
         super(body);
@@ -21,7 +22,8 @@ public class Door extends GameActor {
         TextureAtlas textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         isHit = false;
         lastHit = 0f;
-        // Load default texture 
+        flagEntered = false;
+        // Load default texture
         doorTexture = textureAtlas.findRegion(GameManager.DOOR_TEXTURE);
 
     }
@@ -40,18 +42,23 @@ public class Door extends GameActor {
 
     @Override
     public void act(float delta) {
-        if(isHit){
+        if (isHit) {
             // Create new 4 onils
-            for(int i = 0; i < 4; i++){
+            for (int i = 0; i < 4; i++) {
                 Body onilBody = WorldUtils.createEnemy(getUserData().position, EnemyConfig.onilConfig);
                 getParent().addActor(new Enemy(onilBody, EnemyConfig.onilConfig));
                 gameManager.enemiesLeft++;
             }
 
-            isHit = false; 
+            isHit = false;
         }
+
+        if (flagEntered) {
+            ((GameStage) getStage()).nextLevel();
+        }
+
         super.act(delta);
-    }   
+    }
 
     @Override
     public DoorUserData getUserData() {
@@ -64,15 +71,15 @@ public class Door extends GameActor {
     }
 
     public void hit() {
-        if(lastHit + 3f < stateTime){
+        if (lastHit + 3f < stateTime) {
             this.isHit = true;
             lastHit = stateTime;
         }
     }
 
-    public void enter(){
-        if(gameManager.enemiesLeft == 0){
-            ((GameStage) getStage()).nextLevel();            
+    public void enter() {
+        if (gameManager.enemiesLeft == 0) {
+            this.flagEntered = true;
         }
     }
 

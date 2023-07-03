@@ -3,25 +3,24 @@ package com.mygdx.game.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
 
 public class GameScreen implements Screen {
     private GameStage stage;
+    private int currentLevel;
+    private LevelConfig[] levels;
+    private BombermanConfig currentBombermanConfig;
+    
+    public GameScreen() {
+        currentLevel = 0;
+        levels = LevelConfig.levels;
+        currentBombermanConfig = BombermanConfig.bombermanCheatConfig;
+    }
 
     @Override
     public void show() {
-        LevelConfig levelOne = new LevelConfig(
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-            );
-        stage = new GameStage(this, levelOne);
+        stage = new GameStage(this, levels[currentLevel], currentBombermanConfig);
     }
 
     @Override
@@ -52,6 +51,21 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+    }
+
+    public void gameOver(){
+        System.out.println("Game Over");
+    }
+
+    public void nextLevel(BombermanConfig bombermanConfig){
+        this.currentBombermanConfig = bombermanConfig;
+        this.currentLevel++;
+        show();
+    }
+
+    public void restartLevel(BombermanConfig bombermanConfig){
+        this.currentBombermanConfig = bombermanConfig;
+        show();
     }
 
 }

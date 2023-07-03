@@ -110,11 +110,12 @@ public class WorldUtils {
         Body body;
 
         for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            rect.width = rect.width / GameManager.PPM;
-            rect.height = rect.height / GameManager.PPM;
-            rect.x = rect.x / GameManager.PPM;
-            rect.y = rect.y / GameManager.PPM;
+            Rectangle mapRect = ((RectangleMapObject) object).getRectangle();
+            Rectangle rect = new Rectangle();
+            rect.width = mapRect.width / GameManager.PPM;
+            rect.height = mapRect.height / GameManager.PPM;
+            rect.x = mapRect.x / GameManager.PPM;
+            rect.y = mapRect.y / GameManager.PPM;
 
             bdef.type = BodyType.StaticBody;
             bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);

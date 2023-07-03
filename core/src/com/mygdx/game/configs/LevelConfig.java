@@ -28,4 +28,21 @@ public class LevelConfig {
         return amountOfBalloms + amountOfOnils + amountOfDolls + amountOfMinvos + amountOfKondorias + amountOfOvapis
                 + amountOfPass + amountOfPontan;
     }
+
+    public static LevelConfig[] levels = {
+            new LevelConfig(
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
+    };
 }
