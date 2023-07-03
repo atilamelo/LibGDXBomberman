@@ -27,12 +27,14 @@ public class GameManager implements Disposable {
 
     public static final String GAME_NAME = "Bomberman NES";
 
-    public static final int APP_WIDTH = 29;
-    public static final int APP_HEIGHT = 13;
+    public static final int MAP_WIDTH = 29;
+    public static final int MAP_HEIGHT = 13;
+    public static final float TILE_WIDTH = 1f;
+    public static final float TILE_HEIGHT= 1f;
     public static final float PPM = 16;
     public static final int FPS = 60;
-    public static final int GAME_WIDTH = APP_WIDTH * (int) PPM * 10;
-    public static final int GAME_HEIGHT = APP_HEIGHT * (int) PPM * 10;
+    public static final int GAME_WIDTH = MAP_WIDTH * (int) PPM * 10;
+    public static final int GAME_HEIGHT = MAP_HEIGHT * (int) PPM * 10;
     public static final float GAME_ZOOM = 0.25f;
 
     // Bomberman properties
@@ -43,7 +45,7 @@ public class GameManager implements Disposable {
     public static final float BOMBERMAN_B2D_WIDTH = 0.3f;
     public static final float BOMBERMAN_B2D_HEIGHT = 0.4f;
     public static final float BOMBERMAN_B2D_RADIUS = .15f;
-    public static final float BOMBERMAN_INITIAL_SPEED = 6f;
+    public static final float BOMBERMAN_INITIAL_SPEED = 1f;
     public static final float BOMBERMAN_DENSITY = 1f;
 
     // Tiled Maps properties
@@ -144,7 +146,7 @@ public class GameManager implements Disposable {
     public static final float ONIL_HEIGHT = 1f;
     public static final float ONIL_B2D_RADIUS = 0.45f;
     public static final float ONIL_SPEED = 3f;
-    public static final float ONIL_DYING_TIME = 1.5f;
+    public static final float ENEMY_DYING_TIME = 1.5f;
     public static final String ONIL_DYING_TEXTURE = "onilDying";
     public static final String[] ONIL_RIGHT_REGION_NAMES = new String[] { "onilRight01", "onilRight02",
             "onilRight03" };

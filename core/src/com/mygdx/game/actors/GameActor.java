@@ -1,6 +1,7 @@
 package com.mygdx.game.actors;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.actors.enemies.Enemy;
@@ -9,6 +10,7 @@ import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.systems.CoordinateConverter;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
@@ -21,6 +23,8 @@ public abstract class GameActor extends Actor {
     protected Rectangle screenRectangle;
     protected GameManager gameManager;
     protected Position tilePosition;
+    protected Position matrixPosition;
+
 
     public GameActor(Body body) {
         this.body = body;
@@ -30,15 +34,22 @@ public abstract class GameActor extends Actor {
         int x = Math.round(body.getPosition().x);
         int y = Math.round(body.getPosition().y);
         tilePosition = new Position(x, y);
+        matrixPosition = new Position(x, (GameManager.MAP_HEIGHT / 2) - y);
+
         
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        
-        tilePosition.setX(Math.round(screenRectangle.x));
-        tilePosition.setY(Math.round(screenRectangle.y));
+        // System.out.println("GameActor X: " + body.getPosition().x + userData.getWidth() / 2);
+        // System.out.println("GameActor Y: " + body.getPosition().y + userData.getHeight() / 2);
+    
+        Vector2 bodyCenter = body.getWorldCenter();
+        tilePosition.setX((int) Math.floor(bodyCenter.x));
+        tilePosition.setY((int) Math.floor(bodyCenter.y));
+        matrixPosition = CoordinateConverter.cartesianToMatrix(tilePosition);
+
 
         if (isAlive()) {
             updateRectangle();
@@ -62,7 +73,8 @@ public abstract class GameActor extends Actor {
                 BrickUserData brickUserData = (BrickUserData) userData;
                 Brick brick = (Brick) brickUserData.getActor();
                 if(brick.haveDoor()){
-                    Body doorBody = WorldUtils.createDoor(brick.getPosition());
+                    Position doorPosition = new Position(brick.getPosition().getX() - 1, brick.getPosition().getY() -1 );
+                    Body doorBody = WorldUtils.createDoor(doorPosition);
                     Door door = new Door(doorBody);
                     brick.getParent().addActor(door);
                 }

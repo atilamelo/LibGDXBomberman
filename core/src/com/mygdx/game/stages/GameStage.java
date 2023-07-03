@@ -1,5 +1,6 @@
 package com.mygdx.game.stages;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -23,10 +24,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
-import com.mygdx.game.actors.enemies.Onil;
+import com.mygdx.game.actors.enemies.HighIntelligence;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
+import com.mygdx.game.systems.AStarManhattan;
 import com.mygdx.game.systems.RandomPlacement;
+import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -35,8 +38,8 @@ import com.mygdx.game.utils.WorldUtils;
 public class GameStage extends Stage {
 
     // This will be our viewport measurements while working with the debug renderer
-    private static final int VIEWPORT_WIDTH = GameManager.APP_WIDTH;
-    private static final int VIEWPORT_HEIGHT = GameManager.APP_HEIGHT;
+    private static final int VIEWPORT_WIDTH = GameManager.MAP_WIDTH;
+    private static final int VIEWPORT_HEIGHT = GameManager.MAP_HEIGHT;
 
     private GameScreen gameScreen;
     private GameManager gameManager;
@@ -125,17 +128,21 @@ public class GameStage extends Stage {
     private void setupBricks() {
         Random random = new Random();
 
-        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks,
-                GameManager.generateSpawnArea());
+        // List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks,
+        //         GameManager.generateSpawnArea());
 
         // Get random location for the door
-        RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
+        // RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
+        List<RandomPlacement.Position> positions = new ArrayList<Position>();
+        // positions.add(new Position(1, 10));
+        // positions.add(new Position(2, 11));
+        
 
         for (RandomPlacement.Position pos : positions) {
             Body bodyBrick = WorldUtils.createBrick(pos);
-            if (pos == doorPosition)
-                background.addActor(new Brick(bodyBrick, true));
-            else
+            // if (pos == doorPosition)
+            //     background.addActor(new Brick(bodyBrick, true));
+            // else
                 background.addActor(new Brick(bodyBrick));
         }
     }
@@ -154,7 +161,7 @@ public class GameStage extends Stage {
         positions = RandomPlacement.generateRandomPositions(amountOfOnils, GameManager.generateSpawnArea());
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createOnil(pos);
-            elements.addActor(new Onil(bodyEnemy));
+            elements.addActor(new HighIntelligence(bodyEnemy));
         }
 
     }

@@ -190,8 +190,8 @@ public class AStarManhattan {
         // Exemplo de uso
         // Criar o grid
         List<List<Position>> grid = new ArrayList<>();
-        int sizeX = 10;
-        int sizeY = 10;
+        int sizeX = 15;
+        int sizeY = 9;
 
         for (int y = 0; y < sizeY; y++) {
             List<Position> row = new ArrayList<>();
@@ -223,7 +223,7 @@ public class AStarManhattan {
         }
     }
 
-    private static void printBoardWithPath(List<List<Position>> grid, List<Position> path) {
+    public static void printBoardWithPath(List<List<Position>> grid, List<Position> path) {
         int sizeX = grid.get(0).size();
         int sizeY = grid.size();
 
@@ -234,6 +234,23 @@ public class AStarManhattan {
                     System.out.print("X ");
                 } else if (path.contains(position)) {
                     System.out.print("* ");
+                } else {
+                    System.out.print("- ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public static void printBoard(List<List<Position>> grid) {
+        int sizeX = grid.get(0).size();
+        int sizeY = grid.size();
+
+        for (int y = 0; y < sizeY; y++) {
+            for (int x = 0; x < sizeX; x++) {
+                Position position = grid.get(y).get(x);
+                if (position.isOccuped()) {
+                    System.out.print("X ");
                 } else {
                     System.out.print("- ");
                 }

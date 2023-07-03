@@ -1,5 +1,7 @@
 package com.mygdx.game.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,6 +25,7 @@ import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
 import com.mygdx.game.box2d.OnilUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
+import com.mygdx.game.systems.CoordinateConverter;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class WorldUtils {
@@ -43,19 +46,21 @@ public class WorldUtils {
         float halfHeight = GameManager.BOMBERMAN_B2D_HEIGHT;
         float cornerRadius = GameManager.BOMBERMAN_B2D_RADIUS;
 
-        float[] vertices = new float[] {
-                -halfWidth + cornerRadius, -halfHeight,
-                halfWidth - cornerRadius, -halfHeight,
-                halfWidth, -halfHeight + cornerRadius,
-                halfWidth, halfHeight - cornerRadius,
-                halfWidth - cornerRadius, halfHeight,
-                -halfWidth + cornerRadius, halfHeight,
-                -halfWidth, halfHeight - cornerRadius,
-                -halfWidth, -halfHeight + cornerRadius
-        };
+        // float[] vertices = new float[] {
+        //         -halfWidth + cornerRadius, -halfHeight,
+        //         halfWidth - cornerRadius, -halfHeight,
+        //         halfWidth, -halfHeight + cornerRadius,
+        //         halfWidth, halfHeight - cornerRadius,
+        //         halfWidth - cornerRadius, halfHeight,
+        //         -halfWidth + cornerRadius, halfHeight,
+        //         -halfWidth, halfHeight - cornerRadius,
+        //         -halfWidth, -halfHeight + cornerRadius
+        // };
 
-        ChainShape chainShape = new ChainShape();
-        chainShape.createLoop(vertices);
+        // ChainShape chainShape = new ChainShape();
+        // chainShape.createLoop(vertices);
+        CircleShape chainShape = new CircleShape();
+        chainShape.setRadius(0.3f);
 
         // Create body
         Body body = world.createBody(bodyDef);
@@ -68,7 +73,8 @@ public class WorldUtils {
         fdef.friction = 0.0f;
         fdef.restitution = 0.0f;
         fdef.filter.categoryBits = GameManager.PLAYER_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT | GameManager.BRICK_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
+                | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT | GameManager.BRICK_BIT;
         body.setActive(true);
 
         body.createFixture(fdef);
@@ -236,7 +242,8 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT
+                | GameManager.EXPLOSION_BIT;
         fdef.isSensor = true;
 
         body.createFixture(fdef);
@@ -268,8 +275,8 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT | GameManager.EXPLOSION_BIT;
-        fdef.isSensor = true;
+        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT
+                | GameManager.EXPLOSION_BIT;
 
         body.createFixture(fdef);
         body.resetMassData();
@@ -392,19 +399,123 @@ public class WorldUtils {
         return hit;
     }
 
-    public static boolean bombermanWithinRange(Position fromV)   {
-        boolean inRange = false;
+    public static boolean hitSomething(Position position, short categoryBits[]) {
+        return hitSomething(new Vector2(position.getX() + 0.5f, position.getY() + 0.5f), categoryBits);
+    }
 
-        for(int x = fromV.getX() - 1; x <= fromV.getX() + 1; x++){
-            for(int y = fromV.getY() + 1; y >= fromV.getY() - 1; y--){
+    public static Position bombermanWithinRange(Position fromV, int range) {
+        Position bombermanPosition = null;
+        Position matrixPosition = null;
+
+        for (int x = fromV.getX() - range; x <= fromV.getX() + range; x++) {
+            for (int y = fromV.getY() + range; y >= fromV.getY() - range; y--) {
                 if (hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.PLAYER_BIT)) {
-                    inRange = true;
+                    bombermanPosition = new Position(x, y);
                     break;
                 }
             }
+
+            if (bombermanPosition != null) {
+                matrixPosition = CoordinateConverter.cartesianToMatrix(bombermanPosition);
+                break;
+            }
         }
 
-        return inRange;
+        return matrixPosition;
+    }
+
+    public static ArrayList<Position> getFreeAdjacentPositions(Position position, short categoryBits[]) {
+        int x = position.getX();
+        int y = position.getY();
+
+        ArrayList<Position> adjacentPositions = new ArrayList<Position>();
+
+        // Posição acima
+        Position positionAbove = new Position(x, y - 1);
+        adjacentPositions.add(positionAbove);
+
+        // Posição abaixo
+        Position positionBelow = new Position(x, y + 1);
+        adjacentPositions.add(positionBelow);
+
+        // Posição à esquerda
+        Position positionLeft = new Position(x - 1, y);
+        adjacentPositions.add(positionLeft);
+
+        // Posição à direita
+        Position positionRight = new Position(x + 1, y);
+        adjacentPositions.add(positionRight);
+
+        ArrayList<Position> positionsToRemove = new ArrayList<Position>();
+
+        for (Position pos : adjacentPositions) {
+            if (hitSomething(new Vector2(pos.getX() + 0.5f, pos.getY() + 0.5f), categoryBits)) {
+                positionsToRemove.add(pos);
+            }
+        }
+
+        adjacentPositions.removeAll(positionsToRemove);
+
+        return adjacentPositions;
+    }
+
+    public static List<List<Position>> getMapGrid(short[] categoryBits) {
+        List<List<Position>> mapGrid = new ArrayList<>();
+
+        for (int y = 0; y < GameManager.MAP_HEIGHT; y++) {
+            List<Position> row = new ArrayList<>();
+            System.out.print(" [ " + y + " ] ");
+            for (int x = 0; x < GameManager.MAP_WIDTH; x++) {
+                Position position = new Position(x, y);
+                System.out.print(" [" + x + "] ");
+                if (hitSomething(CoordinateConverter.matrixToCartesian(position), categoryBits)) {
+                    position.setOcuppied(true);
+                }
+
+                row.add(position);
+            }
+            System.out.println();
+
+            mapGrid.add(row);
+        }
+
+        return mapGrid;
+    }
+
+    public static boolean isEnemyInsideTile(Body circleBody, Position pos) {
+        // Obtém as coordenadas do centro do círculo
+        Vector2 circleCenter = circleBody.getWorldCenter();
+        float rectangleWidth = GameManager.TILE_WIDTH;
+        float rectangleHeight = GameManager.TILE_HEIGHT;
+        Position cartesianPosition = CoordinateConverter.matrixToCartesian(pos);
+        Vector2 rectanglePosition = new Vector2(cartesianPosition.getX() + 0.5f, cartesianPosition.getY() + 0.5f);
+
+        // Obtém o raio do círculo
+        CircleShape circleShape = (CircleShape) circleBody.getFixtureList().get(0).getShape();
+        float circleRadius = circleShape.getRadius() - 0.1f;
+
+        // Calcula os limites do retângulo
+        float halfWidth = (rectangleWidth) / 2;
+        float halfHeight = (rectangleHeight) / 2;
+        float rectangleLeft = rectanglePosition.x - halfWidth;
+        float rectangleRight = rectanglePosition.x + halfWidth;
+        float rectangleBottom = rectanglePosition.y - halfHeight;
+        float rectangleTop = rectanglePosition.y + halfHeight;
+
+        // Verifica se o centro do círculo está dentro dos limites do retângulo
+        boolean isCenterInsideRectangle = circleCenter.x >= rectangleLeft &&
+                circleCenter.x <= rectangleRight &&
+                circleCenter.y >= rectangleBottom &&
+                circleCenter.y <= rectangleTop;
+
+        // Verifica se o círculo está totalmente contido no retângulo
+        boolean isCircleFullyContained = isCenterInsideRectangle &&
+                circleCenter.x + circleRadius <= rectangleRight &&
+                circleCenter.x - circleRadius >= rectangleLeft &&
+                circleCenter.y + circleRadius <= rectangleTop &&
+                circleCenter.y - circleRadius >= rectangleBottom;
+
+        return isCircleFullyContained;
     }
 
 }

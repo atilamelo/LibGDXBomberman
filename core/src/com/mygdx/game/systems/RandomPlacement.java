@@ -116,5 +116,15 @@ public class RandomPlacement {
         public boolean isOccuped(){
             return ocupped;
         }
+
+        public boolean setOcuppied(boolean ocupped){
+            return this.ocupped = ocupped;
+        }
+
+        @Override
+        public String toString() {
+            return "Position [x=" + x + ", y=" + y + "]";
+        }
+        
     }
 }
