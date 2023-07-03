@@ -17,7 +17,8 @@ public class Onil extends Enemy {
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
-    private TextureRegion dyingTexture;
+    private Animation<TextureRegion> dyingAnimation;
+    private Animation<TextureRegion> dyingFrames;
 
     public Onil(Body body) {
         super(body, EnemyConfig.onilConfig);
@@ -26,6 +27,7 @@ public class Onil extends Enemy {
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> dyingFrames = new Array<TextureRegion>(TextureRegion.class);
 
         // Load left region into the animation
         for (String path : GameManager.ONIL_LEFT_REGION_NAMES) {
@@ -39,8 +41,11 @@ public class Onil extends Enemy {
         }
         rightAnimation = new Animation<TextureRegion>(0.1f, rightFrames);
 
-        dyingTexture = textureAtlas.findRegion(GameManager.ONIL_DYING_TEXTURE);
-
+        // Load dying animation
+        for (String path : GameManager.ONIL_DYING_REGION_NAMES) {
+            dyingFrames.add(textureAtlas.findRegion(path));
+        }
+        dyingAnimation = new Animation<TextureRegion>(0.2f, dyingFrames);
     }
 
     @Override
@@ -73,7 +78,7 @@ public class Onil extends Enemy {
                 break;
             case DYING:
             case DIE:
-                currentFrame = dyingTexture;
+                currentFrame = dyingAnimation.getKeyFrame(stateTime, false);
                 break;
             default:
                 break;

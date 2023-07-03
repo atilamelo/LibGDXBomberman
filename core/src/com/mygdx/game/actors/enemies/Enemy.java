@@ -2,8 +2,14 @@ package com.mygdx.game.actors.enemies;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.actors.GameActor;
 import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.configs.EnemyConfig;
@@ -16,7 +22,12 @@ import com.mygdx.game.utils.WorldUtils;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public abstract class Enemy extends GameActor{
+public class Enemy extends GameActor{
+    private TextureAtlas textureAtlas;
+    private Animation<TextureRegion> leftAnimation;
+    private Animation<TextureRegion> rightAnimation;
+    private Animation<TextureRegion> dyingAnimation;
+    private Animation<TextureRegion> dyingFrames;
     protected State state;
     private short[] maskBits;
     private List<Position> pursueBombermanPath;
@@ -59,6 +70,33 @@ public abstract class Enemy extends GameActor{
         this.lastBombermanPosPursue = tilePosition.deepCopy();
         this.lastBombermanPosInter = tilePosition.deepCopy();
         this.state = State.getRandomWalkingState();
+
+        getUserData().setActor(this);
+
+        /* Load textures */
+        this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
+        Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
+        Array<TextureRegion> dyingFrames = new Array<TextureRegion>(TextureRegion.class);
+
+        // Load left region into the animation
+        for (String path : config.leftAnimation) {
+            leftFrames.add(textureAtlas.findRegion(path));
+        }
+        leftAnimation = new Animation<TextureRegion>(0.1f, leftFrames);
+
+        // Load right region into the animation
+        for (String path : config.rightAnimation) {
+            rightFrames.add(textureAtlas.findRegion(path));
+        }
+        rightAnimation = new Animation<TextureRegion>(0.1f, rightFrames);
+
+        // Load dying animation
+        for (String path : config.dyingAnimation) {
+            dyingFrames.add(textureAtlas.findRegion(path));
+        }
+        dyingAnimation = new Animation<TextureRegion>(0.2f, dyingFrames);
+
     }
 
     private void changeWalkingState() {
@@ -85,6 +123,41 @@ public abstract class Enemy extends GameActor{
             // Se as posições forem iguais, você pode retornar um estado padrão
             return State.WALKING_UP;
         }
+    }
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        float x = screenRectangle.x;
+        float y = screenRectangle.y;
+        float width = screenRectangle.width;
+        float height = screenRectangle.height;
+        TextureRegion currentFrame = null;
+
+        // Choose the appropriate animation based on the movement direction
+        switch (state) {
+            case ATTACKING_UP:
+            case ATTACKING_DOWN:
+            case WALKING_UP:
+            case WALKING_RIGHT:
+                currentFrame = rightAnimation.getKeyFrame(stateTime, true);
+                break;
+            case ATTACKING_LEFT:
+            case ATTACKING_RIGHT:
+            case WALKING_DOWN:
+            case WALKING_LEFT:
+                currentFrame = leftAnimation.getKeyFrame(stateTime, true);
+                break;
+            case DYING:
+            case DIE:
+                currentFrame = dyingAnimation.getKeyFrame(stateTime, false);
+                break;
+            default:
+                break;
+        }
+
+        // Draw the current frame
+        batch.draw(currentFrame, x, y, width, height);
+
     }
 
     @Override
@@ -263,8 +336,13 @@ public abstract class Enemy extends GameActor{
         return (EnemyUserData) userData;
     };
 
-    public abstract boolean isDyingFinished();
-
+    public boolean isDyingFinished() {
+        if (state.equals(State.DIE) || state.equals(State.DYING)) {
+            return dyingAnimation.isAnimationFinished(stateTime);
+        }else{
+            return false;
+        }
+    }
     @Override
     public boolean isAlive(){
         /* Wait animation of dying finish to remove Actor of stage and body of world */
