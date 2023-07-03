@@ -20,7 +20,7 @@ import com.mygdx.game.utils.WorldUtils;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public class Enemy extends GameActor{
+public class Enemy extends GameActor {
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
@@ -32,7 +32,7 @@ public class Enemy extends GameActor{
     private Position lastBombermanPosInter;
     private float intersectionChangeChance;
     private int rangePursue;
-    private int hp; 
+    private int hp;
     private float speed;
     private float lastHit;
 
@@ -59,7 +59,7 @@ public class Enemy extends GameActor{
 
     public Enemy(Body body, EnemyConfig config) {
         super(body);
-        this.hp = config.hp; 
+        this.hp = config.hp;
         this.speed = config.speed;
         this.maskBits = config.maskBits;
         this.intersectionChangeChance = config.intersectionChangeChance;
@@ -121,6 +121,7 @@ public class Enemy extends GameActor{
             return State.WALKING_UP;
         }
     }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -162,7 +163,7 @@ public class Enemy extends GameActor{
         super.act(delta);
 
         /* Check if enemy is dead / dying */
-        if (hp == 0 && !state.equals(State.DYING) & !state.equals(State.DIE)) {
+        if (hp < 0 && !state.equals(State.DYING) & !state.equals(State.DIE)) {
             stateTime = 0f;
             state = State.DYING;
         }
@@ -249,7 +250,7 @@ public class Enemy extends GameActor{
             lastBombermanPosPursue = tilePosition.deepCopy();
 
             if (bombermanLocation != null) {
-                
+
                 List<List<Position>> mapGrid = WorldUtils.getMapGrid(removePlayerBit(maskBits));
                 pursueBombermanPath = AStarManhattan.findPath(matrixPosition, bombermanLocation, mapGrid);
 
@@ -324,48 +325,44 @@ public class Enemy extends GameActor{
 
     public static short[] removePlayerBit(short[] maskBits) {
         List<Short> newMaskBits = new ArrayList<>();
-    
+
         for (short bit : maskBits) {
             if (bit != GameManager.PLAYER_BIT) {
                 newMaskBits.add(bit);
             }
         }
-    
+
         short[] updatedMaskBits = new short[newMaskBits.size()];
-    
+
         for (int i = 0; i < newMaskBits.size(); i++) {
             updatedMaskBits[i] = newMaskBits.get(i);
         }
-    
+
         return updatedMaskBits;
     }
-    
-    
+
     @Override
-    public EnemyUserData getUserData(){
+    public EnemyUserData getUserData() {
         return (EnemyUserData) userData;
     };
 
     public boolean isDyingFinished() {
         if (state.equals(State.DIE) || state.equals(State.DYING)) {
             return dyingAnimation.isAnimationFinished(stateTime);
-        }else{
+        } else {
             return false;
         }
     }
+
     @Override
-    public boolean isAlive(){
+    public boolean isAlive() {
         /* Wait animation of dying finish to remove Actor of stage and body of world */
         return hp > 0 || !isDyingFinished();
     };
 
-    public void takeDamage(int damage){ 
-        /* Add 3 second more of wait to avoid double damage */
-        if(lastHit + 3f < stateTime){
+    public void takeDamage(int damage) {
+        if(stateTime > 1.0f){
             hp -= damage;
-            lastHit = stateTime;
-            gameManager.enemiesLeft--;
-
         }
     }
 

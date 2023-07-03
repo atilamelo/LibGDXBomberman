@@ -11,8 +11,8 @@ import com.mygdx.game.utils.WorldUtils;
 
 public class RandomPlacement {
 
-    private static final int MAP_WIDTH = 29;
-    private static final int MAP_HEIGHT = 13;
+    private static final int MAP_WIDTH = GameManager.MAP_WIDTH;
+    private static final int MAP_HEIGHT = GameManager.MAP_HEIGHT;
 
     public static List<Position> generateRandomPositions(int quantity, List<Position> invalidPositions) {
         List<Position> brickPositions = new ArrayList<>();

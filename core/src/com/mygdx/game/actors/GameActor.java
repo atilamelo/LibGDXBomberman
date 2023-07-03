@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BrickUserData;
+import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.stages.GameStage;
@@ -54,8 +55,10 @@ public abstract class GameActor extends Actor {
             updateRectangle();
         } else {
             userData.isFlaggedForDelete = true;
-
-            if(userData instanceof BombUserData){
+            if(userData instanceof EnemyUserData){
+                gameManager.enemiesLeft--;
+            }
+            else if(userData instanceof BombUserData){
                 BombUserData bombUserData = (BombUserData) userData;
                 Bomb bomb = (Bomb) bombUserData.getActor();
                 GameStage stage = (GameStage) bomb.getStage();

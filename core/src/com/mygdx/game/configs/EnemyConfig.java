@@ -110,7 +110,7 @@ public class EnemyConfig {
             GameManager.MASK_BITS_PASS_BRICK_ARRAY,
             GameManager.MASK_BITS_PASS_BRICK,
             GameManager.ENEMY_HIGHQI_INTERSECTION_CHANGE,
-            GameManager.ENEMY_HIGHQI_RANGE_PURSUE + 25,
+            GameManager.ENEMY_HIGHQI_RANGE_PURSUE       ,
             GameManager.PONTAN_LEFT_REGION_NAMES,
             GameManager.PONTAN_RIGHT_REGION_NAMES,
             GameManager.PONTAN_DYING_REGION_NAMES);

@@ -239,7 +239,7 @@ public class GameStage extends Stage {
         if (flagIsGameFinished) {
             if (stateTime > 3f) {
                 BombermanConfig bombermanConfig = bomberman.getConfig(false);
-                gameScreen.restartLevel(bombermanConfig);
+                gameScreen.nextLevel(bombermanConfig);
             }
         }
 
