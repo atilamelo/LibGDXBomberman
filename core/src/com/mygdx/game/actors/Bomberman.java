@@ -268,7 +268,18 @@ public class Bomberman extends GameActor {
         brickPass = true;
         short newMaskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
                 | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT;
+        updateMaskBits(newMaskBits);
+    }
 
+    public void activateBombPass() {
+        bombPass = true;
+        short newMaskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT
+                | GameManager.POWER_UP_BIT;
+                
+        updateMaskBits(newMaskBits);
+    }
+
+    public void updateMaskBits(short newMaskBits) {
         for (Fixture fixture : body.getFixtureList()) {
             Filter oldFilter = fixture.getFilterData();
             Filter newFilter = new Filter();
@@ -278,7 +289,6 @@ public class Bomberman extends GameActor {
 
             fixture.setFilterData(newFilter);
         }
-
     }
 
     public void explodeAllBombs() {

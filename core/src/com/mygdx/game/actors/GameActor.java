@@ -111,6 +111,9 @@ public abstract class GameActor extends Actor {
                     case SPEED_UP:
                         bomberman.speedUp();
                         break;
+                    case BOMB_PASS:
+                        bomberman.activateBombPass();
+                        break;
                 }
                 
                 System.out.println("Power Up coletado: " + type);

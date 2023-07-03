@@ -18,6 +18,7 @@ public class PowerUp extends GameActor {
         FIRE_UP,
         SPEED_UP,
         REMOTE_CONTROL,
+        BOMB_PASS,
         BRICK_PASS,
         FLAME_PASS,
         INVENCIBLE;
@@ -57,6 +58,9 @@ public class PowerUp extends GameActor {
                 break;
             case SPEED_UP:
                 this.texture = textureAtlas.findRegion(GameManager.POWER_UP_SPEED_UP);
+                break;
+            case BOMB_PASS:
+                this.texture = textureAtlas.findRegion(GameManager.POWER_UP_BOMB_PASS);
                 break;
         }
     }
