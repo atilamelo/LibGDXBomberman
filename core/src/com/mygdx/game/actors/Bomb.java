@@ -19,7 +19,8 @@ public class Bomb extends GameActor {
     private int power;
     private int x;
     private int y;
-    public boolean flagWillExploded = false;
+    public boolean flagWillExploded;
+    public boolean flagIsSensor;
 
     public static enum State {
         ACTIVE,
@@ -36,6 +37,8 @@ public class Bomb extends GameActor {
         this.power = power;
         this.x = x;
         this.y = y;
+        this.flagWillExploded = false;
+        this.flagIsSensor = true;
         Array<TextureRegion> bombFrames = new Array<>();
         getUserData().setActor(this);
 
@@ -72,6 +75,10 @@ public class Bomb extends GameActor {
 
         if (flagWillExploded) {
             explode();
+        }
+
+        if(!flagIsSensor){
+            body.getFixtureList().get(0).setSensor(false);
         }
     }
 

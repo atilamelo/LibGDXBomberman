@@ -29,7 +29,6 @@ public class WorldListener implements ContactListener {
 
         if (fixA == null || fixB == null)
             return;
-        
 
         if (categoryBitsA == GameManager.EXPLOSION_BIT) {
             switch (categoryBitsB) {
@@ -124,7 +123,28 @@ public class WorldListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+        short categoryBitsA = fixA.getFilterData().categoryBits;
+        short categoryBitsB = fixB.getFilterData().categoryBits;
 
+        if(categoryBitsA == GameManager.PLAYER_BIT){
+            switch(categoryBitsB){
+                case GameManager.BOMB_BIT:
+                    BombUserData bombData = (BombUserData) fixB.getBody().getUserData();
+                    Bomb bombActor = (Bomb) bombData.getActor();
+                    bombActor.flagIsSensor = false;
+                    break;
+            }
+        }else if(categoryBitsB == GameManager.PLAYER_BIT){
+            switch(categoryBitsA){
+                case GameManager.BOMB_BIT:
+                    BombUserData bombData = (BombUserData) fixA.getBody().getUserData();
+                    Bomb bombActor = (Bomb) bombData.getActor();
+                    bombActor.flagIsSensor = false;
+                    break;
+            }
+        }
     }
 
     @Override
