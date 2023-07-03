@@ -27,7 +27,6 @@ public class Enemy extends GameActor{
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
     private Animation<TextureRegion> dyingAnimation;
-    private Animation<TextureRegion> dyingFrames;
     protected State state;
     private short[] maskBits;
     private List<Position> pursueBombermanPath;
@@ -252,13 +251,14 @@ public class Enemy extends GameActor{
             lastBombermanPosPursue = tilePosition.deepCopy();
 
             if (bombermanLocation != null) {
-                short[] categoryBits = { GameManager.BRICK_BIT, GameManager.WALL_BIT, GameManager.BOMB_BIT };
-                List<List<Position>> mapGrid = WorldUtils.getMapGrid(categoryBits);
+                
+                List<List<Position>> mapGrid = WorldUtils.getMapGrid(removePlayerBit(maskBits));
                 pursueBombermanPath = AStarManhattan.findPath(matrixPosition, bombermanLocation, mapGrid);
 
                 if (pursueBombermanPath != null) {
                     AStarManhattan.printBoardWithPath(mapGrid, pursueBombermanPath);
                 } else {
+                    AStarManhattan.printBoard(mapGrid);
                     System.out.println("Caminho impossível");
                 }
                 System.out.println("\n\n");
@@ -330,6 +330,25 @@ public class Enemy extends GameActor{
             }
         }
     }
+
+    public static short[] removePlayerBit(short[] maskBits) {
+        List<Short> newMaskBits = new ArrayList<>();
+    
+        for (short bit : maskBits) {
+            if (bit != GameManager.PLAYER_BIT) {
+                newMaskBits.add(bit);
+            }
+        }
+    
+        short[] updatedMaskBits = new short[newMaskBits.size()];
+    
+        for (int i = 0; i < newMaskBits.size(); i++) {
+            updatedMaskBits[i] = newMaskBits.get(i);
+        }
+    
+        return updatedMaskBits;
+    }
+    
     
     @Override
     public EnemyUserData getUserData(){

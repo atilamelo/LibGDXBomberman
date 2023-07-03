@@ -23,6 +23,7 @@ import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
+import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.systems.CoordinateConverter;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
@@ -203,7 +204,7 @@ public class WorldUtils {
         return body;
     }
 
-    public static Body createEnemy(Position pos) {
+    public static Body createEnemy(Position pos, EnemyConfig config) {
         // Get world
         World world = GameManager.getInstance().getWorld();
 
@@ -223,8 +224,7 @@ public class WorldUtils {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT
-                | GameManager.EXPLOSION_BIT;
+        fdef.filter.maskBits = config.maskBitsBody;
 
         body.createFixture(fdef);
         body.resetMassData();
@@ -416,7 +416,6 @@ public class WorldUtils {
 
                 row.add(position);
             }
-            System.out.println();
 
             mapGrid.add(row);
         }
