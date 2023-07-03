@@ -2,6 +2,7 @@ package com.mygdx.game.actors.enemies;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.actors.GameActor;
+import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.box2d.UserData;
 
 public abstract class Enemy extends GameActor{
@@ -19,7 +20,9 @@ public abstract class Enemy extends GameActor{
     }
 
     @Override
-    public abstract UserData getUserData();
+    public EnemyUserData getUserData(){
+        return (EnemyUserData) userData;
+    };
 
     @Override
     public boolean isAlive(){

@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
+import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
@@ -143,11 +144,11 @@ public class GameStage extends Stage {
         List<RandomPlacement.Position> positions;
 
         // /* Balloms */
-        // positions = RandomPlacement.generateRandomPositions(amountOfBalloms, GameManager.generateSpawnArea());
-        // for (RandomPlacement.Position pos : positions) {
-        //     Body bodyEnemy = WorldUtils.createBallom(pos);
-        //     elements.addActor(new Ballom(bodyEnemy));
-        // }
+        positions = RandomPlacement.generateRandomPositions(amountOfBalloms, GameManager.generateSpawnArea());
+        for (RandomPlacement.Position pos : positions) {
+            Body bodyEnemy = WorldUtils.createEnemy(pos);
+            elements.addActor(new Ballom(bodyEnemy));
+        }
 
         /* Onils */
         positions = RandomPlacement.generateRandomPositions(amountOfOnils, GameManager.generateSpawnArea());

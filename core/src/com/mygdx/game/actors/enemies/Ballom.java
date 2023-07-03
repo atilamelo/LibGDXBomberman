@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.box2d.BallomUserData;
+import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -15,31 +15,14 @@ import com.mygdx.game.utils.WorldUtils;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public class Ballom extends Enemy {
-    private StateBallom state;
+public class Ballom extends EnemyIntelligence {
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
     private Animation<TextureRegion> dyingAnimation;
-    private short[] maskBits = { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT };
-
-
-    public static enum StateBallom {
-        WALKING_UP,
-        WALKING_DOWN,
-        WALKING_LEFT,
-        WALKING_RIGHT,
-        DYING,
-        DIE;
-
-        public static StateBallom getRandomWalkingState() {
-            return values()[(int) (Math.random() * 4)];
-        }
-    }
 
     public Ballom(Body body) {
-        super(body, 1, 1);
-        state = StateBallom.getRandomWalkingState();
+        super(body, EnemyConfig.ballonConfig);
         getUserData().setActor(this);
 
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
@@ -67,80 +50,6 @@ public class Ballom extends Enemy {
 
     }
 
-    private void changeWalkingState() {
-        state = StateBallom.getRandomWalkingState();
-    }
-
-    @Override
-    public BallomUserData getUserData() {
-        return (BallomUserData) userData;
-    }
-
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-        Vector2 pos;
-
-        if (hp == 0 && !state.equals(StateBallom.DYING) & !state.equals(StateBallom.DIE)) {
-            stateTime = 0f;
-            state = StateBallom.DYING;
-        }
-
-        switch (state) {
-            case WALKING_UP:
-                pos = new Vector2(body.getPosition().x, body.getPosition().y + .3f);
-
-                if (body.getLinearVelocity().y != speed) {
-                    body.setLinearVelocity(new Vector2(0, speed * body.getMass()));
-                }
-
-                if (WorldUtils.hitSomething(pos, maskBits)) {
-                    changeWalkingState();
-                }
-                break;
-            case WALKING_DOWN:
-                pos = new Vector2(body.getPosition().x, body.getPosition().y - .3f);
-
-                if (body.getLinearVelocity().y != -speed) {
-                    body.setLinearVelocity(new Vector2(0, -speed * body.getMass()));
-                }
-
-                if (WorldUtils.hitSomething(pos, maskBits)) {
-                    changeWalkingState();
-                }
-                break;
-            case WALKING_LEFT:
-                pos = new Vector2(body.getPosition().x - .3f, body.getPosition().y);
-
-                if (body.getLinearVelocity().x != -speed) {
-                    body.setLinearVelocity(new Vector2(-speed * body.getMass(), 0));
-                }
-                if (WorldUtils.hitSomething(pos, maskBits)) {
-                    changeWalkingState();
-                }
-                break;
-            case WALKING_RIGHT:
-                if (body.getLinearVelocity().x != speed) {
-                    // body.applyLinearImpulse(new Vector2(speed * body.getMass(), 0),
-                    // body.getWorldCenter(), true);
-
-                    body.setLinearVelocity(new Vector2(speed * body.getMass(), 0));
-                }
-                pos = new Vector2(body.getPosition().x + .3f, body.getPosition().y);
-                if (WorldUtils.hitSomething(pos, maskBits)) {
-                    changeWalkingState();
-                }
-                break;
-            case DYING:
-                body.setActive(false);
-                if (dyingAnimation.isAnimationFinished(stateTime)) {
-                    state = StateBallom.DIE;
-                }
-                break;
-            case DIE:
-                break;
-        }
-    }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
@@ -177,7 +86,7 @@ public class Ballom extends Enemy {
 
     @Override
     public boolean isDyingFinished() {
-        if (state.equals(StateBallom.DIE) || state.equals(StateBallom.DYING)) {
+        if (state.equals(State.DIE) || state.equals(State.DYING)) {
             return dyingAnimation.isAnimationFinished(stateTime);
         }else{
             return false;

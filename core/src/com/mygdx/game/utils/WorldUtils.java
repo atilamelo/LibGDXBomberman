@@ -20,8 +20,8 @@ import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.DoorUserData;
+import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.box2d.ExplosionUserData;
-import com.mygdx.game.box2d.OnilUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.systems.CoordinateConverter;
 import com.mygdx.game.systems.RandomPlacement.Position;
@@ -228,7 +228,7 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new OnilUserData(GameManager.ENEMY_WIDTH, GameManager.ENEMY_HEIGHT));
+        body.setUserData(new EnemyUserData(GameManager.ENEMY_WIDTH, GameManager.ENEMY_HEIGHT));
 
         shape.dispose();
 

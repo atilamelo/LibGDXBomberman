@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.box2d.OnilUserData;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.utils.GameManager;
 
@@ -42,11 +41,6 @@ public class Onil extends EnemyIntelligence {
 
         dyingTexture = textureAtlas.findRegion(GameManager.ONIL_DYING_TEXTURE);
 
-    }
-
-    @Override
-    public OnilUserData getUserData() {
-        return (OnilUserData) userData;
     }
 
     @Override
