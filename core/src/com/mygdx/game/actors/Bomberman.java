@@ -211,6 +211,7 @@ public class Bomberman extends GameActor {
         }
 
         if (getUserData().getState().equals(State.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
+            ((GameStage) getStage()).restartLevel();
             getUserData().setState(State.DIE);
         }
     }
@@ -222,6 +223,7 @@ public class Bomberman extends GameActor {
 
     public BombermanConfig getConfig(boolean bombermanIsDead) {
         /* If bomberman is dead, he lost some items */
+        /* IF bomberman is alive, get one life more */
         if (bombermanIsDead) {
             return new BombermanConfig(
                     bombRange,
@@ -243,7 +245,7 @@ public class Bomberman extends GameActor {
                     invencible,
                     speed,
                     bombPass,
-                    lifes);
+                    lifes + 1);
         }
     }
 

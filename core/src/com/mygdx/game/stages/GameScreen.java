@@ -15,7 +15,7 @@ public class GameScreen implements Screen {
     private BombermanConfig currentBombermanConfig;
     
     public GameScreen() {
-        currentLevel = 48;
+        currentLevel = 25;
         currentBombermanConfig = BombermanConfig.bombermanCheatConfig;
     }
 

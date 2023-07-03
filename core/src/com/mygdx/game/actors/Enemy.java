@@ -260,7 +260,7 @@ public class Enemy extends GameActor{
         if (pursueBombermanPath != null && !state.equals(State.DIE) && !state.equals(State.DYING)) {
             if (pursueBombermanPath.size() > 0) {
                 Position nextPosition = pursueBombermanPath.get(0);
-                if (WorldUtils.isEnemyInsideTile(body, nextPosition)) {
+                if (WorldUtils.isBodyInsideTile(body, nextPosition)) {
                     pursueBombermanPath.remove(0);
                 } else {
                     if (nextPosition.getX() > matrixPosition.getX()) {
@@ -284,7 +284,7 @@ public class Enemy extends GameActor{
 
     private void handleIntersectChange() {
         if (tilePositionChanged(lastBombermanPosInter) && !state.isAttacking()
-                && WorldUtils.isEnemyInsideTile(body, matrixPosition)) {
+                && WorldUtils.isBodyInsideTile(body, matrixPosition)) {
             lastBombermanPosInter = tilePosition.deepCopy();
             List<Position> freeAdjacentPositions = WorldUtils.getFreeAdjacentPositions(tilePosition, maskBits);
             List<Position> positionsToRemove = new ArrayList<Position>();

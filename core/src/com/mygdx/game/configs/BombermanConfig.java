@@ -30,7 +30,7 @@ public class BombermanConfig {
             true,
             true,
             true,
-            true,
+            false,
             3,
             true,
             10);

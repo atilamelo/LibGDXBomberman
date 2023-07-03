@@ -1,4 +1,5 @@
 Level,AmountOfBricks,AmountOfBalloms,AmountOfOnils,AmountOfDolls,AmountOfMinvos,AmountOfKondorias,AmountOfOvapis,AmountOfPass,AmountOfPontan,PowerUpType
+0,1,0,0,0,0,0,0,0,0,"Flames"
 1,6,6,0,0,0,0,0,0,0,"Flames"
 2,6,3,3,0,0,0,0,0,0,"Bombs"
 3,6,2,2,2,0,0,0,0,0,"Detonator"

@@ -78,6 +78,7 @@ public class Door extends GameActor {
     }
 
     public void enter() {
+        System.out.println(matrixPosition);
         if (gameManager.enemiesLeft == 0) {
             this.flagEntered = true;
         }

@@ -423,14 +423,14 @@ public class WorldUtils {
         return mapGrid;
     }
 
-    public static boolean isEnemyInsideTile(Body enemyBody, Position pos) {
-        Vector2 circleCenter = enemyBody.getWorldCenter();
+    public static boolean isBodyInsideTile(Body body, Position pos) {
+        Vector2 circleCenter = body.getWorldCenter();
         float rectangleWidth = GameManager.TILE_WIDTH;
         float rectangleHeight = GameManager.TILE_HEIGHT;
         Position cartesianPosition = CoordinateConverter.matrixToCartesian(pos);
         Vector2 rectanglePosition = new Vector2(cartesianPosition.getX() + 0.5f, cartesianPosition.getY() + 0.5f);
 
-        CircleShape circleShape = (CircleShape) enemyBody.getFixtureList().get(0).getShape();
+        CircleShape circleShape = (CircleShape) body.getFixtureList().get(0).getShape();
         float circleRadius = circleShape.getRadius() - 0.1f;
 
         float halfWidth = (rectangleWidth) / 2;

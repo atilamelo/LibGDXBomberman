@@ -61,7 +61,6 @@ public class GameStage extends Stage {
     private LevelConfig config;
     private BombermanConfig bombermanConfig = null;
     private boolean flagIsGameFinished = false;
-
     private boolean isSoundClearEnemiesPlayed = false;
 
     public GameStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
@@ -148,12 +147,12 @@ public class GameStage extends Stage {
             Body bodyBrick = WorldUtils.createBrick(pos);
             Brick newBrick = new Brick(bodyBrick);
 
-            if (pos == doorPosition) {  
-                newBrick.setDoor(true);  
+            if (pos == doorPosition) {
+                newBrick.setDoor(true);
             }
 
             if (pos == powerUpPosition) {
-                newBrick.setPowerUp(config.powerUpType);  
+                newBrick.setPowerUp(config.powerUpType);
             }
 
             background.addActor(newBrick);
@@ -239,8 +238,8 @@ public class GameStage extends Stage {
 
         if (flagIsGameFinished) {
             if (stateTime > 3f) {
-                BombermanConfig bombermanConfig = bomberman.getConfig(false);
-                gameScreen.nextLevel(bombermanConfig);
+                BombermanConfig bombermanConfig = bomberman.getConfig(true);
+                gameScreen.restartLevel(bombermanConfig);
             }
         }
 
@@ -267,6 +266,11 @@ public class GameStage extends Stage {
             stateTime = 0f;
             flagIsGameFinished = true;
         }
+    }
+
+    public void restartLevel() {
+        BombermanConfig bombermanConfig = bomberman.getConfig(true);
+        gameScreen.restartLevel(bombermanConfig);
     }
 
     /*
