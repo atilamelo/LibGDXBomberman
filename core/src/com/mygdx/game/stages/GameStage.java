@@ -1,10 +1,8 @@
 package com.mygdx.game.stages;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -24,13 +22,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
-import com.mygdx.game.actors.enemies.HighIntelligence;
 import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
-import com.mygdx.game.systems.AStarManhattan;
 import com.mygdx.game.systems.RandomPlacement;
-import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 

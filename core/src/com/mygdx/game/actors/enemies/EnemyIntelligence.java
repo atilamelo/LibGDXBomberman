@@ -13,7 +13,7 @@ import com.mygdx.game.utils.WorldUtils;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public abstract class HighIntelligence extends Enemy {
+public abstract class EnemyIntelligence extends Enemy {
     protected State state;
     private short[] maskBits;
     private List<Position> pursueBombermanPath;
@@ -43,7 +43,7 @@ public abstract class HighIntelligence extends Enemy {
         }
     }
 
-    public HighIntelligence(Body body, int hp, float speed, short[] maskBits, float intersectionChangeChance, int rangePursue) {
+    public EnemyIntelligence(Body body, int hp, float speed, short[] maskBits, float intersectionChangeChance, int rangePursue) {
         super(body, hp, speed);
         this.maskBits = maskBits;
         this.intersectionChangeChance = intersectionChangeChance;

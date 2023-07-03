@@ -13,7 +13,7 @@ import com.mygdx.game.utils.GameManager;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public class Onil extends HighIntelligence {
+public class Onil extends EnemyIntelligence {
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
@@ -93,7 +93,7 @@ public class Onil extends HighIntelligence {
 
     @Override
     public boolean isDyingFinished() {
-        return state.equals(HighIntelligence.State.DIE);
+        return state.equals(EnemyIntelligence.State.DIE);
     }
 
 }
