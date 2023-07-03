@@ -54,7 +54,6 @@ public abstract class GameActor extends Actor {
             updateRectangle();
         } else {
             userData.isFlaggedForDelete = true;
-            GameActor actor = (GameActor) userData.getActor();
 
             if(userData instanceof BombUserData){
                 BombUserData bombUserData = (BombUserData) userData;
@@ -75,9 +74,9 @@ public abstract class GameActor extends Actor {
                 }
 
                 /* Chance to generate Power Up */
-                if(Math.random() < GameManager.POWER_UP_CHANCE){
+                if(brick.getPowerUpType() != null){
                     Body powerUpBody = WorldUtils.createPowerUp(brick.getPosition());
-                    brick.getParent().addActor(new PowerUp(powerUpBody));
+                    brick.getParent().addActor(new PowerUp(powerUpBody, brick.getPowerUpType()));
                 }
             }else if(userData instanceof PowerUpUserData){
                 PowerUpUserData powerUpUserData = (PowerUpUserData) userData;

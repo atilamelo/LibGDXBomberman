@@ -23,17 +23,15 @@ public class PowerUp extends GameActor {
         FLAME_PASS,
         INVENCIBLE;
 
-        public static PowerUpType getRandomPowerUp() {
-            return values()[(int) (Math.random() * values().length)];
-        }
+
 
     }
 
-    public PowerUp(Body body) {
+    public PowerUp(Body body, PowerUpType powerUpType) {
         super(body);
         userData.setActor(this);
-        this.powerUpType = PowerUpType.getRandomPowerUp();
         this.isPicked = false;
+        this.powerUpType = powerUpType;
         AssetManager assetManager = gameManager.getAssetManager();
         TextureAtlas textureAtlas = assetManager.get(GameManager.BOMBERMAN_ATLAS_PATH);
 

@@ -12,7 +12,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
-import com.mygdx.game.listeners.WorldListener;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
 /*

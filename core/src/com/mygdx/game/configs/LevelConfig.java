@@ -1,5 +1,7 @@
 package com.mygdx.game.configs;
 
+import com.mygdx.game.actors.PowerUp.PowerUpType;
+
 public class LevelConfig {
     public int amountOfBricks;
     public int amountOfBalloms;
@@ -10,9 +12,10 @@ public class LevelConfig {
     public int amountOfOvapis;
     public int amountOfPass;
     public int amountOfPontan;
+    public PowerUpType powerUpType;
 
     public LevelConfig(int amountOfBricks, int amountOfBalloms, int amountOfOnils, int amountOfDolls,
-            int amountOfMinvos, int amountOfKondorias, int amountOfOvapis, int amountOfPass, int amountOfPontan) {
+            int amountOfMinvos, int amountOfKondorias, int amountOfOvapis, int amountOfPass, int amountOfPontan, PowerUpType powerUpType) {
         this.amountOfBricks = amountOfBricks;
         this.amountOfBalloms = amountOfBalloms;
         this.amountOfOnils = amountOfOnils;
@@ -22,6 +25,7 @@ public class LevelConfig {
         this.amountOfOvapis = amountOfOvapis;
         this.amountOfPass = amountOfPass;
         this.amountOfPontan = amountOfPontan;
+        this.powerUpType = powerUpType;
     }
 
     public int getTotalOfEnemies() {
@@ -39,10 +43,11 @@ public class LevelConfig {
                     0,
                     0,
                     0,
-                    0),
-            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
-            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
-            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
-            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0),
+                    0,
+                    PowerUpType.BOMB_UP),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0, PowerUpType.BOMB_UP),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0, PowerUpType.BOMB_UP),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0, PowerUpType.BOMB_UP),
+            new LevelConfig(1, 0, 0, 0, 0, 0, 0, 0, 0, PowerUpType.BOMB_UP),
     };
 }

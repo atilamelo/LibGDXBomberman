@@ -48,7 +48,8 @@ public class GameStage extends Stage {
     private InputProcessor inputProcessor;
 
     private final float TIME_STEP = 1 / 300f;
-    private float accumulator = 0f;
+    private float acumullator = 0f;
+    private float stateTime = 0f;
 
     private OrthographicCamera gamecam;
     private FitViewport gameport;
@@ -59,6 +60,7 @@ public class GameStage extends Stage {
     public Group background;
     private LevelConfig config;
     private BombermanConfig bombermanConfig = null;
+    private boolean flagIsGameFinished = false;
 
     private boolean isSoundClearEnemiesPlayed = false;
 
@@ -110,7 +112,7 @@ public class GameStage extends Stage {
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
         gameManager.setWorld(world);
-;
+        ;
 
         setupBomberman();
         setupMapCollision();
@@ -121,7 +123,7 @@ public class GameStage extends Stage {
     private void setupBomberman() {
         if (bombermanConfig == null) {
             bomberman = new Bomberman(WorldUtils.createBomberman(), this);
-        }else{
+        } else {
             bomberman = new Bomberman(WorldUtils.createBomberman(), this, bombermanConfig);
         }
         elements.addActor(bomberman);
@@ -138,15 +140,28 @@ public class GameStage extends Stage {
         List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(config.amountOfBricks,
                 GameManager.generateSpawnArea());
 
-        // Get random location for the door
+        // Get random location for the door and power up
         RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
+        RandomPlacement.Position powerUpPosition = positions.get(random.nextInt(positions.size()));
+
         for (RandomPlacement.Position pos : positions) {
             Body bodyBrick = WorldUtils.createBrick(pos);
-            if (pos == doorPosition)
-                background.addActor(new Brick(bodyBrick, true));
-            else
-                background.addActor(new Brick(bodyBrick));
+            Brick newBrick = new Brick(bodyBrick);
+
+            if (pos == doorPosition) {  
+                newBrick.setDoor(true);  
+                System.out.println("Door position: " + powerUpPosition);
+            }
+
+            if (pos == powerUpPosition) {
+                newBrick.setPowerUp(config.powerUpType);  
+                System.out.println("PowerUp position: " + powerUpPosition);
+            }
+
+            background.addActor(newBrick);
+
         }
+
     }
 
     private void setupEnemies() {
@@ -224,13 +239,21 @@ public class GameStage extends Stage {
             isSoundClearEnemiesPlayed = true;
         }
 
-        // Fixed timestep
-        accumulator += delta;
+        if (flagIsGameFinished) {
+            if (stateTime > 3f) {
+                BombermanConfig bombermanConfig = bomberman.getConfig(false);
+                gameScreen.nextLevel(bombermanConfig);
+            }
+        }
 
-        while (accumulator >= delta) {
+        // Fixed timestep
+        acumullator += delta;
+        stateTime += delta;
+
+        while (acumullator >= delta) {
             world.step(TIME_STEP, 6, 2);
             sweepDeadBodies();
-            accumulator -= TIME_STEP;
+            acumullator -= TIME_STEP;
         }
 
         // TODO: Implement interpolation
@@ -238,11 +261,14 @@ public class GameStage extends Stage {
     }
 
     public void nextLevel() {
-        System.out.println("Parabéns venceu!");
-        gameManager.stopMusic();
-        gameManager.playEffect(GameManager.SOUND_STAGE_CLEAR);
-        BombermanConfig bombermanConfig = bomberman.getConfig(false);
-        gameScreen.nextLevel(bombermanConfig);
+        if (!flagIsGameFinished) {
+            gameManager.stopMusic();
+            gameManager.playEffect(GameManager.SOUND_STAGE_CLEAR);
+            bomberman.move(new Vector2(0, 0)); // Stop bomberman moviments
+            bomberman.setState(Bomberman.State.IDLE_DOWN);
+            stateTime = 0f;
+            flagIsGameFinished = true;
+        }
     }
 
     /*
@@ -345,54 +371,57 @@ public class GameStage extends Stage {
 
         @Override
         public boolean keyDown(int keycode) {
-            switch (keycode) {
-                case Input.Keys.UP:
-                    bomberman.moveUp();
-                    break;
-                case Input.Keys.DOWN:
-                    bomberman.moveDown();
-                    break;
-                case Input.Keys.LEFT:
-                    bomberman.moveLeft();
-                    break;
-                case Input.Keys.RIGHT:
-                    bomberman.moveRight();
-                    break;
-            }
+            if (!flagIsGameFinished) {
+                switch (keycode) {
+                    case Input.Keys.UP:
+                        bomberman.moveUp();
+                        break;
+                    case Input.Keys.DOWN:
+                        bomberman.moveDown();
+                        break;
+                    case Input.Keys.LEFT:
+                        bomberman.moveLeft();
+                        break;
+                    case Input.Keys.RIGHT:
+                        bomberman.moveRight();
+                        break;
+                }
 
+            }
             return true;
         }
 
         @Override
         public boolean keyUp(int keycode) {
-            switch (keycode) {
-                case Keys.UP:
-                    bomberman.setState(Bomberman.State.IDLE_UP);
-                    moving_y = 0;
-                    break;
-                case Keys.DOWN:
-                    bomberman.setState(Bomberman.State.IDLE_DOWN);
-                    moving_y = 0;
-                    break;
-                case Keys.LEFT:
-                    bomberman.setState(Bomberman.State.IDLE_LEFT);
-                    moving_x = 0;
-                    break;
-                case Keys.RIGHT:
-                    bomberman.setState(Bomberman.State.IDLE_RIGHT);
-                    moving_x = 0;
-                    break;
-                case Keys.SPACE:
-                    bomberman.placeBomb();
-                    break;
-                case Keys.Z:
-                    bomberman.explodeAllBombs();
-                    break;
+            if (!flagIsGameFinished) {
+                switch (keycode) {
+                    case Keys.UP:
+                        bomberman.setState(Bomberman.State.IDLE_UP);
+                        moving_y = 0;
+                        break;
+                    case Keys.DOWN:
+                        bomberman.setState(Bomberman.State.IDLE_DOWN);
+                        moving_y = 0;
+                        break;
+                    case Keys.LEFT:
+                        bomberman.setState(Bomberman.State.IDLE_LEFT);
+                        moving_x = 0;
+                        break;
+                    case Keys.RIGHT:
+                        bomberman.setState(Bomberman.State.IDLE_RIGHT);
+                        moving_x = 0;
+                        break;
+                    case Keys.SPACE:
+                        bomberman.placeBomb();
+                        break;
+                    case Keys.Z:
+                        bomberman.explodeAllBombs();
+                        break;
 
+                }
+
+                bomberman.move(new Vector2(moving_x, moving_y));
             }
-
-            bomberman.move(new Vector2(moving_x, moving_y));
-
             return true;
         }
 

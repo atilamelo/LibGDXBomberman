@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.actors.PowerUp.PowerUpType;
 import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.utils.GameManager;
 
@@ -14,6 +15,7 @@ public class Brick extends GameActor {
     private TextureRegion brickTexture;
     private TextureAtlas textureAtlas;
     private boolean door;
+    private PowerUpType powerUp;
     
     public static enum State {
         DESTROYED,
@@ -26,6 +28,7 @@ public class Brick extends GameActor {
         getUserData().setActor(this);
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
         this.door = false;
+        this.powerUp = null;
 
         // Load textures
         Array<TextureRegion> breakingFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -39,11 +42,6 @@ public class Brick extends GameActor {
         // Load default texture 
         brickTexture = textureAtlas.findRegion(GameManager.BRICK_TEXTURE);
 
-    }
-
-    public Brick(Body body, boolean haveDoor){
-        this(body);
-        this.door = true; 
     }
 
     @Override
@@ -98,8 +96,20 @@ public class Brick extends GameActor {
         }
     }
 
+    public void setDoor(boolean haveDoor){
+        this.door = haveDoor;
+    }
+
+    public void setPowerUp(PowerUpType powerUp){
+        this.powerUp = powerUp;
+    }
+
     public boolean haveDoor(){
         return this.door;
+    }
+
+    public PowerUpType getPowerUpType(){
+        return this.powerUp;
     }
 
 }
