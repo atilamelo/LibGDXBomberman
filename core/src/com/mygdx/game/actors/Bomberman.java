@@ -144,11 +144,7 @@ public class Bomberman extends GameActor {
 
     @Override
     public void act(float delta) {
-        // System.out.println("Bomberman matrix position:" + matrixPosition);
         super.act(delta);
-
-        // System.out.println("Is bomberman totally inside a tile?" + WorldUtils.isEnemyInsideTile(body, matrixPosition));
-        // System.out.println("Bomberman matrix position:" + matrixPosition);
 
         if (invencible == true && stateTime > GameManager.INVENCIBLE_TIME) {
             invencible = false;
@@ -157,7 +153,7 @@ public class Bomberman extends GameActor {
         if (getUserData().getState().equals(StateBomberman.DYING)) {
             body.setActive(false);
         }
-        // System.out.println("BombermanUserData state: " + state);
+        
         stateTime += Gdx.graphics.getDeltaTime();
         if (getUserData().getState().equals(StateBomberman.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
             getUserData().setState(StateBomberman.DIE);

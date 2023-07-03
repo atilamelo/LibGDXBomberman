@@ -430,19 +430,15 @@ public class WorldUtils {
 
         ArrayList<Position> adjacentPositions = new ArrayList<Position>();
 
-        // Posição acima
         Position positionAbove = new Position(x, y - 1);
         adjacentPositions.add(positionAbove);
 
-        // Posição abaixo
         Position positionBelow = new Position(x, y + 1);
         adjacentPositions.add(positionBelow);
 
-        // Posição à esquerda
         Position positionLeft = new Position(x - 1, y);
         adjacentPositions.add(positionLeft);
 
-        // Posição à direita
         Position positionRight = new Position(x + 1, y);
         adjacentPositions.add(positionRight);
 
@@ -464,10 +460,8 @@ public class WorldUtils {
 
         for (int y = 0; y < GameManager.MAP_HEIGHT; y++) {
             List<Position> row = new ArrayList<>();
-            System.out.print(" [ " + y + " ] ");
             for (int x = 0; x < GameManager.MAP_WIDTH; x++) {
                 Position position = new Position(x, y);
-                System.out.print(" [" + x + "] ");
                 if (hitSomething(CoordinateConverter.matrixToCartesian(position), categoryBits)) {
                     position.setOcuppied(true);
                 }
@@ -482,19 +476,16 @@ public class WorldUtils {
         return mapGrid;
     }
 
-    public static boolean isEnemyInsideTile(Body circleBody, Position pos) {
-        // Obtém as coordenadas do centro do círculo
-        Vector2 circleCenter = circleBody.getWorldCenter();
+    public static boolean isEnemyInsideTile(Body enemyBody, Position pos) {
+        Vector2 circleCenter = enemyBody.getWorldCenter();
         float rectangleWidth = GameManager.TILE_WIDTH;
         float rectangleHeight = GameManager.TILE_HEIGHT;
         Position cartesianPosition = CoordinateConverter.matrixToCartesian(pos);
         Vector2 rectanglePosition = new Vector2(cartesianPosition.getX() + 0.5f, cartesianPosition.getY() + 0.5f);
 
-        // Obtém o raio do círculo
-        CircleShape circleShape = (CircleShape) circleBody.getFixtureList().get(0).getShape();
+        CircleShape circleShape = (CircleShape) enemyBody.getFixtureList().get(0).getShape();
         float circleRadius = circleShape.getRadius() - 0.1f;
 
-        // Calcula os limites do retângulo
         float halfWidth = (rectangleWidth) / 2;
         float halfHeight = (rectangleHeight) / 2;
         float rectangleLeft = rectanglePosition.x - halfWidth;
@@ -502,13 +493,11 @@ public class WorldUtils {
         float rectangleBottom = rectanglePosition.y - halfHeight;
         float rectangleTop = rectanglePosition.y + halfHeight;
 
-        // Verifica se o centro do círculo está dentro dos limites do retângulo
         boolean isCenterInsideRectangle = circleCenter.x >= rectangleLeft &&
                 circleCenter.x <= rectangleRight &&
                 circleCenter.y >= rectangleBottom &&
                 circleCenter.y <= rectangleTop;
 
-        // Verifica se o círculo está totalmente contido no retângulo
         boolean isCircleFullyContained = isCenterInsideRectangle &&
                 circleCenter.x + circleRadius <= rectangleRight &&
                 circleCenter.x - circleRadius >= rectangleLeft &&

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.actors.enemies.HighIntelligence;
+import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
@@ -45,7 +46,7 @@ public class Door extends GameActor {
             // Create new 4 onils
             for(int i = 0; i < 4; i++){
                 Body onilBody = WorldUtils.createOnil(getUserData().position);
-                getParent().addActor(new HighIntelligence(onilBody));
+                getParent().addActor(new Onil(onilBody));
                 gameManager.enemiesLeft++;
             }
 

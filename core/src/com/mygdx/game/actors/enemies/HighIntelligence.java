@@ -1,17 +1,10 @@
 package com.mygdx.game.actors.enemies;
 
-import java.util.ArrayList;
 import java.util.List;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.OnilUserData;
 import com.mygdx.game.systems.AStarManhattan;
-import com.mygdx.game.systems.CoordinateConverter;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
@@ -20,17 +13,11 @@ import com.mygdx.game.utils.WorldUtils;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public class HighIntelligence extends Enemy {
-    private StateEnemyHighIntelligence state;
-    private TextureAtlas textureAtlas;
-    private Animation<TextureRegion> leftAnimation;
-    private Animation<TextureRegion> rightAnimation;
-    private TextureRegion dyingTexture;
-    private short[] maskBits = { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT };
+public abstract class HighIntelligence extends Enemy {
+    protected StateEnemyHighIntelligence state;
+    private short[] maskBits;
     private List<Position> pursueBombermanPath;
-    private float lastChangedWalking;
     private float lastPursueCheck;
-    private float lastChangedAttack;
 
     public static enum StateEnemyHighIntelligence {
         WALKING_UP,
@@ -53,31 +40,11 @@ public class HighIntelligence extends Enemy {
         }
     }
 
-    public HighIntelligence(Body body) {
-        super(body, GameManager.ONIL_HP, GameManager.ONIL_SPEED);
+    public HighIntelligence(Body body, int hp, float speed, short[] maskBits) {
+        super(body, hp, speed);
+        this.maskBits = maskBits;
         state = StateEnemyHighIntelligence.getRandomWalkingState();
-        getUserData().setActor(this);
-        lastChangedWalking = 0f;
         lastPursueCheck = 0f;
-
-        this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
-        Array<TextureRegion> leftFrames = new Array<TextureRegion>(TextureRegion.class);
-        Array<TextureRegion> rightFrames = new Array<TextureRegion>(TextureRegion.class);
-
-        // Load left region into the animation
-        for (String path : GameManager.ONIL_LEFT_REGION_NAMES) {
-            leftFrames.add(textureAtlas.findRegion(path));
-        }
-        leftAnimation = new Animation<TextureRegion>(0.1f, leftFrames);
-
-        // Load right region into the animation
-        for (String path : GameManager.ONIL_RIGHT_REGION_NAMES) {
-            rightFrames.add(textureAtlas.findRegion(path));
-        }
-        rightAnimation = new Animation<TextureRegion>(0.1f, rightFrames);
-
-        dyingTexture = textureAtlas.findRegion(GameManager.ONIL_DYING_TEXTURE);
-
     }
 
     private void changeWalkingState() {
@@ -85,26 +52,20 @@ public class HighIntelligence extends Enemy {
     }
 
     @Override
-    public OnilUserData getUserData() {
-        return (OnilUserData) userData;
-    }
-
-    @Override
     public void act(float delta) {
         super.act(delta);
         Vector2 pos;
         
-        System.out.println("Is onil totally inside a tile?" + WorldUtils.isEnemyInsideTile(body, matrixPosition));
-        System.out.println("Onil matrix position:" + matrixPosition);
-
+        /* Check if enemy is dead */
         if (hp == 0 && !state.equals(StateEnemyHighIntelligence.DYING) & !state.equals(StateEnemyHighIntelligence.DIE)) {
             stateTime = 0f;
             state = StateEnemyHighIntelligence.DYING;
         }
 
-        /* Chase player system */
+        /* Pursue player system */
         handlePursue();
 
+        /* Change walking state system */
         switch (state) {
             case WALKING_UP:
                 pos = new Vector2(body.getPosition().x, body.getPosition().y + .3f);
@@ -160,42 +121,6 @@ public class HighIntelligence extends Enemy {
         }
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-        float x = screenRectangle.x;
-        float y = screenRectangle.y;
-        float width = screenRectangle.width;
-        float height = screenRectangle.height;
-        TextureRegion currentFrame = null;
-
-        // Choose the appropriate animation based on the movement direction
-        switch (state) {
-            case ATTACKING_UP:
-            case ATTACKING_DOWN:
-            case WALKING_UP:
-            case WALKING_RIGHT:
-                currentFrame = rightAnimation.getKeyFrame(stateTime, true);
-                break;
-            case ATTACKING_LEFT:
-            case ATTACKING_RIGHT:
-            case WALKING_DOWN:
-            case WALKING_LEFT:
-                currentFrame = leftAnimation.getKeyFrame(stateTime, true);
-                break;
-            case DYING:
-            case DIE:
-                currentFrame = dyingTexture;
-                break;
-            default:
-                break;
-        }
-
-        // Draw the current frame
-        batch.draw(currentFrame, x, y, width, height);
-
-    }
-
     private void handlePursue() {
         if (lastPursueCheck + 0.5f < stateTime) {
             Position bombermanLocation = WorldUtils.bombermanWithinRange(tilePosition, 25);
@@ -240,10 +165,4 @@ public class HighIntelligence extends Enemy {
             changeWalkingState();
         }
     }
-
-    @Override
-    public boolean isDyingFinished() {
-        return state.equals(StateEnemyHighIntelligence.DIE);
-    }
-
 }

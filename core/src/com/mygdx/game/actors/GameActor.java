@@ -42,14 +42,11 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        // System.out.println("GameActor X: " + body.getPosition().x + userData.getWidth() / 2);
-        // System.out.println("GameActor Y: " + body.getPosition().y + userData.getHeight() / 2);
     
         Vector2 bodyCenter = body.getWorldCenter();
         tilePosition.setX((int) Math.floor(bodyCenter.x));
         tilePosition.setY((int) Math.floor(bodyCenter.y));
         matrixPosition = CoordinateConverter.cartesianToMatrix(tilePosition);
-
 
         if (isAlive()) {
             updateRectangle();

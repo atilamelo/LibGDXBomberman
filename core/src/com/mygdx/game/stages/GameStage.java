@@ -25,6 +25,7 @@ import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
 import com.mygdx.game.actors.enemies.HighIntelligence;
+import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.systems.AStarManhattan;
@@ -128,21 +129,18 @@ public class GameStage extends Stage {
     private void setupBricks() {
         Random random = new Random();
 
-        // List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks,
-        //         GameManager.generateSpawnArea());
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks,
+                GameManager.generateSpawnArea());
 
         // Get random location for the door
-        // RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
-        List<RandomPlacement.Position> positions = new ArrayList<Position>();
-        // positions.add(new Position(1, 10));
-        // positions.add(new Position(2, 11));
+        RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
         
 
         for (RandomPlacement.Position pos : positions) {
             Body bodyBrick = WorldUtils.createBrick(pos);
-            // if (pos == doorPosition)
-            //     background.addActor(new Brick(bodyBrick, true));
-            // else
+            if (pos == doorPosition)
+                background.addActor(new Brick(bodyBrick, true));
+            else
                 background.addActor(new Brick(bodyBrick));
         }
     }
@@ -161,7 +159,7 @@ public class GameStage extends Stage {
         positions = RandomPlacement.generateRandomPositions(amountOfOnils, GameManager.generateSpawnArea());
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createOnil(pos);
-            elements.addActor(new HighIntelligence(bodyEnemy));
+            elements.addActor(new Onil(bodyEnemy));
         }
 
     }
