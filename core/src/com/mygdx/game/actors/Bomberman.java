@@ -125,8 +125,9 @@ public class Bomberman extends GameActor {
         this.bombRange = config.bombRange;
         this.bombCount = config.bombCount;
         this.remoteControl = config.remoteControl;
-        this.invencible = config.invencible;
         this.lifes = config.lifes;
+        if(config.invencible)
+            activateInvencible();
         if (config.brickPass)
             activateBrickPass();
         if (config.bombPass)
@@ -204,6 +205,10 @@ public class Bomberman extends GameActor {
         super.act(delta);
 
         if (invencible == true && stateTime > GameManager.INVENCIBLE_TIME) {
+            Filter oldFilter = body.getFixtureList().get(0).getFilterData();
+            short olderMaskBits = oldFilter.maskBits;
+            short newMaskBits = (short) (olderMaskBits | GameManager.ENEMY_BIT);
+            updateMaskBits(newMaskBits);
             invencible = false;
         }
 
@@ -379,9 +384,13 @@ public class Bomberman extends GameActor {
         }
     }
 
-    public void invencible() {
+    public void activateInvencible() {
         stateTime = 0f;
         invencible = true;
+        Filter oldFilter = body.getFixtureList().get(0).getFilterData();
+        short olderMaskBits = oldFilter.maskBits;
+        short newMaskBits = (short) (olderMaskBits &  (~GameManager.ENEMY_BIT));
+        updateMaskBits(newMaskBits);
     }
 
     public void speedUp() {

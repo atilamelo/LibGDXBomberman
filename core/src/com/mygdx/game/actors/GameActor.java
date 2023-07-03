@@ -101,7 +101,7 @@ public abstract class GameActor extends Actor {
                         bomberman.activateFlamePass();
                         break;
                     case INVENCIBLE:
-                        bomberman.invencible();
+                        bomberman.activateInvencible();
                         break;
                     case REMOTE_CONTROL:
                         bomberman.activateRemoteControl();

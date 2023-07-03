@@ -28,6 +28,7 @@ import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.listeners.WorldListener;
 import com.mygdx.game.systems.RandomPlacement;
+import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -60,6 +61,8 @@ public class GameStage extends Stage {
     public Group background;
     private LevelConfig config;
     private BombermanConfig bombermanConfig = null;
+    private List<Position> spawnAreaBricks;
+    private List<Position> spawnAreaEnemies;
     private boolean flagIsGameFinished = false;
     private boolean isSoundClearEnemiesPlayed = false;
 
@@ -111,12 +114,17 @@ public class GameStage extends Stage {
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
         gameManager.setWorld(world);
-        ;
-
+        
+        setupSpawn();
         setupBomberman();
         setupMapCollision();
         setupBricks();
         setupEnemies();
+    }
+
+    private void setupSpawn() {
+        this.spawnAreaBricks = GameManager.generateSpawnArea(new Position(1, 11), new Position(3, 9));
+        this.spawnAreaEnemies= GameManager.generateSpawnArea(new Position(1, 11), new Position(8, 5));
     }
 
     private void setupBomberman() {
@@ -137,7 +145,7 @@ public class GameStage extends Stage {
         Random random = new Random();
 
         List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(config.amountOfBricks,
-                GameManager.generateSpawnArea());
+                spawnAreaBricks);
 
         // Get random location for the door and power up
         RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
@@ -165,56 +173,56 @@ public class GameStage extends Stage {
         List<RandomPlacement.Position> positions;
 
         /* Balloms */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfBalloms, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfBalloms, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.ballonConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.ballonConfig));
         }
 
         /* Onils */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfOnils, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfOnils, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.onilConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.onilConfig));
         }
 
         /* Dolls */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfDolls, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfDolls, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.dollConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.dollConfig));
         }
 
         /* Minvos */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfMinvos, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfMinvos, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.minvoConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.minvoConfig));
         }
 
         /* Kondorias */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfKondorias, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfKondorias, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.kondoriaConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.kondoriaConfig));
         }
 
         /* Ovapis */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfOvapis, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfOvapis, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.ovapiConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.ovapiConfig));
         }
 
         /* Pass */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfPass, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfPass, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.passConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.passConfig));
         }
 
         /* Pontan */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfPontan, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfPontan, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.pontanConfig);
             elements.addActor(new Enemy(bodyEnemy, EnemyConfig.pontanConfig));

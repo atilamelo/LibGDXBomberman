@@ -364,13 +364,13 @@ public class GameManager implements Disposable {
         assetManager.get(effect, Sound.class).play(volume);
     }
 
-    public static List<Position> generateSpawnArea() {
+    public static List<Position> generateSpawnArea(Position fromv, Position toV) {
         List<Position> spawnArea = new ArrayList<Position>();
 
-        for (int x = 0; x < 4; x++) {
-            for (int y = 11; y > 9; y--) {
-                spawnArea.add(new Position(x, y));
-            }
+        for(int y = fromv.getY(); y >= toV.getY(); y--){
+                for(int x = fromv.getX(); x <= toV.getX(); x++){
+                        spawnArea.add(new Position(x, y));
+                }
         }
 
         return spawnArea;
