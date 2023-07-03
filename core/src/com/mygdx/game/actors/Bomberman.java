@@ -31,7 +31,6 @@ public class Bomberman extends GameActor {
     private TextureAtlas textureAtlas;
     private GameStage game;
     private List<Bomb> bombsList;
-    private float stateTime;
     private int bombRange;
     private int bombCount;
     private boolean remoteControl;
@@ -154,7 +153,6 @@ public class Bomberman extends GameActor {
             body.setActive(false);
         }
         
-        stateTime += Gdx.graphics.getDeltaTime();
         if (getUserData().getState().equals(StateBomberman.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
             getUserData().setState(StateBomberman.DIE);
         }

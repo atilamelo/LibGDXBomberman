@@ -17,7 +17,6 @@ public class Bomb extends GameActor {
 
     private Animation<TextureRegion> bombAnimation;
     private TextureAtlas textureAtlas;
-    private float stateTime;
     private GameStage gameStage;
     private int power;
     private int x;
@@ -63,7 +62,6 @@ public class Bomb extends GameActor {
     public void act(float delta) {
         super.act(delta);
 
-        stateTime += delta;
         if (stateTime >= 3f) {
             explode();
         }

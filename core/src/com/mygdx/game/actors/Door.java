@@ -11,7 +11,6 @@ import com.mygdx.game.utils.WorldUtils;
 
 public class Door extends GameActor {
     private TextureRegion doorTexture;
-    private float stateTime;
     private boolean isHit; // Door is hit by bomb
     private float lastHit; // Last time door is hit by bomb
 
@@ -40,7 +39,6 @@ public class Door extends GameActor {
 
     @Override
     public void act(float delta) {
-        stateTime += delta; 
         if(isHit){
             // Create new 4 onils
             for(int i = 0; i < 4; i++){

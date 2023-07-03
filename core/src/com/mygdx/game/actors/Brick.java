@@ -13,7 +13,6 @@ import com.mygdx.game.utils.GameManager;
 public class Brick extends GameActor {
     private Animation<TextureRegion> breakingAnimation;
     private TextureRegion brickTexture;
-    private float stateTime;
     private TextureAtlas textureAtlas;
     private boolean door;
 
@@ -68,7 +67,6 @@ public class Brick extends GameActor {
 
     @Override
     public void act(float delta) {
-        stateTime += delta; 
 
         if(getUserData().getState().equals(StateBrick.EXPLODING) && breakingAnimation.isAnimationFinished(stateTime)){
             getUserData().setState(StateBrick.DESTROYED);

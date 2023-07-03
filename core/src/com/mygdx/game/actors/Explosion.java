@@ -12,7 +12,6 @@ import com.mygdx.game.utils.WorldUtils;
 public class Explosion extends GameActor {
     public StateExplosion state;
     private GameStage stage;
-    private float stateTime;
     private Animation<TextureRegion> animation;
 
     public Explosion(GameStage stage, int x, int y, float width, float height, boolean isCenter) {
@@ -37,7 +36,6 @@ public class Explosion extends GameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        stateTime += delta;
 
         if (stateTime > 0.7f) {
             state = StateExplosion.DEATH;

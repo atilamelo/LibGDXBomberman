@@ -24,6 +24,7 @@ public abstract class GameActor extends Actor {
     protected GameManager gameManager;
     protected Position tilePosition;
     protected Position matrixPosition;
+    protected float stateTime;
 
 
     public GameActor(Body body) {
@@ -42,6 +43,7 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        stateTime += delta;
     
         Vector2 bodyCenter = body.getWorldCenter();
         tilePosition.setX((int) Math.floor(bodyCenter.x));

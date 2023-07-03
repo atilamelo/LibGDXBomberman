@@ -8,7 +8,6 @@ import com.mygdx.game.box2d.UserData;
 public abstract class Enemy extends GameActor{
     protected int hp; 
     protected float speed;
-    protected float stateTime;
     protected float lastHit;
 
     public Enemy(Body body, int hp, float speed) {
@@ -32,7 +31,6 @@ public abstract class Enemy extends GameActor{
 
     @Override
     public void act(float delta) {
-        stateTime += delta;
         super.act(delta);
     }
 
