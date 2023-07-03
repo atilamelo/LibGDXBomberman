@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.systems.AStarManhattan;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
@@ -43,11 +44,11 @@ public abstract class EnemyIntelligence extends Enemy {
         }
     }
 
-    public EnemyIntelligence(Body body, int hp, float speed, short[] maskBits, float intersectionChangeChance, int rangePursue) {
-        super(body, hp, speed);
-        this.maskBits = maskBits;
-        this.intersectionChangeChance = intersectionChangeChance;
-        this.rangePursue = rangePursue;
+    public EnemyIntelligence(Body body, EnemyConfig config) {
+        super(body, config.hp, config.speed);
+        this.maskBits = config.maskBits;
+        this.intersectionChangeChance = config.intersectionChangeChance;
+        this.rangePursue = config.rangePursue;
         this.lastBombermanPosPursue = tilePosition.deepCopy();
         this.lastBombermanPosInter = tilePosition.deepCopy();
         this.state = State.getRandomWalkingState();
@@ -248,5 +249,10 @@ public abstract class EnemyIntelligence extends Enemy {
                 state = getPositionState(tilePosition, newDirection);
             }
         }
+    }
+
+    @Override
+    public boolean isDyingFinished() {
+        return state.equals(EnemyIntelligence.State.DIE);
     }
 }

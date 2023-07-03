@@ -126,11 +126,6 @@ public class GameManager implements Disposable {
             ENEMY_BIT, DOOR_BIT, POWER_UP_BIT };
 
     // Ballon Enemy properties
-    public static final int BALLON_HP = 1;
-    public static final float BALLON_WIDTH = .8f;
-    public static final float BALLON_HEIGHT = 1f;
-    public static final float BALLON_B2D_RADIUS = 0.45f;
-    public static final float BALLON_SPEED = 1.7f;
     public static final String[] BALLON_DYING_REGION_NAMES = new String[] { "ballomDying01", "ballomDying02",
             "ballomDying03", "ballomDying04", "ballomDying05" };
     public static final String[] BALLON_RIGHT_REGION_NAMES = new String[] { "ballomRight01", "ballomRight02",
@@ -138,13 +133,27 @@ public class GameManager implements Disposable {
     public static final String[] BALLON_LEFT_REGION_NAMES = new String[] { "ballomLeft01", "ballomLeft02",
             "ballomLeft03" };
 
-    // Onil Enemy Properties
-    public static final int ONIL_HP = 1;
-    public static final float ONIL_WIDTH = .8f;
-    public static final float ONIL_HEIGHT = 1f;
-    public static final float ONIL_B2D_RADIUS = 0.4f;
-    public static final float ONIL_SPEED = 3f;
+    /* Enemy properties (Box2D) */
+    public static final float ENEMY_WIDTH = .8f;
+    public static final float ENEMY_HEIGHT = 1f;
+    public static final float ENEMY_B2D_RADIUS = 0.4f;
     public static final float ENEMY_DYING_TIME = 1.5f;
+    /* Speed of each enemy */
+    public static final float ENEMY_SLOWEST_SPEED = 0.5f;
+    public static final float ENEMY_SLOW_SPEED = ENEMY_SLOWEST_SPEED * 2;
+    public static final float ENEMY_NORMAL_SPEED = ENEMY_SLOW_SPEED * 2;
+    public static final float ENEMY_FAST_SPEED = ENEMY_SLOW_SPEED * 3;
+    /* Range that enemy will pursue the player */
+    public static final int ENEMY_LOWQI_RANGE_PURSUE = 0;
+    public static final int ENEMY_MEDIUMQI_RANGE_PURSUE = 2;
+    public static final int ENEMY_HIGHQI_RANGE_PURSUE = 3;
+    /* Chances of change randomly direction */
+    public static final float ENEMY_LOWQI_INTERSECTION_CHANGE = 0;
+    public static final float ENEMY_MEDIUMQI_INTERSECTION_CHANGE = 0.1f;
+    public static final float ENEMY_HIGHQI_INTERSECTION_CHANGE = 0.5f;
+
+
+    /*  */
     public static final String ONIL_DYING_TEXTURE = "onilDying";
     public static final String[] ONIL_RIGHT_REGION_NAMES = new String[] { "onilRight01", "onilRight02",
             "onilRight03" };

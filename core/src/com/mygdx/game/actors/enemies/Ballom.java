@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.utils.GameManager;
@@ -39,7 +38,7 @@ public class Ballom extends Enemy {
     }
 
     public Ballom(Body body) {
-        super(body, GameManager.BALLON_HP, GameManager.BALLON_SPEED);
+        super(body, 1, 1);
         state = StateBallom.getRandomWalkingState();
         getUserData().setActor(this);
 

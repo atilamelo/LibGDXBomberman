@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.OnilUserData;
+import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.utils.GameManager;
 
 /*
@@ -18,11 +19,9 @@ public class Onil extends EnemyIntelligence {
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
     private TextureRegion dyingTexture;
-    private final static short[] maskBits = { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT };
-
 
     public Onil(Body body) {
-        super(body, GameManager.ONIL_HP, GameManager.ONIL_SPEED, maskBits, 0.5f, 2);
+        super(body, EnemyConfig.onilConfig);
         getUserData().setActor(this);
 
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
@@ -89,11 +88,6 @@ public class Onil extends EnemyIntelligence {
         // Draw the current frame
         batch.draw(currentFrame, x, y, width, height);
 
-    }
-
-    @Override
-    public boolean isDyingFinished() {
-        return state.equals(EnemyIntelligence.State.DIE);
     }
 
 }

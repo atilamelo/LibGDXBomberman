@@ -44,7 +44,7 @@ public class Door extends GameActor {
         if(isHit){
             // Create new 4 onils
             for(int i = 0; i < 4; i++){
-                Body onilBody = WorldUtils.createOnil(getUserData().position);
+                Body onilBody = WorldUtils.createEnemy(getUserData().position);
                 getParent().addActor(new Onil(onilBody));
                 gameManager.enemiesLeft++;
             }

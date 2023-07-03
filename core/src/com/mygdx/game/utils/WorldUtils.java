@@ -16,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.mygdx.game.box2d.BallomUserData;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
@@ -204,41 +203,7 @@ public class WorldUtils {
         return body;
     }
 
-    public static Body createBallom(Position pos) {
-        // Get world
-        World world = GameManager.getInstance().getWorld();
-
-        // Body Def
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        // TODO: Ajustar posição inicial de maneira aleatória
-        bodyDef.position.set(new Vector2(pos.getX() + 0.5f, pos.getY() + 0.5f));
-
-        // Shape of Explosion
-        CircleShape shape = new CircleShape();
-        shape.setRadius(GameManager.BALLON_B2D_RADIUS);
-
-        // Create body
-        Body body = world.createBody(bodyDef);
-
-        // Fixture Def
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
-        fdef.filter.categoryBits = GameManager.ENEMY_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.BRICK_BIT | GameManager.PLAYER_BIT
-                | GameManager.EXPLOSION_BIT;
-        fdef.isSensor = true;
-
-        body.createFixture(fdef);
-        body.resetMassData();
-        body.setUserData(new BallomUserData(GameManager.BALLON_WIDTH, GameManager.BALLON_HEIGHT));
-
-        shape.dispose();
-
-        return body;
-    }
-
-    public static Body createOnil(Position pos) {
+    public static Body createEnemy(Position pos) {
         // Get world
         World world = GameManager.getInstance().getWorld();
 
@@ -249,7 +214,7 @@ public class WorldUtils {
 
         // Shape of Explosion
         CircleShape shape = new CircleShape();
-        shape.setRadius(GameManager.ONIL_B2D_RADIUS);
+        shape.setRadius(GameManager.ENEMY_B2D_RADIUS);
 
         // Create body
         Body body = world.createBody(bodyDef);
@@ -263,7 +228,7 @@ public class WorldUtils {
 
         body.createFixture(fdef);
         body.resetMassData();
-        body.setUserData(new OnilUserData(GameManager.ONIL_WIDTH, GameManager.ONIL_HEIGHT));
+        body.setUserData(new OnilUserData(GameManager.ENEMY_WIDTH, GameManager.ENEMY_HEIGHT));
 
         shape.dispose();
 
