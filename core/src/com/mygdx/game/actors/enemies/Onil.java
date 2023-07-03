@@ -13,7 +13,7 @@ import com.mygdx.game.utils.GameManager;
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
  * Link: TODO: INSERIR LINK
  */
-public class Onil extends EnemyIntelligence {
+public class Onil extends Enemy {
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
@@ -82,6 +82,11 @@ public class Onil extends EnemyIntelligence {
         // Draw the current frame
         batch.draw(currentFrame, x, y, width, height);
 
+    }
+
+    @Override
+    public boolean isDyingFinished() {
+        return state.equals(State.DIE);
     }
 
 }

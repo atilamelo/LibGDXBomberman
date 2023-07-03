@@ -31,6 +31,7 @@ public abstract class GameActor extends Actor {
         this.body = body;
         this.userData = (UserData) body.getUserData();
         this.gameManager = GameManager.getInstance();
+        this.stateTime = 0f;
         screenRectangle = new Rectangle();
         int x = Math.round(body.getPosition().x);
         int y = Math.round(body.getPosition().y);
