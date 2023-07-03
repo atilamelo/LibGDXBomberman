@@ -1,22 +1,22 @@
 package com.mygdx.game.box2d;
 
-import com.mygdx.game.enums.StateBomb;
+import com.mygdx.game.actors.Bomb.State;
 import com.mygdx.game.enums.UserDataType;
 
 public class BombUserData extends UserData{
-    public StateBomb state;
+    public State state;
 
     public BombUserData(float width, float height) {
         super(width, height);
         userDataType = UserDataType.BOMB;
-        state = StateBomb.ACTIVE;
+        state = State.ACTIVE;
     }
 
-    public StateBomb getState() {
+    public State getState() {
         return state;
     }
 
-    public void setState(StateBomb state) {
+    public void setState(State state) {
         this.state = state;
     }
     

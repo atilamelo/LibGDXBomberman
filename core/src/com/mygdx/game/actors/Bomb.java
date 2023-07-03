@@ -7,14 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombUserData;
-import com.mygdx.game.enums.StateBomb;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Bomb extends GameActor {
-    public StateBomb state;
-
+    public State state;
     private Animation<TextureRegion> bombAnimation;
     private TextureAtlas textureAtlas;
     private GameStage gameStage;
@@ -22,6 +20,12 @@ public class Bomb extends GameActor {
     private int x;
     private int y;
     public boolean flagWillExploded = false;
+
+    public static enum State {
+        ACTIVE,
+        CREATINGEXPLOSE,
+        EXPLODED
+    }
 
     public Bomb(GameStage gameStage, int x, int y, int power) {
         super(WorldUtils.createBomb(x + 0.5f, y + 0.5f));
@@ -78,7 +82,7 @@ public class Bomb extends GameActor {
 
     @Override
     public boolean isAlive() {
-        return state.equals(StateBomb.ACTIVE);
+        return state.equals(State.ACTIVE);
     }
 
     private void explode() {        
@@ -87,7 +91,7 @@ public class Bomb extends GameActor {
         float gap = GameManager.GAP_EXPLOSION;
 
         // Próprio local
-        state = StateBomb.EXPLODED;
+        state = State.EXPLODED;
 
         // Próprio local
         Array<TextureRegion> explosionFrames = new Array<>();

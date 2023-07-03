@@ -11,7 +11,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         LevelConfig levelOne = new LevelConfig(
-            1,
+            10,
             0,
             0,
             0,

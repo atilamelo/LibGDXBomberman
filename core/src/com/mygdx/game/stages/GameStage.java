@@ -25,7 +25,6 @@ import com.mygdx.game.actors.Enemy;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
-import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
@@ -334,19 +333,19 @@ public class GameStage extends Stage {
         public boolean keyUp(int keycode) {
             switch (keycode) {
                 case Keys.UP:
-                    bomberman.setState(StateBomberman.IDLE_UP);
+                    bomberman.setState(Bomberman.State.IDLE_UP);
                     moving_y = 0;
                     break;
                 case Keys.DOWN:
-                    bomberman.setState(StateBomberman.IDLE_DOWN);
+                    bomberman.setState(Bomberman.State.IDLE_DOWN);
                     moving_y = 0;
                     break;
                 case Keys.LEFT:
-                    bomberman.setState(StateBomberman.IDLE_LEFT);
+                    bomberman.setState(Bomberman.State.IDLE_LEFT);
                     moving_x = 0;
                     break;
                 case Keys.RIGHT:
-                    bomberman.setState(StateBomberman.IDLE_RIGHT);
+                    bomberman.setState(Bomberman.State.IDLE_RIGHT);
                     moving_x = 0;
                     break;
                 case Keys.SPACE:

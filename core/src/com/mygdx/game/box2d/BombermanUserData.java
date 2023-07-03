@@ -1,25 +1,19 @@
 package com.mygdx.game.box2d;
 
-import com.mygdx.game.enums.StateBomberman;
+import com.mygdx.game.actors.Bomberman.State;
 import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.utils.GameManager;
 
 public class BombermanUserData extends UserData {
-    public StateBomberman state;
+    public State state;
     private float linearVelocity;
 
     public BombermanUserData(float width, float height) {
         super(width, height);
         userDataType = UserDataType.BOMBERMAN;
         linearVelocity = GameManager.BOMBERMAN_INITIAL_SPEED;
-        state = StateBomberman.IDLE_DOWN; 
+        state = State.IDLE_DOWN; 
     }
-
-    // public BombermanUserData() {
-    //     super();
-    //     userDataType = UserDataType.BOMBERMAN;
-    //     linearVelocity = GameManager.BOMBERMAN_VELOCITY;
-    // }
 
     public float getLinearVelocity() {
         return linearVelocity;
@@ -29,11 +23,11 @@ public class BombermanUserData extends UserData {
         this.linearVelocity = linearVelocity;
     }
     
-    public StateBomberman getState() {
+    public State getState() {
         return state;
     }
 
-    public void setState(StateBomberman state){
+    public void setState(State state){
         this.state = state;
     }
 }

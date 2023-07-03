@@ -4,15 +4,19 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.box2d.ExplosionUserData;
-import com.mygdx.game.enums.StateExplosion;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
 public class Explosion extends GameActor {
-    public StateExplosion state;
+    public State state;
     private GameStage stage;
     private Animation<TextureRegion> animation;
+
+    public static enum State {
+        EXPLODING,
+        DEATH
+    }
 
     public Explosion(GameStage stage, int x, int y, float width, float height, boolean isCenter) {
         super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f, width, height, isCenter));
@@ -26,7 +30,7 @@ public class Explosion extends GameActor {
 
     public Explosion(GameStage stage, float x, float y, float width, float height, boolean isCenter, Animation<TextureRegion> animation) {
         super(WorldUtils.createExplosion(x + 0.5f, y + 0.5f, width, height, isCenter));
-        this.state = StateExplosion.EXPLODING;
+        this.state = State.EXPLODING;
         this.stage = stage;
 
         this.stage.background.addActor(this);
@@ -38,7 +42,7 @@ public class Explosion extends GameActor {
         super.act(delta);
 
         if (stateTime > 0.7f) {
-            state = StateExplosion.DEATH;
+            state = State.DEATH;
         }
 
     }
@@ -63,7 +67,7 @@ public class Explosion extends GameActor {
 
     @Override
     public boolean isAlive() {
-        return state == StateExplosion.EXPLODING;
+        return state == State.EXPLODING;
     }
 
 }

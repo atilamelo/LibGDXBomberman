@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
-import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
@@ -37,6 +36,19 @@ public class Bomberman extends GameActor {
     private boolean invencible;
     private float speed;
     private boolean bombPass;
+
+    public static enum State {
+        MOVE_UP,
+        MOVE_DOWN,
+        MOVE_LEFT,
+        MOVE_RIGHT,
+        IDLE_UP,
+        IDLE_DOWN,
+        IDLE_LEFT,
+        IDLE_RIGHT,
+        DYING,
+        DIE
+    }
 
     public Bomberman(Body body, GameStage game) {
         super(body);
@@ -147,12 +159,12 @@ public class Bomberman extends GameActor {
             invencible = false;
         }
 
-        if (getUserData().getState().equals(StateBomberman.DYING)) {
+        if (getUserData().getState().equals(State.DYING)) {
             body.setActive(false);
         }
-        
-        if (getUserData().getState().equals(StateBomberman.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
-            getUserData().setState(StateBomberman.DIE);
+
+        if (getUserData().getState().equals(State.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
+            getUserData().setState(State.DIE);
         }
     }
 
@@ -163,38 +175,38 @@ public class Bomberman extends GameActor {
 
     @Override
     public boolean isAlive() {
-        return !getUserData().getState().equals(StateBomberman.DIE);
+        return !getUserData().getState().equals(State.DIE);
     }
 
     public void moveUp() {
-        if (!getUserData().getState().equals(StateBomberman.DYING)
-                && !getUserData().getState().equals(StateBomberman.DIE)) {
+        if (!getUserData().getState().equals(State.DYING)
+                && !getUserData().getState().equals(State.DIE)) {
             body.applyLinearImpulse(new Vector2(0, speed), body.getWorldCenter(), true);
-            getUserData().setState(StateBomberman.MOVE_UP);
+            getUserData().setState(State.MOVE_UP);
         }
     }
 
     public void moveDown() {
-        if (!getUserData().getState().equals(StateBomberman.DYING)
-                && !getUserData().getState().equals(StateBomberman.DIE)) {
+        if (!getUserData().getState().equals(State.DYING)
+                && !getUserData().getState().equals(State.DIE)) {
             body.applyLinearImpulse(new Vector2(0, -speed), body.getWorldCenter(), true);
-            getUserData().setState(StateBomberman.MOVE_DOWN);
+            getUserData().setState(State.MOVE_DOWN);
         }
     }
 
     public void moveLeft() {
-        if (!getUserData().getState().equals(StateBomberman.DYING)
-                && !getUserData().getState().equals(StateBomberman.DIE)) {
+        if (!getUserData().getState().equals(State.DYING)
+                && !getUserData().getState().equals(State.DIE)) {
             body.applyLinearImpulse(new Vector2(-speed, 0), body.getWorldCenter(), true);
-            getUserData().setState(StateBomberman.MOVE_LEFT);
+            getUserData().setState(State.MOVE_LEFT);
         }
     }
 
     public void moveRight() {
-        if (!getUserData().getState().equals(StateBomberman.DYING)
-                && !getUserData().getState().equals(StateBomberman.DIE)) {
+        if (!getUserData().getState().equals(State.DYING)
+                && !getUserData().getState().equals(State.DIE)) {
             body.applyLinearImpulse(new Vector2(speed, 0), body.getWorldCenter(), true);
-            getUserData().setState(StateBomberman.MOVE_RIGHT);
+            getUserData().setState(State.MOVE_RIGHT);
         }
     }
 
@@ -222,16 +234,16 @@ public class Bomberman extends GameActor {
 
     public void die(UserDataType cause) {
         if (((cause.equals(UserDataType.EXPLOSION) && !flamePass) || cause.equals(UserDataType.ENEMY)) && !invencible) {
-            if (!getUserData().getState().equals(StateBomberman.DYING)) {
+            if (!getUserData().getState().equals(State.DYING)) {
                 stateTime = 0f;
-                getUserData().setState(StateBomberman.DYING);
+                getUserData().setState(State.DYING);
             }
         }
     }
 
-    public void setState(StateBomberman state) {
-        if (!getUserData().getState().equals(StateBomberman.DYING)
-                && !getUserData().getState().equals(StateBomberman.DIE)) {
+    public void setState(State state) {
+        if (!getUserData().getState().equals(State.DYING)
+                && !getUserData().getState().equals(State.DIE)) {
             getUserData().setState(state);
         }
     }
@@ -282,7 +294,7 @@ public class Bomberman extends GameActor {
         invencible = true;
     }
 
-    public void speedUp(){
+    public void speedUp() {
         speed += GameManager.SPEED_UP_VALUE;
     }
 }
