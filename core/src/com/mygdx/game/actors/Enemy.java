@@ -1,8 +1,7 @@
-package com.mygdx.game.actors.enemies;
+package com.mygdx.game.actors;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.actors.GameActor;
 import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.systems.AStarManhattan;

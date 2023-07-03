@@ -1,6 +1,5 @@
 package com.mygdx.game.configs;
 
-import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.utils.GameManager;
 
 public class EnemyConfig {

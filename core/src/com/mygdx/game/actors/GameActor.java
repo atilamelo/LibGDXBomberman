@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.PowerUpUserData;

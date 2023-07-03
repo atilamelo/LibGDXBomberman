@@ -2,8 +2,6 @@ package com.mygdx.game.actors;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;

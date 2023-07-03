@@ -12,7 +12,6 @@ public class PowerUp extends GameActor {
     private boolean isPicked;
     private PowerUpType powerUpType;
     private TextureRegion texture;
-    private float stateTime;
 
     public static enum PowerUpType {
         BOMB_UP,

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.mygdx.game.actors.enemies.Enemy;
 import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.utils.GameManager;

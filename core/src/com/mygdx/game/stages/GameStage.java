@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
-import com.mygdx.game.actors.enemies.Enemy;
+import com.mygdx.game.actors.Enemy;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
