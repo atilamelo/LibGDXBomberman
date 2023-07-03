@@ -2,6 +2,8 @@ package com.mygdx.game.actors;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -28,6 +30,9 @@ public class Bomberman extends GameActor {
     private TextureAtlas textureAtlas;
     private GameStage game;
     private List<Bomb> bombsList;
+    private Sound soundDownUp;
+    private Sound soundLeftRight;
+    private float lastPlayedSound;
     private int bombRange;
     private int bombCount;
     private boolean remoteControl;
@@ -36,6 +41,7 @@ public class Bomberman extends GameActor {
     private boolean invencible;
     private float speed;
     private boolean bombPass;
+    private final float SPACE_BETWEEN_SOUDNS = 0.25f;
 
     public static enum State {
         MOVE_UP,
@@ -61,6 +67,11 @@ public class Bomberman extends GameActor {
         this.bombsList = new ArrayList<Bomb>();
         this.remoteControl = false;
         this.invencible = false;
+        this.lastPlayedSound = 0f;
+
+        /* Load sounds */
+        this.soundDownUp = gameManager.getAssetManager().get(GameManager.SOUND_DOWN_UP_WALK);
+        this.soundLeftRight = gameManager.getAssetManager().get(GameManager.SOUND_LEFT_RIGHT_WALK);
 
         Array<TextureRegion> upFrames = new Array<TextureRegion>(TextureRegion.class);
         Array<TextureRegion> downFrames = new Array<TextureRegion>(TextureRegion.class);
@@ -116,15 +127,31 @@ public class Bomberman extends GameActor {
         switch (getUserData().getState()) {
             case MOVE_UP:
                 currentFrame = upAnimation.getKeyFrame(stateTime, true);
+                if (lastPlayedSound + SPACE_BETWEEN_SOUDNS < stateTime) {
+                    soundDownUp.play();
+                    lastPlayedSound = stateTime;
+                }
                 break;
             case MOVE_DOWN:
                 currentFrame = downAnimation.getKeyFrame(stateTime, true);
+                if (lastPlayedSound + SPACE_BETWEEN_SOUDNS < stateTime) {
+                    soundDownUp.play();
+                    lastPlayedSound = stateTime;
+                }
                 break;
             case MOVE_LEFT:
                 currentFrame = leftAnimation.getKeyFrame(stateTime, true);
+                if (lastPlayedSound + SPACE_BETWEEN_SOUDNS < stateTime) {
+                    soundLeftRight.play();
+                    lastPlayedSound = stateTime;
+                }
                 break;
             case MOVE_RIGHT:
                 currentFrame = rightAnimation.getKeyFrame(stateTime, true);
+                if (lastPlayedSound + SPACE_BETWEEN_SOUDNS < stateTime) {
+                    soundLeftRight.play();
+                    lastPlayedSound = stateTime;
+                }
                 break;
             case IDLE_UP:
                 currentFrame = upAnimation.getKeyFrames()[1];
@@ -178,6 +205,10 @@ public class Bomberman extends GameActor {
         return !getUserData().getState().equals(State.DIE);
     }
 
+    public boolean isDying(){
+        return getUserData().getState().equals(State.DYING);
+    }
+
     public void moveUp() {
         if (!getUserData().getState().equals(State.DYING)
                 && !getUserData().getState().equals(State.DIE)) {
@@ -222,6 +253,7 @@ public class Bomberman extends GameActor {
             if (!WorldUtils.hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.BOMB_BIT)) {
                 System.out.println("Bomba colocada em: " + x + " " + y);
                 bombsList.add(new Bomb(game, x, y, bombRange));
+                gameManager.playEffect(GameManager.SOUND_PUT_BOMB);
             } else {
                 System.out.println("Já existe uma bomba no local! " + x + " " + y);
             }
@@ -275,7 +307,7 @@ public class Bomberman extends GameActor {
         bombPass = true;
         short newMaskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.EXPLOSION_BIT
                 | GameManager.POWER_UP_BIT;
-                
+
         updateMaskBits(newMaskBits);
     }
 

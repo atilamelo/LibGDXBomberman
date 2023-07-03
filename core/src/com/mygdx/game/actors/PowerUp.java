@@ -94,6 +94,7 @@ public class PowerUp extends GameActor {
 
     public void pick(){
         isPicked = true;
+        gameManager.playEffect(GameManager.SOUND_PICK_POWER_UP);
     }
 
     public PowerUpType getPowerUpType() {

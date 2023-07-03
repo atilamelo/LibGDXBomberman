@@ -96,6 +96,8 @@ public class Bomb extends GameActor {
         float width = GameManager.EXPLOSION_B2D_WIDTH;
         float height = GameManager.EXPLOSION_B2D_HEIGHT;
         float gap = GameManager.GAP_EXPLOSION;
+        
+        gameManager.playEffect(GameManager.SOUND_BOMB_EXPLODES, 0.2f);
 
         // Próprio local
         state = State.EXPLODED;

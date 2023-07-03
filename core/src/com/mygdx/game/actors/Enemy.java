@@ -371,6 +371,9 @@ public class Enemy extends GameActor{
         if(lastHit + 3f < stateTime){
             hp -= damage;
             lastHit = stateTime;
+            gameManager.enemiesLeft--;
+            System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
+
         }
     }
 

@@ -56,10 +56,7 @@ public abstract class GameActor extends Actor {
             userData.isFlaggedForDelete = true;
             GameActor actor = (GameActor) userData.getActor();
 
-            if(actor instanceof Enemy){
-                gameManager.enemiesLeft--;
-                System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
-            }else if(userData instanceof BombUserData){
+            if(userData instanceof BombUserData){
                 BombUserData bombUserData = (BombUserData) userData;
                 Bomb bomb = (Bomb) bombUserData.getActor();
                 GameStage stage = (GameStage) bomb.getStage();

@@ -58,6 +58,8 @@ public class GameStage extends Stage {
     public Group background;
     private LevelConfig config;
 
+    private boolean isSoundClearEnemiesPlayed = false;
+
     public GameStage(GameScreen gameScreen, LevelConfig levelConfig) {
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
@@ -84,6 +86,9 @@ public class GameStage extends Stage {
 
         inputProcessor = new InputProcessor();
         Gdx.input.setInputProcessor(inputProcessor);
+        
+        // Music of stage 
+        gameManager.playMusic(GameManager.MUSIC_MAIN, true);
 
     }
 
@@ -197,6 +202,18 @@ public class GameStage extends Stage {
     @Override
     public void act(float delta) {
         super.act(delta);
+
+        // Stop song if player dies
+        if(bomberman.isDying() && gameManager.musicIsPlaying()){
+            gameManager.stopMusic();
+            gameManager.playEffect(GameManager.SOUND_MISS);
+        }
+
+        if(gameManager.enemiesLeft == 0 && !isSoundClearEnemiesPlayed){
+            gameManager.playEffect(GameManager.SOUND_CLEAR_ENEMIES);
+            isSoundClearEnemiesPlayed = true;
+        }
+
 
         // Fixed timestep
         accumulator += delta;
