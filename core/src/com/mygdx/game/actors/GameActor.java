@@ -62,7 +62,6 @@ public abstract class GameActor extends Actor {
                 Bomberman bomberman = stage.getBomberman();
 
                 bomberman.getBombsList().remove(bomb);
-                System.out.println("Bombas ativas restantes: " + bomberman.getBombsList().size());
             }else if(userData instanceof BrickUserData){
                 BrickUserData brickUserData = (BrickUserData) userData;
                 Brick brick = (Brick) brickUserData.getActor();
@@ -112,7 +111,6 @@ public abstract class GameActor extends Actor {
                         break;
                 }
                 
-                System.out.println("Power Up coletado: " + type);
             }
             
             remove();

@@ -298,12 +298,9 @@ public class Bomberman extends GameActor {
             x = Math.round(screenRectangle.x);
             y = Math.round(screenRectangle.y);
             if (!WorldUtils.hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.BOMB_BIT)) {
-                System.out.println("Bomba colocada em: " + x + " " + y);
                 bombsList.add(new Bomb(game, x, y, bombRange));
                 gameManager.playEffect(GameManager.SOUND_PUT_BOMB);
-            } else {
-                System.out.println("Já existe uma bomba no local! " + x + " " + y);
-            }
+            } 
         }
     }
 

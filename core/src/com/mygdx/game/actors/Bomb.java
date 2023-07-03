@@ -146,7 +146,6 @@ public class Bomb extends GameActor {
 
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
-            System.out.println("Explosão criada em cima");
             if (i == power - 1) {
                 new Explosion(gameStage, x, y + i + 1, width - gap, height - gap, false, explosionAnimation);
             } else {
@@ -185,7 +184,6 @@ public class Bomb extends GameActor {
             }
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
-            System.out.println("Explosão criada abaixo");
 
             if (i == power - 1) {
                 new Explosion(gameStage, x, y - (i + 1), width - gap, height - gap, false, explosionAnimation);
@@ -224,7 +222,6 @@ public class Bomb extends GameActor {
             }
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
-            System.out.println("Explosão criada à direita");
             if (i == power - 1) {
                 new Explosion(gameStage, x + (i + 1), y, width - gap, height - gap, false, explosionAnimation);
             } else {
@@ -261,7 +258,6 @@ public class Bomb extends GameActor {
             }
             explosionAnimation = new Animation<>(0.1f, explosionFrames);
 
-            System.out.println("Explosão criada à esquerda");
             if (i == power - 1) {
                 new Explosion(gameStage, x - (i + 1), y, width - gap, height - gap, false, explosionAnimation);
             } else {

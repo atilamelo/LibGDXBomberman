@@ -253,13 +253,6 @@ public class Enemy extends GameActor{
                 List<List<Position>> mapGrid = WorldUtils.getMapGrid(removePlayerBit(maskBits));
                 pursueBombermanPath = AStarManhattan.findPath(matrixPosition, bombermanLocation, mapGrid);
 
-                if (pursueBombermanPath != null) {
-                    AStarManhattan.printBoardWithPath(mapGrid, pursueBombermanPath);
-                } else {
-                    AStarManhattan.printBoard(mapGrid);
-                    System.out.println("Caminho impossível");
-                }
-                System.out.println("\n\n");
             }
 
         }
@@ -372,7 +365,6 @@ public class Enemy extends GameActor{
             hp -= damage;
             lastHit = stateTime;
             gameManager.enemiesLeft--;
-            System.out.println("Inimigos restantes: " + gameManager.enemiesLeft);
 
         }
     }

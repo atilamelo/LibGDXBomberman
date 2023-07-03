@@ -1,5 +1,7 @@
 package com.mygdx.game.stages;
 
+import java.lang.System.Logger.Level;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,18 +11,17 @@ import com.mygdx.game.configs.LevelConfig;
 public class GameScreen implements Screen {
     private GameStage stage;
     private int currentLevel;
-    private LevelConfig[] levels;
+    private LevelConfig levelConfig;
     private BombermanConfig currentBombermanConfig;
     
     public GameScreen() {
-        currentLevel = 0;
-        levels = LevelConfig.levels;
+        currentLevel = 48;
         currentBombermanConfig = BombermanConfig.bombermanCheatConfig;
     }
 
     @Override
     public void show() {
-        stage = new GameStage(this, levels[currentLevel], currentBombermanConfig);
+        stage = new GameStage(this, LevelConfig.getLevelConfig(currentLevel), currentBombermanConfig);
     }
 
     @Override

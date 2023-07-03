@@ -150,12 +150,10 @@ public class GameStage extends Stage {
 
             if (pos == doorPosition) {  
                 newBrick.setDoor(true);  
-                System.out.println("Door position: " + powerUpPosition);
             }
 
             if (pos == powerUpPosition) {
                 newBrick.setPowerUp(config.powerUpType);  
-                System.out.println("PowerUp position: " + powerUpPosition);
             }
 
             background.addActor(newBrick);
