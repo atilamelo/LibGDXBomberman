@@ -126,8 +126,6 @@ public class GameStage extends Stage {
 
         // Get random location for the door
         RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
-        positions.add(new Position(2, 11));
-        positions.add(new Position(1, 10));
         for (RandomPlacement.Position pos : positions) {
             Body bodyBrick = WorldUtils.createBrick(pos);
             if (pos == doorPosition)

@@ -53,6 +53,7 @@ public class Brick extends GameActor {
             case DESTROYED:
                 System.out.println("Destroyed");
             case EXPLODING:
+                body.setActive(false);
                 currentFrame = breakingAnimation.getKeyFrame(stateTime, false);
                 break;
             default:

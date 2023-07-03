@@ -71,7 +71,7 @@ public abstract class GameActor extends Actor {
                 BrickUserData brickUserData = (BrickUserData) userData;
                 Brick brick = (Brick) brickUserData.getActor();
                 if(brick.haveDoor()){
-                    Position doorPosition = new Position(brick.getPosition().getX() - 1, brick.getPosition().getY() -1 );
+                    Position doorPosition = new Position(brick.getPosition().getX(), brick.getPosition().getY());
                     Body doorBody = WorldUtils.createDoor(doorPosition);
                     Door door = new Door(doorBody);
                     brick.getParent().addActor(door);
