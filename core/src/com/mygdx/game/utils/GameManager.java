@@ -376,6 +376,23 @@ public class GameManager implements Disposable {
         return spawnArea;
     }
 
+    public static List<Position> generateSpawnArea(Position fromv, int range) {
+        List<Position> spawnArea = new ArrayList<Position>();
+    
+        int startX = fromv.getX() - range;
+        int endX = fromv.getX() + range;
+        int startY = fromv.getY() + range;
+        int endY = fromv.getY() - range;
+    
+        for (int y = startY; y >= endY; y--) {
+            for (int x = startX; x <= endX; x++) {
+                spawnArea.add(new Position(x, y));
+            }
+        }
+    
+        return spawnArea;
+    }
+    
     @Override
     public void dispose() {
         assetManager.dispose();

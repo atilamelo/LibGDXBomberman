@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -63,7 +64,9 @@ public class GameStage extends Stage {
     private BombermanConfig bombermanConfig = null;
     private List<Position> spawnAreaBricks;
     private List<Position> spawnAreaEnemies;
+    private Hud hud;
     private boolean flagIsGameFinished = false;
+    private boolean flagSpawnedTimeUp = false;
     private boolean isSoundClearEnemiesPlayed = false;
 
     public GameStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
@@ -77,7 +80,7 @@ public class GameStage extends Stage {
         // Tiled Maps
         map = gameManager.getAssetManager().get("maps/map_teste.tmx");
         tiledRender = new OrthogonalTiledMapRenderer(map, 1 / GameManager.PPM);
-
+        hud = new Hud((SpriteBatch) getBatch(), bombermanConfig.lifes);
         // Layers
         elements = new Group();
         background = new Group();
@@ -114,7 +117,7 @@ public class GameStage extends Stage {
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
         gameManager.setWorld(world);
-        
+
         setupSpawn();
         setupBomberman();
         setupMapCollision();
@@ -124,7 +127,7 @@ public class GameStage extends Stage {
 
     private void setupSpawn() {
         this.spawnAreaBricks = GameManager.generateSpawnArea(new Position(1, 11), new Position(3, 9));
-        this.spawnAreaEnemies= GameManager.generateSpawnArea(new Position(1, 11), new Position(8, 5));
+        this.spawnAreaEnemies = GameManager.generateSpawnArea(new Position(1, 11), new Position(8, 5));
     }
 
     private void setupBomberman() {
@@ -250,10 +253,16 @@ public class GameStage extends Stage {
                 gameScreen.nextLevel(bombermanConfig);
             }
         }
+        
+        if(hud.isTimeUp() && !flagSpawnedTimeUp){
+            spawnPontan();
+            flagSpawnedTimeUp = true;
+        }
 
         // Fixed timestep
         acumullator += delta;
         stateTime += delta;
+        hud.update(delta);
 
         while (acumullator >= delta) {
             world.step(TIME_STEP, 6, 2);
@@ -263,6 +272,18 @@ public class GameStage extends Stage {
 
         // TODO: Implement interpolation
 
+    }
+
+    public void spawnPontan(){
+        List<Position> notSpawnAreaPontans = GameManager.generateSpawnArea(bomberman.getPosition(), 3);
+        List<RandomPlacement.Position> valid_positions = RandomPlacement.generateRandomPositions(8, notSpawnAreaPontans);
+        
+        for (Position pos : valid_positions) {
+            Body bodyPonton = WorldUtils.createEnemy(pos, EnemyConfig.pontanConfig);
+            Enemy pontan = new Enemy(bodyPonton, EnemyConfig.pontanConfig);
+            elements.addActor(pontan);
+            gameManager.enemiesLeft++;
+        }
     }
 
     public void nextLevel() {
@@ -278,9 +299,9 @@ public class GameStage extends Stage {
 
     public void restartLevel() {
         BombermanConfig bombermanConfig = bomberman.getConfig(true);
-        if(bombermanConfig.lifes > 0){
+        if (bombermanConfig.lifes > 0) {
             gameScreen.restartLevel(bombermanConfig);
-        }else{
+        } else {
             gameScreen.gameOver();
         }
     }
@@ -316,7 +337,7 @@ public class GameStage extends Stage {
 
     @Override
     public void draw() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
 
         handleCamera();
 
@@ -328,6 +349,9 @@ public class GameStage extends Stage {
         box2drender.render(world, gamecam.combined);
 
         super.draw();
+
+        getBatch().setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
     }
 
     /*
