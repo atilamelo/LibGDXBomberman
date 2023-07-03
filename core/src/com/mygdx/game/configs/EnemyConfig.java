@@ -33,5 +33,13 @@ public class EnemyConfig {
         GameManager.ENEMY_MEDIUMQI_RANGE_PURSUE
     );
 
+    public final static EnemyConfig dollConfig = new EnemyConfig(
+        1,
+        GameManager.ENEMY_NORMAL_SPEED,
+        new short[] { GameManager.WALL_BIT, GameManager.BRICK_BIT, GameManager.BOMB_BIT },
+        GameManager.ENEMY_LOWQI_INTERSECTION_CHANGE,
+        GameManager.ENEMY_LOWQI_RANGE_PURSUE
+    );
+
     
 }

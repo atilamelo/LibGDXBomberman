@@ -3,13 +3,14 @@ package com.mygdx.game.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.mygdx.game.configs.LevelConfig;
 
 public class GameScreen implements Screen {
     private GameStage stage;
 
     @Override
     public void show() {
-        LevelConfiguration levelOne = new LevelConfiguration(1, 3, 1);
+        LevelConfig levelOne = new LevelConfig(1, 0, 0, 5);
         stage = new GameStage(this, levelOne);
     }
 

@@ -22,8 +22,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.enemies.Ballom;
+import com.mygdx.game.actors.enemies.Doll;
 import com.mygdx.game.actors.enemies.Onil;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.enums.StateBomberman;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.utils.GameManager;
@@ -55,19 +57,15 @@ public class GameStage extends Stage {
     private TiledMap map;
     public Group elements;
     public Group background;
+    private LevelConfig config;
 
-    private int amountOfBricks;
-    private int amountOfBalloms;
-    private int amountOfOnils;
-
-    public GameStage(GameScreen gameScreen, LevelConfiguration levelConfiguration) {
+    public GameStage(GameScreen gameScreen, LevelConfig levelConfig) {
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
+        this.config = levelConfig;
 
-        this.amountOfBricks = levelConfiguration.amountOfBricks;
-        this.amountOfBalloms = levelConfiguration.amountOfBalloms;
-        this.amountOfOnils = levelConfiguration.amountOfOnils;
-        gameManager.enemiesLeft = amountOfBalloms + amountOfOnils;
+
+        gameManager.enemiesLeft = levelConfig.getTotalOfEnemies();
 
         // Tiled Maps
         map = gameManager.getAssetManager().get("maps/map_teste.tmx");
@@ -124,12 +122,11 @@ public class GameStage extends Stage {
     private void setupBricks() {
         Random random = new Random();
 
-        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amountOfBricks,
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(config.amountOfBricks,
                 GameManager.generateSpawnArea());
 
         // Get random location for the door
         RandomPlacement.Position doorPosition = positions.get(random.nextInt(positions.size()));
-        
 
         for (RandomPlacement.Position pos : positions) {
             Body bodyBrick = WorldUtils.createBrick(pos);
@@ -143,18 +140,25 @@ public class GameStage extends Stage {
     private void setupEnemies() {
         List<RandomPlacement.Position> positions;
 
-        // /* Balloms */
-        positions = RandomPlacement.generateRandomPositions(amountOfBalloms, GameManager.generateSpawnArea());
+        /* Balloms */
+        positions = RandomPlacement.generateRandomPositions(config.amountOfBalloms, GameManager.generateSpawnArea());
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos);
             elements.addActor(new Ballom(bodyEnemy));
         }
 
         /* Onils */
-        positions = RandomPlacement.generateRandomPositions(amountOfOnils, GameManager.generateSpawnArea());
+        positions = RandomPlacement.generateRandomPositions(config.amountOfOnils, GameManager.generateSpawnArea());
         for (RandomPlacement.Position pos : positions) {
             Body bodyEnemy = WorldUtils.createEnemy(pos);
             elements.addActor(new Onil(bodyEnemy));
+        }
+
+        /* Dolls */
+        positions = RandomPlacement.generateRandomPositions(config.amountOfDolls, GameManager.generateSpawnArea());
+        for (RandomPlacement.Position pos : positions) {
+            Body bodyEnemy = WorldUtils.createEnemy(pos);
+            elements.addActor(new Doll(bodyEnemy));
         }
 
     }

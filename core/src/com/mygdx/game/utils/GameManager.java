@@ -30,7 +30,7 @@ public class GameManager implements Disposable {
     public static final int MAP_WIDTH = 29;
     public static final int MAP_HEIGHT = 13;
     public static final float TILE_WIDTH = 1f;
-    public static final float TILE_HEIGHT= 1f;
+    public static final float TILE_HEIGHT = 1f;
     public static final float PPM = 16;
     public static final int FPS = 60;
     public static final int GAME_WIDTH = MAP_WIDTH * (int) PPM * 10;
@@ -125,13 +125,21 @@ public class GameManager implements Disposable {
     public static final short BITS[] = { NOTHING_BIT, WALL_BIT, PLAYER_BIT, BOMB_BIT, EXPLOSION_BIT, BRICK_BIT,
             ENEMY_BIT, DOOR_BIT, POWER_UP_BIT };
 
-    // Ballon Enemy properties
+    // Ballon Enemy Render
     public static final String[] BALLON_DYING_REGION_NAMES = new String[] { "ballomDying01", "ballomDying02",
             "ballomDying03", "ballomDying04", "ballomDying05" };
     public static final String[] BALLON_RIGHT_REGION_NAMES = new String[] { "ballomRight01", "ballomRight02",
             "ballomRight03" };
     public static final String[] BALLON_LEFT_REGION_NAMES = new String[] { "ballomLeft01", "ballomLeft02",
             "ballomLeft03" };
+    
+    // Doll Enemy Render 
+    public static final String[] DOLL_DYING_REGION_NAMES = new String[] { "dollDying01", "dollDying02",
+            "dollDying03", "dollDying04", "dollDying05" };
+    public static final String[] DOLL_RIGHT_REGION_NAMES = new String[] { "dollRight01", "dollRight02",
+            "dollRight03" };
+    public static final String[] DOLL_LEFT_REGION_NAMES = new String[] { "dollLeft01", "dollLeft02",
+            "dollLeft03" };
 
     /* Enemy properties (Box2D) */
     public static final float ENEMY_WIDTH = .8f;
@@ -151,7 +159,6 @@ public class GameManager implements Disposable {
     public static final float ENEMY_LOWQI_INTERSECTION_CHANGE = 0;
     public static final float ENEMY_MEDIUMQI_INTERSECTION_CHANGE = 0.1f;
     public static final float ENEMY_HIGHQI_INTERSECTION_CHANGE = 0.5f;
-
 
     /*  */
     public static final String ONIL_DYING_TEXTURE = "onilDying";
@@ -217,8 +224,8 @@ public class GameManager implements Disposable {
     public static List<Position> generateSpawnArea() {
         List<Position> spawnArea = new ArrayList<Position>();
 
-        for(int x = 0; x < 4; x++){
-            for(int y = 11; y > 9; y--){
+        for (int x = 0; x < 4; x++) {
+            for (int y = 11; y > 9; y--) {
                 spawnArea.add(new Position(x, y));
             }
         }
