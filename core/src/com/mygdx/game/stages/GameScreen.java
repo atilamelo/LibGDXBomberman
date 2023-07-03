@@ -5,17 +5,20 @@ import java.lang.System.Logger.Level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.mygdx.game.BombermanGame;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
 
 public class GameScreen implements Screen {
+    BombermanGame game;
     private GameStage stage;
     private int currentLevel;
     private LevelConfig levelConfig;
     private BombermanConfig currentBombermanConfig;
     
-    public GameScreen() {
-        currentLevel = 25;
+    public GameScreen(BombermanGame game) {
+        currentLevel = 0;
+        this.game = game;
         currentBombermanConfig = BombermanConfig.bombermanCheatConfig;
     }
 
@@ -52,10 +55,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
     }
 
     public void gameOver(){
         System.out.println("Game Over");
+        game.dispose();
+        
     }
 
     public void nextLevel(BombermanConfig bombermanConfig){

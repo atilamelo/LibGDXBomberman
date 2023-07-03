@@ -238,7 +238,7 @@ public class GameStage extends Stage {
 
         if (flagIsGameFinished) {
             if (stateTime > 3f) {
-                BombermanConfig bombermanConfig = bomberman.getConfig(true);
+                BombermanConfig bombermanConfig = bomberman.getConfig(false);
                 gameScreen.restartLevel(bombermanConfig);
             }
         }
@@ -270,7 +270,11 @@ public class GameStage extends Stage {
 
     public void restartLevel() {
         BombermanConfig bombermanConfig = bomberman.getConfig(true);
-        gameScreen.restartLevel(bombermanConfig);
+        if(bombermanConfig.lifes > 0){
+            gameScreen.restartLevel(bombermanConfig);
+        }else{
+            gameScreen.gameOver();
+        }
     }
 
     /*

@@ -126,6 +126,7 @@ public class Bomberman extends GameActor {
         this.bombCount = config.bombCount;
         this.remoteControl = config.remoteControl;
         this.invencible = config.invencible;
+        this.lifes = config.lifes;
         if (config.brickPass)
             activateBrickPass();
         if (config.bombPass)
@@ -234,7 +235,7 @@ public class Bomberman extends GameActor {
                     false,
                     speed,
                     false,
-                    lifes);
+                    (lifes - 1));
         } else {
             return new BombermanConfig(
                     bombRange,
@@ -314,7 +315,6 @@ public class Bomberman extends GameActor {
         if (((cause.equals(UserDataType.EXPLOSION) && !flamePass) || cause.equals(UserDataType.ENEMY)) && !invencible) {
             if (!getUserData().getState().equals(State.DYING)) {
                 stateTime = 0f;
-                lifes--;
                 getUserData().setState(State.DYING);
             }
         }

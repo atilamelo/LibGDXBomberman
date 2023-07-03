@@ -30,9 +30,9 @@ public class BombermanConfig {
             true,
             true,
             true,
-            false,
-            3,
             true,
-            10);
+            2.5f,
+            true,
+            100);
 
 }

@@ -36,7 +36,7 @@ public class GameManager implements Disposable {
     public static final int FPS = 60;
     public static final int GAME_WIDTH = MAP_WIDTH * (int) PPM * 10;
     public static final int GAME_HEIGHT = MAP_HEIGHT * (int) PPM * 10;
-    public static final float GAME_ZOOM = 0.25f;
+    public static final float GAME_ZOOM = 0f;
 
     // Bomberman properties
     public static final float BOMBERMAN_SPAWN_X = 1.5f;
@@ -204,7 +204,7 @@ public class GameManager implements Disposable {
 
     /* Enemy properties (Box2D) */
     public static final float ENEMY_WIDTH = .8f;
-    public static final float ENEMY_HEIGHT = 1f;
+    public static final float ENEMY_HEIGHT = .8f;
     public static final float ENEMY_B2D_RADIUS = 0.4f;
     public static final float ENEMY_DYING_TIME = 1.5f;
     /* Mask Bits for the enemies */
