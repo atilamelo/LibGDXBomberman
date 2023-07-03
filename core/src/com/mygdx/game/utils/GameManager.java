@@ -42,9 +42,7 @@ public class GameManager implements Disposable {
     public static final float BOMBERMAN_SPAWN_Y = 11.5f;
     public static final float BOMBERMAN_WIDTH = .7f;
     public static final float BOMBERMAN_HEIGHT = 1f;
-    public static final float BOMBERMAN_B2D_WIDTH = 0.3f;
-    public static final float BOMBERMAN_B2D_HEIGHT = 0.4f;
-    public static final float BOMBERMAN_B2D_RADIUS = .15f;
+    public static final float BOMBERMAN_B2D_RADIUS = .4f;
     public static final float BOMBERMAN_INITIAL_SPEED = 1f;
     public static final float BOMBERMAN_DENSITY = 1f;
 
@@ -144,7 +142,7 @@ public class GameManager implements Disposable {
     public static final int ONIL_HP = 1;
     public static final float ONIL_WIDTH = .8f;
     public static final float ONIL_HEIGHT = 1f;
-    public static final float ONIL_B2D_RADIUS = 0.45f;
+    public static final float ONIL_B2D_RADIUS = 0.4f;
     public static final float ONIL_SPEED = 3f;
     public static final float ENEMY_DYING_TIME = 1.5f;
     public static final String ONIL_DYING_TEXTURE = "onilDying";

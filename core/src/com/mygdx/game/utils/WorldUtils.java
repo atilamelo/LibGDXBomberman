@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -41,26 +40,10 @@ public class WorldUtils {
         bodyDef.position.set(new Vector2(GameManager.BOMBERMAN_SPAWN_X, GameManager.BOMBERMAN_SPAWN_Y));
         bodyDef.fixedRotation = true;
         bodyDef.linearDamping = 0f;
+        bodyDef.angularDamping = 0f;
 
-        float halfWidth = GameManager.BOMBERMAN_B2D_WIDTH;
-        float halfHeight = GameManager.BOMBERMAN_B2D_HEIGHT;
-        float cornerRadius = GameManager.BOMBERMAN_B2D_RADIUS;
-
-        // float[] vertices = new float[] {
-        //         -halfWidth + cornerRadius, -halfHeight,
-        //         halfWidth - cornerRadius, -halfHeight,
-        //         halfWidth, -halfHeight + cornerRadius,
-        //         halfWidth, halfHeight - cornerRadius,
-        //         halfWidth - cornerRadius, halfHeight,
-        //         -halfWidth + cornerRadius, halfHeight,
-        //         -halfWidth, halfHeight - cornerRadius,
-        //         -halfWidth, -halfHeight + cornerRadius
-        // };
-
-        // ChainShape chainShape = new ChainShape();
-        // chainShape.createLoop(vertices);
-        CircleShape chainShape = new CircleShape();
-        chainShape.setRadius(0.3f);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(GameManager.BOMBERMAN_B2D_RADIUS);
 
         // Create body
         Body body = world.createBody(bodyDef);
@@ -68,7 +51,7 @@ public class WorldUtils {
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();
-        fdef.shape = chainShape;
+        fdef.shape = circleShape;
         fdef.density = 0.5f;
         fdef.friction = 0.0f;
         fdef.restitution = 0.0f;
@@ -81,7 +64,7 @@ public class WorldUtils {
         body.resetMassData();
         BombermanUserData userData = new BombermanUserData(GameManager.BOMBERMAN_WIDTH, GameManager.BOMBERMAN_HEIGHT);
         body.setUserData(userData);
-        chainShape.dispose();
+        circleShape.dispose();
 
         return body;
     }
@@ -360,7 +343,7 @@ public class WorldUtils {
         final short categoryBitsFinal = categoryBits;
 
         // Define the AABB (Axis-Aligned Bounding Box) centered at the position
-        float aabbHalfWidth = 0.3f;
+        float aabbHalfWidth = 0.1f;
         Vector2 lowerBound = new Vector2(position.x - aabbHalfWidth, position.y - aabbHalfWidth);
         Vector2 upperBound = new Vector2(position.x + aabbHalfWidth, position.y + aabbHalfWidth);
 
@@ -424,7 +407,7 @@ public class WorldUtils {
         return matrixPosition;
     }
 
-    public static ArrayList<Position> getFreeAdjacentPositions(Position position, short categoryBits[]) {
+    public static List<Position> getFreeAdjacentPositions(Position position, short categoryBits[]) {
         int x = position.getX();
         int y = position.getY();
 

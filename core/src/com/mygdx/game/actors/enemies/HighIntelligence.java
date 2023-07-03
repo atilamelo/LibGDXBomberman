@@ -1,9 +1,9 @@
 package com.mygdx.game.actors.enemies;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.mygdx.game.box2d.OnilUserData;
 import com.mygdx.game.systems.AStarManhattan;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
@@ -14,12 +14,15 @@ import com.mygdx.game.utils.WorldUtils;
  * Link: TODO: INSERIR LINK
  */
 public abstract class HighIntelligence extends Enemy {
-    protected StateEnemyHighIntelligence state;
+    protected State state;
     private short[] maskBits;
     private List<Position> pursueBombermanPath;
-    private Position lastBombermanPos;
+    private Position lastBombermanPosPursue;
+    private Position lastBombermanPosInter;
+    private float intersectionChangeChance;
+    private int rangePursue;
 
-    public static enum StateEnemyHighIntelligence {
+    public static enum State {
         WALKING_UP,
         WALKING_DOWN,
         WALKING_LEFT,
@@ -31,7 +34,7 @@ public abstract class HighIntelligence extends Enemy {
         DYING,
         DIE;
 
-        public static StateEnemyHighIntelligence getRandomWalkingState() {
+        public static State getRandomWalkingState() {
             return values()[(int) (Math.random() * 4)];
         }
 
@@ -40,39 +43,74 @@ public abstract class HighIntelligence extends Enemy {
         }
     }
 
-    public HighIntelligence(Body body, int hp, float speed, short[] maskBits) {
+    public HighIntelligence(Body body, int hp, float speed, short[] maskBits, float intersectionChangeChance, int rangePursue) {
         super(body, hp, speed);
         this.maskBits = maskBits;
-        this.lastBombermanPos = tilePosition.deepCopy();
-        this.state = StateEnemyHighIntelligence.getRandomWalkingState();
+        this.intersectionChangeChance = intersectionChangeChance;
+        this.rangePursue = rangePursue;
+        this.lastBombermanPosPursue = tilePosition.deepCopy();
+        this.lastBombermanPosInter = tilePosition.deepCopy();
+        this.state = State.getRandomWalkingState();
     }
 
     private void changeWalkingState() {
-        state = StateEnemyHighIntelligence.getRandomWalkingState();
+        state = State.getRandomWalkingState();
     }
 
-    private boolean tilePositionChanged(){
-        return !lastBombermanPos.equals(tilePosition);
+    private boolean tilePositionChanged(Position position) {
+        return !position.equals(tilePosition);
+    }
+
+    private State getPositionState(Position currentPosition, Position targetPosition) {
+        int deltaX = targetPosition.getX() - currentPosition.getX();
+        int deltaY = targetPosition.getY() - currentPosition.getY();
+
+        if (deltaX < 0) {
+            return State.WALKING_LEFT;
+        } else if (deltaX > 0) {
+            return State.WALKING_RIGHT;
+        } else if (deltaY < 0) {
+            return State.WALKING_UP;
+        } else if (deltaY > 0) {
+            return State.WALKING_DOWN;
+        } else {
+            // Se as posições forem iguais, você pode retornar um estado padrão
+            return State.WALKING_UP;
+        }
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        Vector2 pos;
-        
-        /* Check if enemy is dead */
-        if (hp == 0 && !state.equals(StateEnemyHighIntelligence.DYING) & !state.equals(StateEnemyHighIntelligence.DIE)) {
+
+        /* Check if enemy is dead / dying */
+        if (hp == 0 && !state.equals(State.DYING) & !state.equals(State.DIE)) {
             stateTime = 0f;
-            state = StateEnemyHighIntelligence.DYING;
+            state = State.DYING;
+        }
+
+        /*
+         * System for randomly changing direction when the player encounters an
+         * intersection
+         */
+        if (intersectionChangeChance > 0) {
+            handleIntersectChange();
         }
 
         /* Pursue player system */
-        handlePursue();
+        if (rangePursue > 0) {
+            handlePursue();
+        }
 
-        /* Change walking state system */
+        /* Handle state system */
+        handleState();
+    }
+
+    private void handleState() {
+        Vector2 pos;
         switch (state) {
             case WALKING_UP:
-                pos = new Vector2(body.getPosition().x, body.getPosition().y + .3f);
+                pos = new Vector2(body.getWorldCenter().x, body.getWorldCenter().y + .3f);
 
                 if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
@@ -84,7 +122,7 @@ public abstract class HighIntelligence extends Enemy {
                 break;
 
             case WALKING_DOWN:
-                pos = new Vector2(body.getPosition().x, body.getPosition().y - .3f);
+                pos = new Vector2(body.getWorldCenter().x, body.getWorldCenter().y - .3f);
                 if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
                 }
@@ -94,7 +132,7 @@ public abstract class HighIntelligence extends Enemy {
                 }
                 break;
             case WALKING_LEFT:
-                pos = new Vector2(body.getPosition().x - .3f, body.getPosition().y);
+                pos = new Vector2(body.getWorldCenter().x - .3f, body.getWorldCenter().y);
 
                 if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
@@ -105,7 +143,7 @@ public abstract class HighIntelligence extends Enemy {
                 }
                 break;
             case WALKING_RIGHT:
-                pos = new Vector2(body.getPosition().x + .3f, body.getPosition().y);
+                pos = new Vector2(body.getWorldCenter().x + .3f, body.getWorldCenter().y);
                 if (WorldUtils.hitSomething(pos, maskBits)) {
                     changeWalkingState();
                 }
@@ -117,19 +155,20 @@ public abstract class HighIntelligence extends Enemy {
             case DYING:
                 body.setActive(false);
                 if (stateTime > GameManager.ENEMY_DYING_TIME) {
-                    state = StateEnemyHighIntelligence.DIE;
+                    state = State.DIE;
                 }
                 break;
             case DIE:
                 break;
         }
+
     }
 
     private void handlePursue() {
-        if (tilePositionChanged()) {
-            Position bombermanLocation = WorldUtils.bombermanWithinRange(tilePosition, 25);
+        if (tilePositionChanged(lastBombermanPosPursue)) {
+            Position bombermanLocation = WorldUtils.bombermanWithinRange(tilePosition, rangePursue);
             pursueBombermanPath = null;
-            lastBombermanPos = tilePosition.deepCopy();
+            lastBombermanPosPursue = tilePosition.deepCopy();
 
             if (bombermanLocation != null) {
                 short[] categoryBits = { GameManager.BRICK_BIT, GameManager.WALL_BIT, GameManager.BOMB_BIT };
@@ -146,20 +185,20 @@ public abstract class HighIntelligence extends Enemy {
 
         }
 
-        if (pursueBombermanPath != null && !state.equals(StateEnemyHighIntelligence.DIE) && !state.equals(StateEnemyHighIntelligence.DYING)) {
+        if (pursueBombermanPath != null && !state.equals(State.DIE) && !state.equals(State.DYING)) {
             if (pursueBombermanPath.size() > 0) {
                 Position nextPosition = pursueBombermanPath.get(0);
                 if (WorldUtils.isEnemyInsideTile(body, nextPosition)) {
                     pursueBombermanPath.remove(0);
                 } else {
                     if (nextPosition.getX() > matrixPosition.getX()) {
-                        state = StateEnemyHighIntelligence.ATTACKING_RIGHT;
+                        state = State.ATTACKING_RIGHT;
                     } else if (nextPosition.getX() < matrixPosition.getX()) {
-                        state = StateEnemyHighIntelligence.ATTACKING_LEFT;
+                        state = State.ATTACKING_LEFT;
                     } else if (nextPosition.getY() < matrixPosition.getY()) {
-                        state = StateEnemyHighIntelligence.ATTACKING_UP;
+                        state = State.ATTACKING_UP;
                     } else if (nextPosition.getY() > matrixPosition.getY()) {
-                        state = StateEnemyHighIntelligence.ATTACKING_DOWN;
+                        state = State.ATTACKING_DOWN;
                     }
 
                 }
@@ -168,6 +207,46 @@ public abstract class HighIntelligence extends Enemy {
             }
         } else if (state.isAttacking()) {
             changeWalkingState();
+        }
+    }
+
+    private void handleIntersectChange() {
+        if (tilePositionChanged(lastBombermanPosInter) && !state.isAttacking()
+                && WorldUtils.isEnemyInsideTile(body, matrixPosition)) {
+            lastBombermanPosInter = tilePosition.deepCopy();
+            List<Position> freeAdjacentPositions = WorldUtils.getFreeAdjacentPositions(tilePosition, maskBits);
+            List<Position> positionsToRemove = new ArrayList<Position>();
+
+            switch (state) {
+                case WALKING_UP:
+                case WALKING_DOWN:
+                    for (Position pos : freeAdjacentPositions) {
+                        State posState = getPositionState(tilePosition, pos);
+                        if (posState.equals(State.WALKING_DOWN) || posState.equals(State.WALKING_UP)) {
+                            positionsToRemove.add(pos);
+                        }
+                    }
+                    break;
+                case WALKING_LEFT:
+                case WALKING_RIGHT:
+                    for (Position pos : freeAdjacentPositions) {
+                        State posState = getPositionState(tilePosition, pos);
+                        if (posState.equals(State.WALKING_LEFT) || posState.equals(State.WALKING_RIGHT)) {
+                            positionsToRemove.add(pos);
+                        }
+                    }
+                default:
+                    break;
+            }
+
+            freeAdjacentPositions.removeAll(positionsToRemove);
+
+            if (freeAdjacentPositions.size() > 0 && Math.random() < intersectionChangeChance) {
+                Position newDirection = freeAdjacentPositions
+                        .get((int) (Math.random() * freeAdjacentPositions.size()));
+
+                state = getPositionState(tilePosition, newDirection);
+            }
         }
     }
 }

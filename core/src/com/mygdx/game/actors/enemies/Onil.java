@@ -1,18 +1,13 @@
 package com.mygdx.game.actors.enemies;
 
-import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.OnilUserData;
-import com.mygdx.game.systems.AStarManhattan;
-import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
-import com.mygdx.game.utils.WorldUtils;
 
 /*
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
@@ -27,7 +22,7 @@ public class Onil extends HighIntelligence {
 
 
     public Onil(Body body) {
-        super(body, GameManager.ONIL_HP, GameManager.ONIL_SPEED, maskBits);
+        super(body, GameManager.ONIL_HP, GameManager.ONIL_SPEED, maskBits, 0.5f, 2);
         getUserData().setActor(this);
 
         this.textureAtlas = GameManager.getInstance().getAssetManager().get(GameManager.BOMBERMAN_ATLAS_PATH);
@@ -98,7 +93,7 @@ public class Onil extends HighIntelligence {
 
     @Override
     public boolean isDyingFinished() {
-        return state.equals(StateEnemyHighIntelligence.DIE);
+        return state.equals(HighIntelligence.State.DIE);
     }
 
 }
