@@ -47,6 +47,8 @@ public class GameManager implements Disposable {
     public static final float BOMBERMAN_B2D_RADIUS = .4f;
     public static final float BOMBERMAN_INITIAL_SPEED = 1f;
     public static final float BOMBERMAN_DENSITY = 1f;
+    public static final short BOMBERMAN_MASK_BITS = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
+    | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT | GameManager.BRICK_BIT | GameManager.DOOR_BIT;
 
     // Tiled Maps properties
     public static final float TILES_WIDTH = 1f;
@@ -237,7 +239,7 @@ public class GameManager implements Disposable {
     // Power Up characteristics
     public static final float POWER_UP_WIDTH = 1f;
     public static final float POWER_UP_HEIGHT = 1f;
-    public static final double POWER_UP_CHANCE = 1; // 20% of chance
+    public static final double POWER_UP_CHANCE = 0.0; // 20% of chance
     public static final float SPEED_UP_VALUE = 0.2f;
     public static final float INVENCIBLE_TIME = 30f;
 

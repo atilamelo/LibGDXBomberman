@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.box2d.DoorUserData;
 import com.mygdx.game.configs.EnemyConfig;
+import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -66,6 +67,12 @@ public class Door extends GameActor {
         if(lastHit + 3f < stateTime){
             this.isHit = true;
             lastHit = stateTime;
+        }
+    }
+
+    public void enter(){
+        if(gameManager.enemiesLeft == 0){
+            ((GameStage) getStage()).nextLevel();            
         }
     }
 

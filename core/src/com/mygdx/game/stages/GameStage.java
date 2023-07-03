@@ -228,6 +228,12 @@ public class GameStage extends Stage {
 
     }
 
+    public void nextLevel(){
+        System.out.println("Parabéns venceu!");
+        gameManager.stopMusic();
+        gameManager.playEffect(GameManager.SOUND_STAGE_CLEAR);
+    }
+
     /*
      * Adaptado de:
      * https://gamedev.stackexchange.com/questions/27113/how-do-i-destroy-a-box2d-

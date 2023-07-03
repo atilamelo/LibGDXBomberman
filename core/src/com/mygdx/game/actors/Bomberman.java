@@ -42,6 +42,7 @@ public class Bomberman extends GameActor {
     private float speed;
     private boolean bombPass;
     private final float SPACE_BETWEEN_SOUDNS = 0.25f;
+    private int lifes;
 
     public static enum State {
         MOVE_UP,
@@ -68,6 +69,7 @@ public class Bomberman extends GameActor {
         this.remoteControl = false;
         this.invencible = false;
         this.lastPlayedSound = 0f;
+        this.lifes = 3;
 
         /* Load sounds */
         this.soundDownUp = gameManager.getAssetManager().get(GameManager.SOUND_DOWN_UP_WALK);

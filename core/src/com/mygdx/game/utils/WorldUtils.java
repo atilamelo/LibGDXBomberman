@@ -56,8 +56,7 @@ public class WorldUtils {
         fdef.friction = 0.0f;
         fdef.restitution = 0.0f;
         fdef.filter.categoryBits = GameManager.PLAYER_BIT;
-        fdef.filter.maskBits = GameManager.WALL_BIT | GameManager.ENEMY_BIT | GameManager.BOMB_BIT
-                | GameManager.EXPLOSION_BIT | GameManager.POWER_UP_BIT | GameManager.BRICK_BIT;
+        fdef.filter.maskBits = GameManager.BOMBERMAN_MASK_BITS;
         body.setActive(true);
 
         body.createFixture(fdef);

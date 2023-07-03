@@ -102,6 +102,11 @@ public class WorldListener implements ContactListener {
                     PowerUp powerUp = (PowerUp) powerUpData.getActor();
                     powerUp.pick();
                     break;
+                case GameManager.DOOR_BIT:
+                    UserData doorData = (UserData) fixB.getBody().getUserData();
+                    Door doorActor = (Door) doorData.getActor();
+                    doorActor.enter();
+                    break;
             }
         }
         if (categoryBitsB == GameManager.PLAYER_BIT) {
@@ -115,6 +120,11 @@ public class WorldListener implements ContactListener {
                     UserData powerUpData = (UserData) fixA.getBody().getUserData();
                     PowerUp powerUp = (PowerUp) powerUpData.getActor();
                     powerUp.pick();
+                    break;
+                case GameManager.DOOR_BIT:
+                    UserData doorData = (UserData) fixA.getBody().getUserData();
+                    Door doorActor = (Door) doorData.getActor();
+                    doorActor.enter();
                     break;
             }
         }
