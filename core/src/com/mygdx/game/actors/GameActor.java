@@ -51,7 +51,6 @@ public abstract class GameActor extends Actor {
         if (isAlive()) {
             updateRectangle();
         } else {
-            // System.out.println("Corpo destruído: " + userData);
             userData.isFlaggedForDelete = true;
             GameActor actor = (GameActor) userData.getActor();
 

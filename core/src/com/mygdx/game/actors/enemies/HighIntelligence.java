@@ -17,7 +17,7 @@ public abstract class HighIntelligence extends Enemy {
     protected StateEnemyHighIntelligence state;
     private short[] maskBits;
     private List<Position> pursueBombermanPath;
-    private float lastPursueCheck;
+    private Position lastBombermanPos;
 
     public static enum StateEnemyHighIntelligence {
         WALKING_UP,
@@ -43,12 +43,16 @@ public abstract class HighIntelligence extends Enemy {
     public HighIntelligence(Body body, int hp, float speed, short[] maskBits) {
         super(body, hp, speed);
         this.maskBits = maskBits;
-        state = StateEnemyHighIntelligence.getRandomWalkingState();
-        lastPursueCheck = 0f;
+        this.lastBombermanPos = tilePosition.deepCopy();
+        this.state = StateEnemyHighIntelligence.getRandomWalkingState();
     }
 
     private void changeWalkingState() {
         state = StateEnemyHighIntelligence.getRandomWalkingState();
+    }
+
+    private boolean tilePositionChanged(){
+        return !lastBombermanPos.equals(tilePosition);
     }
 
     @Override
@@ -122,9 +126,11 @@ public abstract class HighIntelligence extends Enemy {
     }
 
     private void handlePursue() {
-        if (lastPursueCheck + 0.5f < stateTime) {
+        if (tilePositionChanged()) {
             Position bombermanLocation = WorldUtils.bombermanWithinRange(tilePosition, 25);
             pursueBombermanPath = null;
+            lastBombermanPos = tilePosition.deepCopy();
+
             if (bombermanLocation != null) {
                 short[] categoryBits = { GameManager.BRICK_BIT, GameManager.WALL_BIT, GameManager.BOMB_BIT };
                 List<List<Position>> mapGrid = WorldUtils.getMapGrid(categoryBits);
@@ -138,7 +144,6 @@ public abstract class HighIntelligence extends Enemy {
                 System.out.println("\n\n");
             }
 
-            lastPursueCheck = stateTime;
         }
 
         if (pursueBombermanPath != null && !state.equals(StateEnemyHighIntelligence.DIE) && !state.equals(StateEnemyHighIntelligence.DYING)) {

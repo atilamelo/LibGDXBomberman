@@ -125,6 +125,12 @@ public class RandomPlacement {
         public String toString() {
             return "Position [x=" + x + ", y=" + y + "]";
         }
+
+        public Position deepCopy() {
+            Position newPosition = new Position(x, y);
+            newPosition.ocupped = ocupped;
+            return newPosition;
+        }
         
     }
 }
