@@ -69,11 +69,12 @@ public class Bomb extends GameActor {
     public void act(float delta) {
         super.act(delta);
 
-        if (stateTime >= 3f) {
+        if (stateTime >= 3f && state.equals(State.ACTIVE)) {
             explode();
         }
 
-        if (flagWillExploded) {
+        // Utiizado pelo WorldListener para explodir a bomba quando ela colide com outra explosão
+        if (flagWillExploded && state.equals(State.ACTIVE)) {
             explode();
         }
 
