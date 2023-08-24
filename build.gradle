@@ -60,6 +60,8 @@ project(":core") {
 
 
     dependencies {
+        implementation 'com.github.crykn:kryonet:2.22.8'
+        implementation 'com.esotericsoftware:kryo:5.5.0'
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
