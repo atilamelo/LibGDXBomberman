@@ -255,6 +255,14 @@ public class Bomberman extends GameActor {
         }
     }
 
+    public float getX() {
+        return screenRectangle.x;
+    }
+
+    public float getY() {
+        return screenRectangle.y;
+    }
+
     @Override
     public boolean isAlive() {
         return !getUserData().getState().equals(State.DIE);

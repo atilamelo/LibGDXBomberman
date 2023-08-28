@@ -29,7 +29,7 @@ public class Hud implements Disposable {
 
     public Hud(SpriteBatch sb, int livesBomberman) {
         // define tracking variables
-        worldTimer = 200;
+        worldTimer = Integer.MAX_VALUE; // debug value
         timeCount = 0;
         score = 0;
 

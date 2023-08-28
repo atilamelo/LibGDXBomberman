@@ -1,7 +1,5 @@
 package com.mygdx.game.stages;
 
-import java.lang.System.Logger.Level;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,7 +15,7 @@ public class GameScreen implements Screen {
     private BombermanConfig currentBombermanConfig;
     
     public GameScreen(BombermanGame game) {
-        currentLevel = 1;
+        currentLevel = 0;
         this.game = game;
         currentBombermanConfig = BombermanConfig.initialBombermanConfig;
     }

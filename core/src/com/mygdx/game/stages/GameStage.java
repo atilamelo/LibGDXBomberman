@@ -27,10 +27,12 @@ import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.listeners.WorldListener;
+import com.mygdx.game.networking.GameClient;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
+import com.mygdx.game.networking.Network;
 
 // Estrutura básica baseado no Runner feito por William Moura 
 // http://williammora.com/a-running-game-with-libgdx-part-1
@@ -44,6 +46,7 @@ public class GameStage extends Stage {
     private GameManager gameManager;
 
     private World world;
+    private GameClient client;
     private Bomberman bomberman;
 
     private InputProcessor inputProcessor;
@@ -89,6 +92,7 @@ public class GameStage extends Stage {
         // Setups
         setupWorld();
         setupViewPort();
+        setupNetworking();
 
         // Box2d
         box2drender = new Box2DDebugRenderer();
@@ -100,17 +104,7 @@ public class GameStage extends Stage {
         gameManager.playMusic(GameManager.MUSIC_MAIN, true);
 
     }
-
-    private void setupViewPort() {
-        gamecam = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        gamecam.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        gamecam.zoom -= GameManager.GAME_ZOOM;
-        gamecam.update();
-
-        gameport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, gamecam);
-        this.setViewport(gameport);
-    }
-
+    
     private void setupWorld() {
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
@@ -123,6 +117,20 @@ public class GameStage extends Stage {
         setupEnemies();
     }
 
+    private void setupViewPort() {
+        gamecam = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        gamecam.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        gamecam.zoom -= GameManager.GAME_ZOOM;
+        gamecam.update();
+
+        gameport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, gamecam);
+        this.setViewport(gameport);
+    }
+
+    private void setupNetworking() {
+        client = new GameClient("localhost");
+    }
+
     private void setupSpawn() {
         this.spawnAreaBricks = GameManager.generateSpawnArea(new Position(1, 11), new Position(3, 9));
         this.spawnAreaEnemies = GameManager.generateSpawnArea(new Position(1, 11), new Position(8, 5));
@@ -132,7 +140,7 @@ public class GameStage extends Stage {
         if (bombermanConfig == null) {
             bomberman = new Bomberman(WorldUtils.createBomberman(), this);
         } else {
-            bomberman = new Bomberman(WorldUtils.createBomberman(), this, bombermanConfig);
+            bomberman = new Bomberman(WorldUtils.createBomberman(), this, bombermanConfig);            
         }
         elements.addActor(bomberman);
     }
@@ -414,17 +422,20 @@ public class GameStage extends Stage {
                     case Input.Keys.UP:
                         bomberman.moveUp();
                         break;
-                    case Input.Keys.DOWN:
+                        case Input.Keys.DOWN:
                         bomberman.moveDown();
                         break;
-                    case Input.Keys.LEFT:
+                        case Input.Keys.LEFT:
                         bomberman.moveLeft();
                         break;
-                    case Input.Keys.RIGHT:
+                        case Input.Keys.RIGHT:
                         bomberman.moveRight();
                         break;
-                }
+                    }
 
+                Network.PlayerPosition playerPosition = new Network.PlayerPosition(bomberman.getX(), bomberman.getY());
+                client.sendPackage(playerPosition);
+                    
             }
             return true;
         }
