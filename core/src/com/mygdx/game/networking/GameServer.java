@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 import java.time.LocalDateTime;
 
 public class GameServer {
-    Server server;
+    private Server server;
 
     public GameServer() {   
         server = new Server();
@@ -17,7 +17,7 @@ public class GameServer {
         server.addListener(new Listener() {
             public void received (Connection connection, Object object) {
                 System.out.println("Received packet at " + LocalDateTime.now());
-                System.out.println("\t" + object); 
+                System.out.println("\t" +object); 
                 if (object instanceof RegisterPlayer) {
                     RegisterPlayer packet = (RegisterPlayer) object;
                 }

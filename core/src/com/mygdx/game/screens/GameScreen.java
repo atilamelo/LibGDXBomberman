@@ -1,4 +1,4 @@
-package com.mygdx.game.stages;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.BombermanGame;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
+import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.stages.MultiplayerStage;
 
 public class GameScreen implements Screen {
     BombermanGame game;
@@ -26,7 +28,7 @@ public class GameScreen implements Screen {
             System.out.println("Jogo terminado!");
             Gdx.app.exit();
         }
-        stage = new GameStage(this, LevelConfig.getLevelConfig(currentLevel), currentBombermanConfig);
+        stage = new MultiplayerStage(this, LevelConfig.getLevelConfig(currentLevel), currentBombermanConfig);
     }
 
     @Override

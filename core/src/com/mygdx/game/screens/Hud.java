@@ -1,4 +1,4 @@
-package com.mygdx.game.stages;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;

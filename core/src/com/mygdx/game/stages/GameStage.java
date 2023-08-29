@@ -27,62 +27,63 @@ import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.listeners.WorldListener;
-import com.mygdx.game.networking.GameClient;
+import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.Hud;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
-import com.mygdx.game.networking.Network;
 
 // Estrutura básica baseado no Runner feito por William Moura 
 // http://williammora.com/a-running-game-with-libgdx-part-1
-public class GameStage extends Stage {
+public class GameStage extends Stage{
 
     // This will be our viewport measurements while working with the debug renderer
-    private static final int VIEWPORT_WIDTH = GameManager.MAP_WIDTH;
-    private static final int VIEWPORT_HEIGHT = GameManager.MAP_HEIGHT;
+    protected static final int VIEWPORT_WIDTH = GameManager.MAP_WIDTH;
+    protected static final int VIEWPORT_HEIGHT = GameManager.MAP_HEIGHT;
 
-    private GameScreen gameScreen;
-    private GameManager gameManager;
+    protected GameScreen gameScreen;
+    protected GameManager gameManager;
 
-    private World world;
-    private GameClient client;
-    private Bomberman bomberman;
+    protected World world;
+    protected Bomberman bomberman;
 
-    private InputProcessor inputProcessor;
+    protected InputProcessor inputProcessor;
 
-    private final float TIME_STEP = 1 / 300f;
-    private float acumullator = 0f;
-    private float stateTime = 0f;
+    protected final float TIME_STEP = 1 / 300f;
+    protected float acumullator = 0f;
+    protected float stateTime = 0f;
 
-    private OrthographicCamera gamecam;
-    private FitViewport gameport;
-    private Box2DDebugRenderer box2drender;
-    private OrthogonalTiledMapRenderer tiledRender;
-    private TiledMap map;
+    protected OrthographicCamera gamecam;
+    protected FitViewport gameport;
+    protected Box2DDebugRenderer box2drender;
+    protected OrthogonalTiledMapRenderer tiledRender;
+    protected TiledMap map;
+    protected LevelConfig config;
+    protected BombermanConfig bombermanConfig = null;
+    protected List<Position> spawnAreaBricks;
+    protected List<Position> spawnAreaEnemies;
+    protected Hud hud;
+    protected boolean flagIsGameFinished = false;
+    protected boolean flagSpawnedTimeUp = false;
+    protected boolean isSoundClearEnemiesPlayed = false;
     public Group elements;
     public Group background;
-    private LevelConfig config;
-    private BombermanConfig bombermanConfig = null;
-    private List<Position> spawnAreaBricks;
-    private List<Position> spawnAreaEnemies;
-    private Hud hud;
-    private boolean flagIsGameFinished = false;
-    private boolean flagSpawnedTimeUp = false;
-    private boolean isSoundClearEnemiesPlayed = false;
 
     public GameStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
+        super();
         this.gameScreen = gameScreen;
         this.gameManager = GameManager.getInstance();
         this.config = levelConfig;
         this.bombermanConfig = bombermanConfig;
 
-        gameManager.enemiesLeft = levelConfig.getTotalOfEnemies();
+        gameManager.enemiesLeft = levelConfig.getTotalOfEnemies();  
 
         // Tiled Maps
         map = gameManager.getAssetManager().get("maps/map_teste.tmx");
         tiledRender = new OrthogonalTiledMapRenderer(map, 1 / GameManager.PPM);
         hud = new Hud((SpriteBatch) getBatch(), bombermanConfig.lifes);
+
         // Layers
         elements = new Group();
         background = new Group();
@@ -92,7 +93,6 @@ public class GameStage extends Stage {
         // Setups
         setupWorld();
         setupViewPort();
-        setupNetworking();
 
         // Box2d
         box2drender = new Box2DDebugRenderer();
@@ -105,7 +105,7 @@ public class GameStage extends Stage {
 
     }
     
-    private void setupWorld() {
+    protected void setupWorld() {
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
         gameManager.setWorld(world);
@@ -117,7 +117,7 @@ public class GameStage extends Stage {
         setupEnemies();
     }
 
-    private void setupViewPort() {
+    protected void setupViewPort() {
         gamecam = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         gamecam.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         gamecam.zoom -= GameManager.GAME_ZOOM;
@@ -127,16 +127,12 @@ public class GameStage extends Stage {
         this.setViewport(gameport);
     }
 
-    private void setupNetworking() {
-        client = new GameClient("localhost");
-    }
-
-    private void setupSpawn() {
+    protected void setupSpawn() {
         this.spawnAreaBricks = GameManager.generateSpawnArea(new Position(1, 11), new Position(3, 9));
         this.spawnAreaEnemies = GameManager.generateSpawnArea(new Position(1, 11), new Position(8, 5));
     }
 
-    private void setupBomberman() {
+    protected void setupBomberman() {
         if (bombermanConfig == null) {
             bomberman = new Bomberman(WorldUtils.createBomberman(), this);
         } else {
@@ -145,12 +141,11 @@ public class GameStage extends Stage {
         elements.addActor(bomberman);
     }
 
-    private void setupMapCollision() {
+    protected void setupMapCollision() {
         WorldUtils.createMap(map);
-
     }
 
-    private void setupBricks() {
+    protected void setupBricks() {
         Random random = new Random();
 
         List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(config.amountOfBricks,
@@ -178,7 +173,7 @@ public class GameStage extends Stage {
 
     }
 
-    private void setupEnemies() {
+    protected void setupEnemies() {
         List<RandomPlacement.Position> positions;
 
         /* Balloms */
@@ -408,7 +403,7 @@ public class GameStage extends Stage {
         gamecam.position.set(targetX, targetY, 0);
     }
 
-    private class InputProcessor extends InputAdapter {
+    protected class InputProcessor extends InputAdapter {
         float moving_x, moving_y;
 
         public InputProcessor() {
@@ -432,10 +427,6 @@ public class GameStage extends Stage {
                         bomberman.moveRight();
                         break;
                     }
-
-                Network.PlayerPosition playerPosition = new Network.PlayerPosition(bomberman.getX(), bomberman.getY());
-                client.sendPackage(playerPosition);
-                    
             }
             return true;
         }

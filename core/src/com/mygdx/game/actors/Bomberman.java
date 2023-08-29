@@ -16,7 +16,9 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.enums.UserDataType;
+import com.mygdx.game.networking.Network;
 import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.stages.MultiplayerStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -44,6 +46,10 @@ public class Bomberman extends GameActor {
     private boolean bombPass;
     private final float SPACE_BETWEEN_SOUDNS = 0.25f;
     private int lifes;
+    private MultiplayerStage multiplayerStage;
+    private boolean multiplayer;
+    private float lastSendX;
+    private float lastSendY;
 
     public static enum State {
         MOVE_UP,
@@ -117,6 +123,13 @@ public class Bomberman extends GameActor {
 
         stateTime = 0f;
 
+        if(game instanceof MultiplayerStage){
+            multiplayer = true;
+            multiplayerStage = (MultiplayerStage) game;
+        }
+        else{
+            multiplayer = false;
+        }
     }
 
     public Bomberman(Body body, GameStage game, BombermanConfig config) {
@@ -203,6 +216,16 @@ public class Bomberman extends GameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+
+        // Send position to server if multiplayer
+        if(multiplayer){
+            if(lastSendX != getX() || lastSendY != getY()){
+                Network.PlayerPosition playerPosition = new Network.PlayerPosition(getX(), getY());
+                multiplayerStage.client.sendPackage(playerPosition);
+                lastSendX = getX();
+                lastSendY = getY();
+            }
+        }
 
         if (invencible == true && stateTime > GameManager.INVENCIBLE_TIME) {
             Filter oldFilter = body.getFixtureList().get(0).getFilterData();
