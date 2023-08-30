@@ -1,17 +1,12 @@
 package com.mygdx.game.networking;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.actors.Bomberman;
-import com.mygdx.game.actors.Brick;
-import com.mygdx.game.actors.Enemy;
-import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.listeners.WorldListener;
+import com.mygdx.game.networking.Network.PlayerPosition;
 import com.mygdx.game.networking.Network.RegisterPlayer;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
@@ -29,11 +24,12 @@ public class WorldServer {
     private List<Position> spawnAreaBricks;
     private List<Position> spawnAreaEnemies;
     private TiledMap map;
+    private List<VirtualPlayer> players;
 
     public WorldServer() {
-        this.server = new Server();
         this.gameManager = GameManager.getInstance();
         this.map = gameManager.getAssetManager().get("maps/map_teste.tmx");
+        this.players = new ArrayList<VirtualPlayer>();
 
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
@@ -49,17 +45,10 @@ public class WorldServer {
     }
 
     private void setupKyro() {
+        this.server = new Server();
         Network.register(server);
 
-        server.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
-                System.out.println("Received packet at " + LocalDateTime.now());
-                System.out.println("\t" +object); 
-                if (object instanceof RegisterPlayer) {
-                    RegisterPlayer packet = (RegisterPlayer) object;
-                }
-            }
-        });
+        server.addListener(new NetworkingListener());
 
         try {
             server.bind(Network.tcpPort);
@@ -92,5 +81,33 @@ public class WorldServer {
 
     private void setupEnemies() {
         
+    }
+    
+    private class NetworkingListener implements Listener{
+        public void received (Connection connection, Object object) {
+            int id = connection.getID();
+            System.out.println("Received packet at " + LocalDateTime.now());
+            System.out.println("\t" + "From: " + id); 
+            System.out.println("\t" + object);
+
+            if (object instanceof RegisterPlayer) {
+                RegisterPlayer packet = (RegisterPlayer) object;
+                players.add(new VirtualPlayer(id, packet.name));
+                System.out.println("\tPlayer " + packet.name + " registered - Id: " + id);
+
+            } else if (object instanceof PlayerPosition) {
+                PlayerPosition playerPosition = (PlayerPosition) object;
+
+                for (VirtualPlayer player : players) {
+                    if (player.id == id) {
+                        player.body.setTransform(playerPosition.x, playerPosition.y, 0);
+                        System.out.println("\tPlayer " + player.name + " moved to " + playerPosition.x + ", " + playerPosition.y);
+                    }
+                }
+            }
+
+            System.out.println("\tSending packet to all clients except " + id);
+            server.sendToAllExceptTCP(id, object);
+        }
     }
 }

@@ -221,7 +221,7 @@ public class Bomberman extends GameActor {
         if(multiplayer){
             if(lastSendX != getX() || lastSendY != getY()){
                 Network.PlayerPosition playerPosition = new Network.PlayerPosition(getX(), getY());
-                multiplayerStage.client.sendPackage(playerPosition);
+                multiplayerStage.sendPackage(playerPosition);
                 lastSendX = getX();
                 lastSendY = getY();
             }
@@ -278,12 +278,14 @@ public class Bomberman extends GameActor {
         }
     }
 
+    /* Return box2d X axis position */
     public float getX() {
-        return screenRectangle.x;
+        return body.getPosition().x;
     }
 
+    /* Return box2d Y axis position */
     public float getY() {
-        return screenRectangle.y;
+        return body.getPosition().y;
     }
 
     @Override

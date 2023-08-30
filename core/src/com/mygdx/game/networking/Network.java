@@ -15,7 +15,7 @@ public class Network {
     }
 
     public static class RegisterPlayer {
-        String name; 
+        public String name; 
 
         public RegisterPlayer(){}
 

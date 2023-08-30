@@ -34,7 +34,6 @@ public class Enemy extends GameActor {
     private int rangePursue;
     private int hp;
     private float speed;
-    private float lastHit;
 
     public static enum State {
         WALKING_UP,

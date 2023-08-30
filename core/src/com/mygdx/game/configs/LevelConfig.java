@@ -3,8 +3,6 @@ package com.mygdx.game.configs;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-import com.badlogic.gdx.physics.bullet.collision.memcopy_elements_func;
 import com.mygdx.game.actors.PowerUp.PowerUpType;
 
 public class LevelConfig {

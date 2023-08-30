@@ -38,14 +38,12 @@ class DebugScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 		stage = new DebugStage();
 	}
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
-		        // Clear the screen
+		// Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Update the stage
@@ -55,22 +53,18 @@ class DebugScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
