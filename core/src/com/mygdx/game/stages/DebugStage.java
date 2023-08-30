@@ -35,6 +35,10 @@ public class DebugStage extends Stage {
     @Override
     public void draw() {
         Gdx.gl.glClearColor(0, 0, 0, 0);
+        
+        gameport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.setViewport(gameport);
+
         box2drender.render(worldServer.world, gamecam.combined);
 
         super.draw();
