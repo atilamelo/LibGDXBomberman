@@ -3,11 +3,15 @@ package com.mygdx.game.networking;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.listeners.WorldListener;
+import com.mygdx.game.networking.Network.DisconnectedPlayer;
 import com.mygdx.game.networking.Network.PlayerPosition;
 import com.mygdx.game.networking.Network.RegisterPlayer;
+import com.mygdx.game.networking.Network.RegisteredPlayers;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
@@ -15,6 +19,8 @@ import com.mygdx.game.utils.WorldUtils;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class WorldServer {
@@ -25,6 +31,8 @@ public class WorldServer {
     private List<Position> spawnAreaEnemies;
     private TiledMap map;
     private List<VirtualPlayer> players;
+    private static final float TIME_STEP = 1 / 300f;
+    private float accumulator = 0f;
 
     public WorldServer() {
         this.gameManager = GameManager.getInstance();
@@ -33,7 +41,7 @@ public class WorldServer {
 
         world = WorldUtils.createWorld();
         world.setContactListener(new WorldListener());
-        gameManager.setWorld(world);        
+        gameManager.setWorld(world);
 
         // Setups
         setupKyro();
@@ -85,18 +93,33 @@ public class WorldServer {
     
     private class NetworkingListener implements Listener{
         public void received (Connection connection, Object object) {
+            accumulator += Gdx.graphics.getDeltaTime();
+            
+            // Update physics when receive a packet
+            while (accumulator >= TIME_STEP) {
+                world.step(TIME_STEP, 6, 2); 
+                accumulator -= TIME_STEP;
+            }
+
             int id = connection.getID();
             System.out.println("Received packet at " + LocalDateTime.now());
             System.out.println("\t" + "From: " + id); 
             System.out.println("\t" + object);
 
             if (object instanceof RegisterPlayer) {
+                // Send to the new client the list of registered players
+                server.sendToTCP(id, new RegisteredPlayers(players));
+                
                 RegisterPlayer packet = (RegisterPlayer) object;
                 players.add(new VirtualPlayer(id, packet.name));
+
+                // Add id at the packet before send to all clients except the sender
+                packet.id = id;
                 System.out.println("\tPlayer " + packet.name + " registered - Id: " + id);
 
             } else if (object instanceof PlayerPosition) {
                 PlayerPosition playerPosition = (PlayerPosition) object;
+                playerPosition.id = id;
 
                 for (VirtualPlayer player : players) {
                     if (player.id == id) {
@@ -106,8 +129,31 @@ public class WorldServer {
                 }
             }
 
-            System.out.println("\tSending packet to all clients except " + id);
+            System.out.println("\tSending packet to all clients except id " + id);
             server.sendToAllExceptTCP(id, object);
         }
+
+        public void disconnected(Connection connection) {
+            int id = connection.getID();
+            VirtualPlayer player_removed = null;
+            System.out.println("Player " + id + " disconnected");
+            
+            for(VirtualPlayer player : players) {
+                if(player.id == id) {
+                    System.out.println("\tRemoving player " + player.name);
+                    world.destroyBody(player.body);
+                    player_removed = player;
+                }
+            }
+
+            if(player_removed != null){
+                DisconnectedPlayer packet = new DisconnectedPlayer(player_removed.id);
+                players.remove(player_removed);
+                server.sendToAllExceptTCP(id, packet);
+            }
+
+            System.out.println("\t" + "Now connected players: " + players);
+        }
+     
     }
 }

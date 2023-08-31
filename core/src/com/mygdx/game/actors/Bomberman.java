@@ -50,6 +50,7 @@ public class Bomberman extends GameActor {
     private boolean multiplayer;
     private float lastSendX;
     private float lastSendY;
+    private boolean virtualPlayer;
 
     public static enum State {
         MOVE_UP,
@@ -79,6 +80,7 @@ public class Bomberman extends GameActor {
         this.bombPass = false;
         this.lastPlayedSound = 0f;
         this.lifes = 3;
+        this.virtualPlayer = false;
 
         /* Load sounds */
         this.soundDownUp = gameManager.getAssetManager().get(GameManager.SOUND_DOWN_UP_WALK);
@@ -131,6 +133,12 @@ public class Bomberman extends GameActor {
             multiplayer = false;
         }
     }
+
+    public Bomberman(Body body, GameStage game, boolean virtualPlayer) {
+        this(body, game);
+        this.virtualPlayer = virtualPlayer;
+    }
+
 
     public Bomberman(Body body, GameStage game, BombermanConfig config) {
         this(body, game);
@@ -218,7 +226,7 @@ public class Bomberman extends GameActor {
         super.act(delta);
 
         // Send position to server if multiplayer
-        if(multiplayer){
+        if(multiplayer && !virtualPlayer){
             if(lastSendX != getX() || lastSendY != getY()){
                 Network.PlayerPosition playerPosition = new Network.PlayerPosition(getX(), getY());
                 multiplayerStage.sendPackage(playerPosition);
