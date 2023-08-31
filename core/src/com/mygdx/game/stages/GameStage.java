@@ -70,6 +70,7 @@ public class GameStage extends Stage{
     public Group elements;
     public Group background;
 
+
     public GameStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
         super();
         this.gameScreen = gameScreen;
@@ -93,12 +94,10 @@ public class GameStage extends Stage{
         // Setups
         setupWorld();
         setupViewPort();
+        setupInputProcessor();
 
         // Box2d
         box2drender = new Box2DDebugRenderer();
-
-        inputProcessor = new InputProcessor();
-        Gdx.input.setInputProcessor(inputProcessor);
 
         // Music of stage
         gameManager.playMusic(GameManager.MUSIC_MAIN, true);
@@ -127,6 +126,11 @@ public class GameStage extends Stage{
         this.setViewport(gameport);
     }
 
+    protected void setupInputProcessor() {
+        inputProcessor = new InputProcessor();
+        Gdx.input.setInputProcessor(inputProcessor);
+    }
+
     protected void setupSpawn() {
         this.spawnAreaBricks = GameManager.generateSpawnArea(new Position(1, 11), new Position(3, 9));
         this.spawnAreaEnemies = GameManager.generateSpawnArea(new Position(1, 11), new Position(8, 5));
@@ -137,8 +141,8 @@ public class GameStage extends Stage{
             bomberman = new Bomberman(WorldUtils.createBomberman(), this);
         } else {
             bomberman = new Bomberman(WorldUtils.createBomberman(), this, bombermanConfig);            
+            elements.addActor(bomberman);
         }
-        elements.addActor(bomberman);
     }
 
     protected void setupMapCollision() {

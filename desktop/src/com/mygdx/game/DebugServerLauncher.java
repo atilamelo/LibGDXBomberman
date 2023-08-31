@@ -7,7 +7,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.mygdx.game.utils.GameManager;
-import com.mygdx.game.stages.DebugStage;
+import com.mygdx.game.configs.BombermanConfig;
+import com.mygdx.game.configs.LevelConfig;
+import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.stages.ServerStage;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DebugServerLauncher {
@@ -24,7 +27,7 @@ class DebugGameServer extends Game{
 
 	@Override
 	public void create() {
-		setScreen(new DebugScreen());
+		setScreen(new DebugScreen(this));
 	}
 
 	@Override
@@ -33,12 +36,16 @@ class DebugGameServer extends Game{
 	}
 }
 
-class DebugScreen implements Screen {
-	DebugStage stage;
+class DebugScreen extends GameScreen {
+	ServerStage stage;
+
+	public DebugScreen(Game game) {
+		super(game);
+	}
 
 	@Override
 	public void show() {
-		stage = new DebugStage();
+		stage = new ServerStage(this, LevelConfig.getLevelConfig(0), BombermanConfig.initialBombermanConfig);
 	}
 
 	@Override

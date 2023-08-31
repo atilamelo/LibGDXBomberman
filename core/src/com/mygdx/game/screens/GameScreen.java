@@ -1,5 +1,6 @@
 package com.mygdx.game.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,13 +11,13 @@ import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.stages.MultiplayerStage;
 
 public class GameScreen implements Screen {
-    BombermanGame game;
+    private Game game;
     private GameStage stage;
     private int currentLevel;
     private LevelConfig levelConfig;
     private BombermanConfig currentBombermanConfig;
     
-    public GameScreen(BombermanGame game) {
+    public GameScreen(Game game) {
         currentLevel = 0;
         this.game = game;
         currentBombermanConfig = BombermanConfig.initialBombermanConfig;
