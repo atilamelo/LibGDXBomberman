@@ -1,9 +1,12 @@
 package com.mygdx.game.networking;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.mygdx.game.systems.RandomPlacement;
 
 public class Network {
     static public final int tcpPort = 54555;
@@ -16,9 +19,11 @@ public class Network {
         kryo.register(PlayerPosition.class);
         kryo.register(DisconnectedPlayer.class);
         kryo.register(PlaceBomb.class);
+        kryo.register(BrickPositions.class);
         kryo.register(int[].class);
         kryo.register(float[].class);
         kryo.register(String[].class);
+
     }
 
     public static class RegisterPlayer {
@@ -108,6 +113,35 @@ public class Network {
         @Override
         public String toString() {
             return "DisconnectedPlayer [id=" + id + "]";
+        }
+    }
+
+    static public class BrickPositions{
+        public int[] x;
+        public int[] y;
+        public int amountOfBricks;
+
+        public BrickPositions(){}
+
+        public BrickPositions(List<RandomPlacement.Position> bricks){
+            this.amountOfBricks = bricks.size();
+            this.x = new int[amountOfBricks];
+            this.y = new int[amountOfBricks];
+
+            for (int i = 0; i < amountOfBricks; i++) {
+                RandomPlacement.Position brick = bricks.get(i);
+                this.x[i] = brick.getX();
+                this.y[i] = brick.getY();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "bricksPosition{" +
+                "amountOfBricks=" + amountOfBricks +
+                ", x=" + Arrays.toString(x) +
+                ", y=" + Arrays.toString(y) +
+                '}';
         }
     }
 

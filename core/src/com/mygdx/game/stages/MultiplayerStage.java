@@ -8,25 +8,32 @@ import java.util.List;
 import java.util.Queue;
 
 import com.badlogic.gdx.maps.Map;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.actors.Brick;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.networking.Network;
+import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
 import com.mygdx.game.networking.Network.PlayerPosition;
 import com.mygdx.game.networking.Network.RegisterPlayer;
 import com.mygdx.game.networking.Network.RegisteredPlayers;
 import com.mygdx.game.networking.VirtualPlayer;
 import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.systems.RandomPlacement;
+import com.mygdx.game.utils.WorldUtils;
 
 public class MultiplayerStage extends GameStage {
     public Client client;
     private Queue<PlayerPosition> playerPositions;
     private List<VirtualPlayer> network_players;
+    private List<RandomPlacement.Position> bricksPositions;
+    private boolean bricksLoaded = false;
 
     public MultiplayerStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
         super(gameScreen, levelConfig, bombermanConfig);
@@ -38,6 +45,10 @@ public class MultiplayerStage extends GameStage {
 
     @Override
     public void act(float delta) {
+        // Bricks position if not loaded
+        if(!bricksLoaded){
+            setupBricks();
+        }
 
         // Update network player positions
         while(!playerPositions.isEmpty()) {
@@ -69,6 +80,18 @@ public class MultiplayerStage extends GameStage {
 			System.out.println("Error while connecting to server");
 			System.exit(1);
 		}
+    }
+
+    @Override
+    protected void setupBricks() {
+        if(bricksPositions != null){
+            for (RandomPlacement.Position pos : bricksPositions) {
+                Body bodyBrick = WorldUtils.createBrick(pos);
+                Brick newBrick = new Brick(bodyBrick);
+                background.addActor(newBrick);
+                bricksLoaded = true;
+            }
+        }
     }
 
     public void sendPackage(Object object) {
@@ -129,6 +152,14 @@ public class MultiplayerStage extends GameStage {
                 }
     
                 System.out.println("\t" + "Now connected players: " + network_players);            
+            
+            } else if(object instanceof BrickPositions){
+                BrickPositions packetBrickPosition = (BrickPositions) object;
+                MultiplayerStage.this.bricksPositions = new ArrayList<RandomPlacement.Position>();
+                for (int i = 0; i < packetBrickPosition.amountOfBricks; i++) {
+                    RandomPlacement.Position position = new RandomPlacement.Position(packetBrickPosition.x[i], packetBrickPosition.y[i]);
+                    MultiplayerStage.this.bricksPositions.add(position);
+                }
             }
         }
 

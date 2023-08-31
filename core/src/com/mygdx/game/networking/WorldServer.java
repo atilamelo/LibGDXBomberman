@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.listeners.WorldListener;
+import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
 import com.mygdx.game.networking.Network.PlayerPosition;
 import com.mygdx.game.networking.Network.RegisterPlayer;
@@ -26,7 +27,8 @@ import java.util.Queue;
 public class WorldServer {
     public World world;
     private GameManager gameManager;
-    private Server server; 
+    private Server server;
+    private List<RandomPlacement.Position> bricksPositions;
     private List<Position> spawnAreaBricks;
     private List<Position> spawnAreaEnemies;
     private TiledMap map;
@@ -80,11 +82,12 @@ public class WorldServer {
     }
 
     private void setupBricks() {
-        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(1,
+        this.bricksPositions = RandomPlacement.generateRandomPositions(1,
                 spawnAreaBricks);
-        for (RandomPlacement.Position pos : positions) {
+        for (RandomPlacement.Position pos : this.bricksPositions) {
             WorldUtils.createBrick(pos);
-        }        
+        }
+
     }
 
     private void setupEnemies() {
@@ -116,6 +119,7 @@ public class WorldServer {
                 // Add id at the packet before send to all clients except the sender
                 packet.id = id;
                 System.out.println("\tPlayer " + packet.name + " registered - Id: " + id);
+                server.sendToTCP(id, new BrickPositions(WorldServer.this.bricksPositions));
 
             } else if (object instanceof PlayerPosition) {
                 PlayerPosition playerPosition = (PlayerPosition) object;
