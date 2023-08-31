@@ -146,7 +146,23 @@ public class Network {
     }
 
 	static public class PlaceBomb {
-		double x, y;
+		float x;
+        float y;
+        int range;
+
+        public PlaceBomb(){}
+
+        public PlaceBomb(float x, float y, int range) {
+            this.x = x;
+            this.y = y;
+            this.range = range;
+        }
+
+        @Override
+        public String toString() {
+            return "PlaceBomb [x=" + x + ", y=" + y + ", range=" + range + "]";
+        }
+        
 	}
 
 
