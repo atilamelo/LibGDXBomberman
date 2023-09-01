@@ -3,10 +3,14 @@ package com.mygdx.game.networking;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.mygdx.game.actors.Brick;
 import com.mygdx.game.systems.RandomPlacement;
+import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class Network {
     static public final int tcpPort = 54555;
@@ -18,6 +22,7 @@ public class Network {
         kryo.register(RegisteredPlayers.class);
         kryo.register(PlayerPosition.class);
         kryo.register(DisconnectedPlayer.class);
+        kryo.register(RandomPlacement.Position.class);
         kryo.register(PlaceBomb.class);
         kryo.register(BrickPositions.class);
         kryo.register(int[].class);
@@ -26,9 +31,12 @@ public class Network {
 
     }
 
-    public static class RegisterPlayer {
+    public static class Packet {
+        public int id;
+    }
+
+    public static class RegisterPlayer extends Packet {
         public String name;
-        public int id; 
 
         public RegisterPlayer() {}
 
@@ -42,7 +50,7 @@ public class Network {
         }
     }
 
-    public static class RegisteredPlayers {
+    public static class RegisteredPlayers extends Packet {
         public String[] names;
         public int[] ids;
         public float[] xPosition;
@@ -84,7 +92,7 @@ public class Network {
 
     }
 
-    static public class PlayerPosition {
+    static public class PlayerPosition extends Packet {
         public int id;
         public float x, y;
 
@@ -101,7 +109,7 @@ public class Network {
         }
 	}
 
-    static public class DisconnectedPlayer{
+    static public class DisconnectedPlayer extends Packet {
         public int id;
 
         public DisconnectedPlayer(){};
@@ -116,22 +124,23 @@ public class Network {
         }
     }
 
-    static public class BrickPositions{
+    static public class BrickPositions extends Packet {
         public int[] x;
         public int[] y;
         public int amountOfBricks;
 
         public BrickPositions(){}
 
-        public BrickPositions(List<RandomPlacement.Position> bricks){
+        public BrickPositions(Map<Position, Brick> bricks){
             this.amountOfBricks = bricks.size();
             this.x = new int[amountOfBricks];
             this.y = new int[amountOfBricks];
 
-            for (int i = 0; i < amountOfBricks; i++) {
-                RandomPlacement.Position brick = bricks.get(i);
-                this.x[i] = brick.getX();
-                this.y[i] = brick.getY();
+            int i = 0;
+            for (Position position : bricks.keySet()) {
+                this.x[i] = position.getX();
+                this.y[i] = position.getY();
+                i++;
             }
         }
 
@@ -145,23 +154,22 @@ public class Network {
         }
     }
 
-	static public class PlaceBomb {
-		float x;
-        float y;
-        int range;
+	static public class PlaceBomb extends Packet {
+        public Position position;
+        public int range;
 
         public PlaceBomb(){}
 
-        public PlaceBomb(float x, float y, int range) {
-            this.x = x;
-            this.y = y;
+        public PlaceBomb(int x, int y, int range) {
+            this.position = new Position(x, y);
             this.range = range;
         }
 
         @Override
         public String toString() {
-            return "PlaceBomb [x=" + x + ", y=" + y + ", range=" + range + "]";
+            return "PlaceBomb [position=" + position + ", range=" + range + "]";
         }
+
         
 	}
 

@@ -2,18 +2,25 @@ package com.mygdx.game.stages;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.mygdx.game.actors.Bomb;
+import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.actors.Brick;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.networking.Network;
 import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
+import com.mygdx.game.networking.Network.Packet;
 import com.mygdx.game.networking.Network.PlaceBomb;
 import com.mygdx.game.networking.Network.PlayerPosition;
 import com.mygdx.game.networking.Network.RegisterPlayer;
@@ -26,12 +33,13 @@ import com.mygdx.game.utils.WorldUtils;
 public class ServerStage extends GameStage {
     private Server server;
     private List<VirtualPlayer> players;
-    private List<RandomPlacement.Position> bricksPositions;
+    private Queue<Object> notProcessedPackets;
 
     public ServerStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
         super(gameScreen, levelConfig, bombermanConfig);
 
         this.players = new ArrayList<VirtualPlayer>();
+        this.notProcessedPackets = new LinkedList<Object>();
         setupKyro();
 
     }
@@ -67,20 +75,73 @@ public class ServerStage extends GameStage {
 
     @Override
     protected void setupBricks() {
-        this.bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
-        for (RandomPlacement.Position pos : this.bricksPositions) {
-            WorldUtils.createBrick(pos);
+        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
+        for (RandomPlacement.Position pos : bricksPositions) {
+            Brick brick = new Brick(WorldUtils.createBrick(pos));
+            addActor(brick);
+            active_bricks.put(pos, brick);
         }
     }
 
     @Override
     protected void setupEnemies() {
-        
+
     }
 
     @Override
     public void act(float delta) {
+        super.superAct(delta);
 
+        while (!notProcessedPackets.isEmpty()) {
+            Packet packet = (Packet) notProcessedPackets.poll();
+
+            if (packet instanceof RegisterPlayer) {
+                RegisterPlayer registerPlayer = (RegisterPlayer) packet;
+                VirtualPlayer new_player = new VirtualPlayer(registerPlayer.id, registerPlayer.name);
+                new_player.actor = new Bomberman(new_player.body, ServerStage.this,
+                        BombermanConfig.initialBombermanConfig);
+                players.add(new_player);
+                System.out.println("\tPlayer " + registerPlayer.name + " registered - Id: " + registerPlayer.id);
+
+            } else if (packet instanceof PlayerPosition) {
+
+                PlayerPosition playerPosition = (PlayerPosition) packet;
+
+                for (VirtualPlayer player : players) {
+                    if (player.id == packet.id) {
+                        player.body.setTransform(playerPosition.x, playerPosition.y, 0);
+                        System.out.println(
+                                "\tPlayer " + player.name + " moved to " + playerPosition.x + ", " + playerPosition.y);
+                    }
+                }
+
+            } else if (packet instanceof PlaceBomb) {
+
+                PlaceBomb placeBomb = (PlaceBomb) packet;
+
+                for (VirtualPlayer player : players) {
+                    if (player.id == packet.id) {
+                        System.out.println("\tPlayer " + player.name + " placed a bomb at " + placeBomb.position
+                                + " with range " + placeBomb.range);
+                        Bomb bomb = new Bomb(ServerStage.this, placeBomb.position, placeBomb.range);
+                        active_bombs.put(placeBomb.position, bomb);
+                        addActor(bomb);
+                    }
+                }
+
+            }
+
+        }
+
+        // Fixed timestep
+        acumullator += delta;
+        stateTime += delta;
+
+        while (acumullator >= delta) {
+            world.step(TIME_STEP, 6, 2);
+            sweepDeadBodies();
+            acumullator -= TIME_STEP;
+        }
     }
 
     @Override
@@ -92,7 +153,6 @@ public class ServerStage extends GameStage {
 
         box2drender.render(world, gamecam.combined);
 
-        // super.draw();
     }
 
     @Override
@@ -103,48 +163,32 @@ public class ServerStage extends GameStage {
         public void received(Connection connection, Object object) {
 
             int id = connection.getID();
-            System.out.println("Received packet at " + LocalDateTime.now());
-            System.out.println("\t" + "From: " + id);
-            System.out.println("\t" + object);
 
-            if (object instanceof RegisterPlayer) {
-                // Send to the new client the list of registered players
-                server.sendToTCP(id, new RegisteredPlayers(players));
-
-                RegisterPlayer packet = (RegisterPlayer) object;
-                players.add(new VirtualPlayer(id, packet.name));
-
-                // Add id at the packet before send to all clients except the sender
+            if (object instanceof Packet) {
+                Packet packet = (Packet) object;
                 packet.id = id;
-                System.out.println("\tPlayer " + packet.name + " registered - Id: " + id);
-                server.sendToTCP(id, new BrickPositions(ServerStage.this.bricksPositions));
+                notProcessedPackets.add(object);
 
-            } else if (object instanceof PlayerPosition) {
-                PlayerPosition playerPosition = (PlayerPosition) object;
-                playerPosition.id = id;
-
-                for (VirtualPlayer player : players) {
-                    if (player.id == id) {
-                        player.body.setTransform(playerPosition.x, playerPosition.y, 0);
-                        System.out.println(
-                                "\tPlayer " + player.name + " moved to " + playerPosition.x + ", " + playerPosition.y);
-                    }
-                }
-
-            } else if (object instanceof PlaceBomb) {
-                // PlaceBomb placeBomb = (PlaceBomb) object;
-
-                // for (VirtualPlayer player : players) {
-                // if (player.id == id) {
-                // System.out.println("\tPlayer " + player.name + " placed a bomb at " +
-                // placeBomb.x + ", " + placeBomb.y);
-                // }
-                // }
-
+                System.out.println("Received packet at " + LocalDateTime.now());
+                System.out.println("\t" + "From: " + id);
+                System.out.println("\t" + object);
+    
+                System.out.println("\tSending packet to all clients except id " + id);
+                server.sendToAllExceptTCP(id, object);
             }
 
-            System.out.println("\tSending packet to all clients except id " + id);
-            server.sendToAllExceptTCP(id, object);
+
+
+            if (object instanceof RegisterPlayer) {
+
+                // Send to player informatiosn about the actual state of the game
+                List<VirtualPlayer> players_list = new ArrayList<VirtualPlayer>(players);
+                players_list.removeIf(player -> player.id == id);
+                server.sendToTCP(id, new RegisteredPlayers(players_list));
+                server.sendToTCP(id, new BrickPositions(ServerStage.this.active_bricks));
+
+            } 
+
         }
 
         public void disconnected(Connection connection) {

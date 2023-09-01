@@ -1,7 +1,10 @@
 package com.mygdx.game.stages;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.actors.Bomb;
 import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.actors.Enemy;
@@ -69,7 +73,8 @@ public class GameStage extends Stage{
     protected boolean isSoundClearEnemiesPlayed = false;
     public Group elements;
     public Group background;
-
+    public Map<Position, Brick> active_bricks;
+    public Map<Position, Bomb> active_bombs;
 
     public GameStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
         super();
@@ -77,6 +82,8 @@ public class GameStage extends Stage{
         this.gameManager = GameManager.getInstance();
         this.config = levelConfig;
         this.bombermanConfig = bombermanConfig;
+        this.active_bricks = new HashMap<Position, Brick>();
+        this.active_bombs = new HashMap<Position, Bomb>();
 
         gameManager.enemiesLeft = levelConfig.getTotalOfEnemies();  
 
@@ -98,6 +105,7 @@ public class GameStage extends Stage{
 
         // Box2d
         box2drender = new Box2DDebugRenderer();
+
 
         // Music of stage
         gameManager.playMusic(GameManager.MUSIC_MAIN, true);
@@ -281,6 +289,10 @@ public class GameStage extends Stage{
 
     }
 
+    protected void superAct(float delta) {
+        super.act(delta);
+    }
+    
     public void spawnPontan(){
         List<Position> notSpawnAreaPontans = GameManager.generateSpawnArea(bomberman.getPosition(), 3);
         List<RandomPlacement.Position> valid_positions = RandomPlacement.generateRandomPositions(8, notSpawnAreaPontans);
@@ -367,6 +379,10 @@ public class GameStage extends Stage{
      * https://gamedev.stackexchange.com/a/74934
      */
     void handleCamera() {
+        if(!bomberman.isAlive()) {
+            return;
+        }
+
         // Calcula a posição da câmera
         float targetX = bomberman.getScreenRectangle().x;
         float targetY = bomberman.getScreenRectangle().y;

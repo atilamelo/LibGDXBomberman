@@ -346,6 +346,13 @@ public class Bomberman extends GameActor {
             int x, y;
             x = Math.round(screenRectangle.x);
             y = Math.round(screenRectangle.y);
+            
+            // Send new bomb to server if multiplayer
+            if(multiplayer && !virtualPlayer){
+                Network.PlaceBomb bombPosition = new Network.PlaceBomb(x, y, bombRange);
+                multiplayerStage.sendPackage(bombPosition);
+            }
+
             if (!WorldUtils.hasObjectAtPosition(new Vector2(x + 0.5f, y + 0.5f), GameManager.BOMB_BIT)) {
                 bombsList.add(new Bomb(game, x, y, bombRange));
                 gameManager.playEffect(GameManager.SOUND_PUT_BOMB);

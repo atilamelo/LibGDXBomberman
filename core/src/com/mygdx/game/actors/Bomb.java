@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.BombUserData;
 import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -26,6 +27,10 @@ public class Bomb extends GameActor {
         ACTIVE,
         CREATINGEXPLOSE,
         EXPLODED
+    }
+
+    public Bomb(GameStage gameStage, Position position, int power) {
+        this(gameStage, position.getX(), position.getY(), power);
     }
 
     public Bomb(GameStage gameStage, int x, int y, int power) {

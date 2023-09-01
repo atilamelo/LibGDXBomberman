@@ -10,6 +10,7 @@ import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.stages.ServerStage;
 import com.mygdx.game.systems.CoordinateConverter;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
@@ -62,10 +63,15 @@ public abstract class GameActor extends Actor {
             else if(userData instanceof BombUserData){
                 BombUserData bombUserData = (BombUserData) userData;
                 Bomb bomb = (Bomb) bombUserData.getActor();
-                GameStage stage = (GameStage) bomb.getStage();
-                Bomberman bomberman = stage.getBomberman();
+                if(bomb.getStage() instanceof ServerStage){
+                    ServerStage stage = (ServerStage) bomb.getStage();
+                    stage.active_bombs.remove(bomb);
+                }else{
+                    GameStage stage = (GameStage) bomb.getStage();
+                    Bomberman bomberman = stage.getBomberman();
 
-                bomberman.getBombsList().remove(bomb);
+                    bomberman.getBombsList().remove(bomb);
+                }
             }else if(userData instanceof BrickUserData){
                 BrickUserData brickUserData = (BrickUserData) userData;
                 Brick brick = (Brick) brickUserData.getActor();
