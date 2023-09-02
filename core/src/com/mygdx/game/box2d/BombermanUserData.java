@@ -6,6 +6,7 @@ import com.mygdx.game.utils.GameManager;
 
 public class BombermanUserData extends UserData {
     public State state;
+    public int playerId; // If multiplayer, this is the player id
     private float linearVelocity;
 
     public BombermanUserData(float width, float height) {

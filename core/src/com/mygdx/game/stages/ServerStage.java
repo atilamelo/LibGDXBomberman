@@ -17,6 +17,7 @@ import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
+import com.mygdx.game.listeners.ServerWorldListener;
 import com.mygdx.game.networking.Network;
 import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
@@ -31,7 +32,7 @@ import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.utils.WorldUtils;
 
 public class ServerStage extends GameStage {
-    private Server server;
+    public Server server;
     private List<VirtualPlayer> players;
     private Queue<Object> notProcessedPackets;
 
@@ -41,7 +42,13 @@ public class ServerStage extends GameStage {
         this.players = new ArrayList<VirtualPlayer>();
         this.notProcessedPackets = new LinkedList<Object>();
         setupKyro();
+                
+    }
 
+    @Override
+    protected void setupWorld(){
+        super.setupWorld();
+        world.setContactListener(new ServerWorldListener(this));
     }
 
     private void setupKyro() {

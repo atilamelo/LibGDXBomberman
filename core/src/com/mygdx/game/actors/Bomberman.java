@@ -248,8 +248,10 @@ public class Bomberman extends GameActor {
         }
 
         if (getUserData().getState().equals(State.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
-            ((GameStage) getStage()).restartLevel();
             getUserData().setState(State.DIE);
+            if(!(game instanceof MultiplayerStage)){
+                ((GameStage) getStage()).restartLevel();
+            }
         }
     }
 

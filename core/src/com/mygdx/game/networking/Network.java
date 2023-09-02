@@ -9,11 +9,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.mygdx.game.actors.Brick;
+import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class Network {
-    static public final int tcpPort = 54555;
+    static public final int tcpPort = 54552;
     static public final int udpPort = 54777;
 
     static public void register(EndPoint endpoint) {
@@ -25,6 +26,8 @@ public class Network {
         kryo.register(RandomPlacement.Position.class);
         kryo.register(PlaceBomb.class);
         kryo.register(BrickPositions.class);
+        kryo.register(BombermanDie.class);
+        kryo.register(UserDataType.class);
         kryo.register(int[].class);
         kryo.register(float[].class);
         kryo.register(String[].class);
@@ -169,9 +172,25 @@ public class Network {
         public String toString() {
             return "PlaceBomb [position=" + position + ", range=" + range + "]";
         }
-
         
 	}
+
+    static public class BombermanDie extends Packet {
+        public int id; // What bomberman died
+        public UserDataType type; // What killed him
+        
+        public BombermanDie(){}
+
+        public BombermanDie(int id, UserDataType type) {
+            this.id = id;
+            this.type = type;
+        }
+
+        @Override
+        public String toString() {
+            return "BombermanDie [id=" + id + "]";
+        }
+    }
 
 
 }

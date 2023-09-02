@@ -19,7 +19,10 @@ import com.mygdx.game.actors.Brick;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.configs.LevelConfig;
+import com.mygdx.game.enums.UserDataType;
+import com.mygdx.game.listeners.ClientWorldListener;
 import com.mygdx.game.networking.Network;
+import com.mygdx.game.networking.Network.BombermanDie;
 import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
 import com.mygdx.game.networking.Network.Packet;
@@ -35,6 +38,7 @@ import com.mygdx.game.utils.WorldUtils;
 
 public class MultiplayerStage extends GameStage {
     public Client client;
+    private int myId;
     private Queue<Object> notProcessedPackets;
     private Queue<PlayerPosition> playerPositions;
     private List<VirtualPlayer> network_players;
@@ -127,6 +131,19 @@ public class MultiplayerStage extends GameStage {
                 active_bombs.put(placeBomb.position, bomb);
                 addActor(bomb);
 
+            } else if(packet instanceof BombermanDie){
+                BombermanDie bombermanDie = (BombermanDie) packet;
+                
+                if(bombermanDie.id == this.myId){
+                    System.out.println("I died");
+                    bomberman.die(UserDataType.EXPLOSION);
+                } else {
+                    for(VirtualPlayer player : network_players) {
+                        if(player.id == bombermanDie.id) {
+                            player.actor.die(UserDataType.EXPLOSION);
+                        }
+                    }
+                }
             }
         } 
 
@@ -155,7 +172,6 @@ public class MultiplayerStage extends GameStage {
         }
     }
     
-    
     private void setupNetworking() {
         client = new Client();
         client.start();
@@ -175,6 +191,12 @@ public class MultiplayerStage extends GameStage {
     }
 
     @Override
+    protected void setupWorld(){
+        super.setupWorld();
+        world.setContactListener(new ClientWorldListener());
+    }
+
+    @Override
     protected void setupBricks() {
         if(bricksPositions != null){
             for (RandomPlacement.Position pos : bricksPositions) {
@@ -186,6 +208,11 @@ public class MultiplayerStage extends GameStage {
         }
     }
 
+    @Override
+    public void nextLevel() {
+        
+    }
+
     public void sendPackage(Object object) {
         System.out.println("Sending packet at " + LocalDateTime.now());
         System.out.println("\t" + object);
@@ -194,19 +221,18 @@ public class MultiplayerStage extends GameStage {
 
     private class NetworkingListener implements Listener {
         public void connected(Connection connection) {
-            System.out.println("Connected to server");
+            MultiplayerStage.this.myId = connection.getID();
+            System.out.println("Connected to server, ID: " + MultiplayerStage.this.myId);
             sendPackage(new RegisterPlayer("test"));
         }
 
         public void received(Connection connection, Object object) {
-            int id = connection.getID();
             System.out.println("Received packet at " + LocalDateTime.now());
-            System.out.println("\t" + "From: " + id); 
+            System.out.println("\t" + "From server"); 
             System.out.println("\t" + object);
 
             if(object instanceof Packet) {
                 Packet packet = (Packet) object;
-                packet.id = id;
                 notProcessedPackets.add(packet);
             }
             

@@ -2,6 +2,7 @@ package com.mygdx.game.networking;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.actors.Bomberman;
+import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.utils.WorldUtils;
 
 public class VirtualPlayer {
@@ -14,5 +15,7 @@ public class VirtualPlayer {
         this.id = id;
         this.name = name;
         this.body = WorldUtils.createBomberman();
+        BombermanUserData userData = (BombermanUserData) this.body.getUserData();
+        userData.playerId = id;
     }
 }
