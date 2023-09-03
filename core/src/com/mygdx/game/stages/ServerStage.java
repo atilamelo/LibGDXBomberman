@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
+import java.util.UUID;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,18 +13,21 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.mygdx.game.actors.Bomb;
-import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.configs.BombermanConfig;
+import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.configs.LevelConfig;
 import com.mygdx.game.listeners.ServerWorldListener;
 import com.mygdx.game.networking.Network;
+import com.mygdx.game.networking.VirtualEnemy;
 import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
+import com.mygdx.game.networking.Network.EnemyPosition;
 import com.mygdx.game.networking.Network.Packet;
 import com.mygdx.game.networking.Network.PlaceBomb;
 import com.mygdx.game.networking.Network.PlayerPosition;
 import com.mygdx.game.networking.Network.RegisterPlayer;
+import com.mygdx.game.networking.Network.RegisteredEnemies;
 import com.mygdx.game.networking.Network.RegisteredPlayers;
 import com.mygdx.game.networking.VirtualPlayer;
 import com.mygdx.game.screens.GameScreen;
@@ -34,6 +37,7 @@ import com.mygdx.game.utils.WorldUtils;
 public class ServerStage extends GameStage {
     public Server server;
     private List<VirtualPlayer> players;
+    private List<VirtualEnemy> enemies;
     private Queue<Object> notProcessedPackets;
 
     public ServerStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
@@ -82,7 +86,9 @@ public class ServerStage extends GameStage {
 
     @Override
     protected void setupBricks() {
-        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
+        // List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
+        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(config.amountOfBricks, spawnAreaBricks);
+
         for (RandomPlacement.Position pos : bricksPositions) {
             Brick brick = new Brick(WorldUtils.createBrick(pos));
             addActor(brick);
@@ -92,7 +98,24 @@ public class ServerStage extends GameStage {
 
     @Override
     protected void setupEnemies() {
+        this.enemies = new ArrayList<VirtualEnemy>();
+        setupEnemyType(config.amountOfBalloms, EnemyConfig.ballonConfig);
+        setupEnemyType(config.amountOfOnils, EnemyConfig.onilConfig);
+        setupEnemyType(config.amountOfDolls, EnemyConfig.dollConfig);
+        setupEnemyType(config.amountOfMinvos, EnemyConfig.minvoConfig);
+        setupEnemyType(config.amountOfKondorias, EnemyConfig.kondoriaConfig);
+        setupEnemyType(config.amountOfOvapis, EnemyConfig.ovapiConfig);
+        setupEnemyType(config.amountOfPass, EnemyConfig.passConfig);
+        setupEnemyType(config.amountOfPontan, EnemyConfig.pontanConfig);
+    }
 
+    @Override
+    protected void setupEnemyType(int amount, EnemyConfig config) {
+        List<RandomPlacement.Position> enemiesPositions = RandomPlacement.generateRandomPositions(amount, spawnAreaEnemies);
+        for (RandomPlacement.Position pos : enemiesPositions) {
+            VirtualEnemy enemy = new VirtualEnemy(this, pos, config);
+            enemies.add(enemy);
+        }
     }
 
     @Override
@@ -104,9 +127,7 @@ public class ServerStage extends GameStage {
 
             if (packet instanceof RegisterPlayer) {
                 RegisterPlayer registerPlayer = (RegisterPlayer) packet;
-                VirtualPlayer new_player = new VirtualPlayer(registerPlayer.id, registerPlayer.name);
-                new_player.actor = new Bomberman(new_player.body, ServerStage.this,
-                        BombermanConfig.initialBombermanConfig);
+                VirtualPlayer new_player = new VirtualPlayer(registerPlayer.id, registerPlayer.name, ServerStage.this);
                 players.add(new_player);
                 System.out.println("\tPlayer " + registerPlayer.name + " registered - Id: " + registerPlayer.id);
 
@@ -191,7 +212,9 @@ public class ServerStage extends GameStage {
                 // Send to player informatiosn about the actual state of the game
                 List<VirtualPlayer> players_list = new ArrayList<VirtualPlayer>(players);
                 players_list.removeIf(player -> player.id == id);
+
                 server.sendToTCP(id, new RegisteredPlayers(players_list));
+                server.sendToTCP(id, new RegisteredEnemies(enemies));
                 server.sendToTCP(id, new BrickPositions(ServerStage.this.active_bricks));
 
             } 
@@ -220,6 +243,14 @@ public class ServerStage extends GameStage {
             System.out.println("\t" + "Now connected players: " + players);
         }
 
+    }
+
+    public void sendEnemyPosition(UUID multiplayer_id, float x, float y) {
+        EnemyPosition packet = new EnemyPosition();
+        packet.id = multiplayer_id;
+        packet.x = x;
+        packet.y = y;
+        server.sendToAllTCP(packet);
     }
 
 }

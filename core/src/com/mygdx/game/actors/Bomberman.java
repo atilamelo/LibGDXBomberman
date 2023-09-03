@@ -19,6 +19,7 @@ import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.networking.Network;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.stages.MultiplayerStage;
+import com.mygdx.game.stages.ServerStage;
 import com.mygdx.game.utils.GameManager;
 import com.mygdx.game.utils.WorldUtils;
 
@@ -249,7 +250,7 @@ public class Bomberman extends GameActor {
 
         if (getUserData().getState().equals(State.DYING) && dyingAnimation.isAnimationFinished(stateTime)) {
             getUserData().setState(State.DIE);
-            if(!(game instanceof MultiplayerStage)){
+            if(!(game instanceof MultiplayerStage) && !(game instanceof ServerStage)){
                 ((GameStage) getStage()).restartLevel();
             }
         }

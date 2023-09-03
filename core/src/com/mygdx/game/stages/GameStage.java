@@ -186,65 +186,24 @@ public class GameStage extends Stage{
     }
 
     protected void setupEnemies() {
-        List<RandomPlacement.Position> positions;
-
-        /* Balloms */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfBalloms, spawnAreaEnemies);
+        setupEnemyType(config.amountOfBalloms, EnemyConfig.ballonConfig);
+        setupEnemyType(config.amountOfOnils, EnemyConfig.onilConfig);
+        setupEnemyType(config.amountOfDolls, EnemyConfig.dollConfig);
+        setupEnemyType(config.amountOfMinvos, EnemyConfig.minvoConfig);
+        setupEnemyType(config.amountOfKondorias, EnemyConfig.kondoriaConfig);
+        setupEnemyType(config.amountOfOvapis, EnemyConfig.ovapiConfig);
+        setupEnemyType(config.amountOfPass, EnemyConfig.passConfig);
+        setupEnemyType(config.amountOfPontan, EnemyConfig.pontanConfig);
+    }
+    
+    protected void setupEnemyType(int amount, EnemyConfig config) {
+        List<RandomPlacement.Position> positions = RandomPlacement.generateRandomPositions(amount, spawnAreaEnemies);
         for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.ballonConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.ballonConfig));
-        }
-
-        /* Onils */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfOnils, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.onilConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.onilConfig));
-        }
-
-        /* Dolls */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfDolls, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.dollConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.dollConfig));
-        }
-
-        /* Minvos */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfMinvos, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.minvoConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.minvoConfig));
-        }
-
-        /* Kondorias */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfKondorias, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.kondoriaConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.kondoriaConfig));
-        }
-
-        /* Ovapis */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfOvapis, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.ovapiConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.ovapiConfig));
-        }
-
-        /* Pass */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfPass, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.passConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.passConfig));
-        }
-
-        /* Pontan */
-        positions = RandomPlacement.generateRandomPositions(config.amountOfPontan, spawnAreaEnemies);
-        for (RandomPlacement.Position pos : positions) {
-            Body bodyEnemy = WorldUtils.createEnemy(pos, EnemyConfig.pontanConfig);
-            elements.addActor(new Enemy(bodyEnemy, EnemyConfig.pontanConfig));
+            Body bodyEnemy = WorldUtils.createEnemy(pos, config);
+            elements.addActor(new Enemy(bodyEnemy, config));
         }
     }
-
+    
     @Override
     public void act(float delta) {
         super.act(delta);

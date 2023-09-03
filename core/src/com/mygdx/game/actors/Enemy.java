@@ -2,6 +2,8 @@ package com.mygdx.game.actors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,6 +13,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.configs.EnemyConfig;
+import com.mygdx.game.stages.GameStage;
+import com.mygdx.game.stages.MultiplayerStage;
+import com.mygdx.game.stages.ServerStage;
 import com.mygdx.game.systems.AStarManhattan;
 import com.mygdx.game.systems.RandomPlacement.Position;
 import com.mygdx.game.utils.GameManager;
@@ -18,9 +23,9 @@ import com.mygdx.game.utils.WorldUtils;
 
 /*
  * Estrutura de movimentação e implementação dos inimgios baseado no Bomberman for LibGdx (GitHub)
- * Link: TODO: INSERIR LINK
  */
 public class Enemy extends GameActor {
+    private static final float PACKET_SEND_INTERVAL = 5f / 60f; // 60 packets per second
     private TextureAtlas textureAtlas;
     private Animation<TextureRegion> leftAnimation;
     private Animation<TextureRegion> rightAnimation;
@@ -34,6 +39,10 @@ public class Enemy extends GameActor {
     private int rangePursue;
     private int hp;
     private float speed;
+    private float lastSendX;
+    private float lastSendY;
+    private float packetSendTimer;
+    private UUID multiplayer_id;
 
     public static enum State {
         WALKING_UP,
@@ -56,6 +65,11 @@ public class Enemy extends GameActor {
         }
     }
 
+    public Enemy(UUID id, Body body, EnemyConfig config) {
+        this(body, config);
+        this.multiplayer_id = id;
+    }
+
     public Enemy(Body body, EnemyConfig config) {
         super(body);
         this.hp = config.hp;
@@ -66,7 +80,7 @@ public class Enemy extends GameActor {
         this.lastBombermanPosPursue = tilePosition.deepCopy();
         this.lastBombermanPosInter = tilePosition.deepCopy();
         this.state = State.getRandomWalkingState();
-        
+        this.packetSendTimer = 0f;
 
         getUserData().setActor(this);
 
@@ -161,6 +175,7 @@ public class Enemy extends GameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        
 
         /* Check if enemy is dead / dying */
         if (hp < 0 && !state.equals(State.DYING) & !state.equals(State.DIE)) {
@@ -172,17 +187,34 @@ public class Enemy extends GameActor {
          * System for randomly changing direction when the player encounters an
          * intersection
          */
-        if (intersectionChangeChance > 0) {
-            handleIntersectChange();
-        }
+        if(this.getStage() instanceof GameStage && !(this.getStage() instanceof MultiplayerStage)){
+            if (intersectionChangeChance > 0) {
+                handleIntersectChange();
+            }
 
-        /* Pursue player system */
-        if (rangePursue > 0) {
-            handlePursue();
-        }
+            /* Pursue player system */
+            if (rangePursue > 0) {
+                handlePursue();
+            }
 
-        /* Handle state system */
-        handleState();
+            /* Handle state system */
+            handleState();
+
+            /* If server, send information of x, y to all clients */
+            if(this.getStage() instanceof ServerStage) {
+                packetSendTimer += delta;
+                if (packetSendTimer >= PACKET_SEND_INTERVAL) {
+                    packetSendTimer -= PACKET_SEND_INTERVAL;
+        
+                    if (lastSendX != body.getPosition().x || lastSendY != body.getPosition().y) {
+                        ServerStage stage = (ServerStage) this.getStage();
+                        lastSendX = body.getPosition().x;
+                        lastSendY = body.getPosition().y;
+                        stage.sendEnemyPosition(multiplayer_id, lastSendX, lastSendY);
+                    }
+                }
+            }
+        } 
     }
 
     private void handleState() {

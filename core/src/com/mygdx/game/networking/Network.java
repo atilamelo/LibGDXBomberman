@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.mygdx.game.actors.Brick;
+import com.mygdx.game.configs.EnemyConfig;
 import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
@@ -19,23 +21,34 @@ public class Network {
 
     static public void register(EndPoint endpoint) {
         Kryo kryo = endpoint.getKryo();
+        kryo.register(Packet.class);
         kryo.register(RegisterPlayer.class);
         kryo.register(RegisteredPlayers.class);
+        kryo.register(RegisteredEnemies.class);
+        kryo.register(UUID.class, new UUIDSerializer(kryo));
         kryo.register(PlayerPosition.class);
+        kryo.register(EnemyPosition.class);
         kryo.register(DisconnectedPlayer.class);
         kryo.register(RandomPlacement.Position.class);
         kryo.register(PlaceBomb.class);
         kryo.register(BrickPositions.class);
         kryo.register(BombermanDie.class);
         kryo.register(UserDataType.class);
+        kryo.register(EnemyConfig.class);
         kryo.register(int[].class);
+        kryo.register(short[].class);
+        kryo.register(UUID[].class);
         kryo.register(float[].class);
         kryo.register(String[].class);
+        kryo.register(EnemyConfig[].class);
+        kryo.register(Position[].class);
 
     }
 
     public static class Packet {
         public int id;
+
+        public Packet() {}
     }
 
     public static class RegisterPlayer extends Packet {
@@ -56,8 +69,7 @@ public class Network {
     public static class RegisteredPlayers extends Packet {
         public String[] names;
         public int[] ids;
-        public float[] xPosition;
-        public float[] yPosition;
+        public Position[] positions;
         public int amountOfPlayers;
 
         public RegisteredPlayers() {}
@@ -66,15 +78,13 @@ public class Network {
             this.amountOfPlayers = players.size();
             this.names = new String[amountOfPlayers];
             this.ids = new int[amountOfPlayers];
-            this.xPosition = new float[amountOfPlayers];
-            this.yPosition = new float[amountOfPlayers];
+            this.positions = new Position[amountOfPlayers];
 
             for (int i = 0; i < amountOfPlayers; i++) {
                 VirtualPlayer player = players.get(i);
                 this.names[i] = player.name;
                 this.ids[i] = player.id;
-                this.xPosition[i] = player.body.getPosition().x;
-                this.yPosition[i] = player.body.getPosition().y;
+                this.positions[i] = new Position((int) player.body.getPosition().x, (int) player.body.getPosition().y);
             }
         }
 
@@ -84,15 +94,39 @@ public class Network {
 
         @Override
         public String toString() {
-            return "RegisteredPlayers{" +
-                "amountOfPlayers=" + amountOfPlayers +
-                ", names=" + Arrays.toString(names) +
-                ", ids=" + Arrays.toString(ids) +
-                ", xPosition=" + Arrays.toString(xPosition) +
-                ", yPosition=" + Arrays.toString(yPosition) +
-                '}';
+            return "RegisteredPlayers [names=" + Arrays.toString(names) + ", ids=" + Arrays.toString(ids)
+                    + ", positions=" + Arrays.toString(positions) + ", amountOfPlayers=" + amountOfPlayers + "]";
         }
 
+    }
+
+    public static class RegisteredEnemies extends Packet{
+        public UUID[] ids;
+        public EnemyConfig[] configs;
+        public Position[] positions;
+        public int amountOfEnemies;
+
+        public RegisteredEnemies() {}
+
+        public RegisteredEnemies(List<VirtualEnemy> enemies) {
+            this.amountOfEnemies = enemies.size();
+            this.ids = new UUID[amountOfEnemies];
+            this.configs = new EnemyConfig[amountOfEnemies];
+            this.positions = new Position[amountOfEnemies];
+
+            for (int i = 0; i < amountOfEnemies; i++) {
+                VirtualEnemy enemy = enemies.get(i);
+                this.ids[i] = enemy.id;
+                this.configs[i] = enemy.config;
+                this.positions[i] = new Position((int) enemy.body.getPosition().x, (int) enemy.body.getPosition().y);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "RegisteredEnemies [ids=" + Arrays.toString(ids) + ", configs=" + Arrays.toString(configs)
+                    + ", positions=" + Arrays.toString(positions) + ", amountOfEnemies=" + amountOfEnemies + "]";
+        }
     }
 
     static public class PlayerPosition extends Packet {
@@ -111,6 +145,24 @@ public class Network {
             return "PlayerPosition [x=" + x + ", y=" + y + "]";
         }
 	}
+
+    static public class EnemyPosition extends Packet {
+        public UUID id;
+        public float x, y;
+
+        public EnemyPosition(){}
+
+        public EnemyPosition(UUID id, float x, float y) {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public String toString() {
+            return "EnemyPosition [id=" + id + ", x=" + x + ", y=" + y + "]";
+        }
+    }
 
     static public class DisconnectedPlayer extends Packet {
         public int id;

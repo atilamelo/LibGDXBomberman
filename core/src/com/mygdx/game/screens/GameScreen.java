@@ -20,7 +20,7 @@ public class GameScreen implements Screen {
     private BombermanConfig currentBombermanConfig;
     
     public GameScreen(Game game) {
-        currentLevel = 0;
+        currentLevel = 1;
         this.game = game;
         currentBombermanConfig = BombermanConfig.initialBombermanConfig;
     }

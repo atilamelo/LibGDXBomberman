@@ -45,7 +45,7 @@ class DebugScreen extends GameScreen {
 
 	@Override
 	public void show() {
-		stage = new ServerStage(this, LevelConfig.getLevelConfig(0), BombermanConfig.initialBombermanConfig);
+		stage = new ServerStage(this, LevelConfig.getLevelConfig(1), BombermanConfig.initialBombermanConfig);
 	}
 
 	@Override

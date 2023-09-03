@@ -82,6 +82,10 @@ public class RandomPlacement {
             this.ocupped = ocupped;
         }
 
+        public Position(Position position) {
+            this(position.x, position.y, position.ocupped);
+        }
+
         public int getX() {
             return x;
         }
