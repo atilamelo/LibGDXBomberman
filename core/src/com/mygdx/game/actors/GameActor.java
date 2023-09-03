@@ -9,6 +9,7 @@ import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.EnemyUserData;
 import com.mygdx.game.box2d.PowerUpUserData;
 import com.mygdx.game.box2d.UserData;
+import com.mygdx.game.networking.Network.EnemyDie;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.stages.ServerStage;
 import com.mygdx.game.systems.CoordinateConverter;
@@ -59,6 +60,12 @@ public abstract class GameActor extends Actor {
             if(userData instanceof EnemyUserData){
                 gameManager.addScore(100);
                 gameManager.enemiesLeft--;
+                GameStage stage = (GameStage) getStage();
+                if(stage instanceof ServerStage){
+                    ServerStage serverStage = (ServerStage) stage;
+                    serverStage.enemies.removeIf(enemy -> enemy.actor.getUserData().isFlaggedForDelete);
+                }
+
             }
             else if(userData instanceof BombUserData){
                 BombUserData bombUserData = (BombUserData) userData;
@@ -86,6 +93,11 @@ public abstract class GameActor extends Actor {
                 if(brick.getPowerUpType() != null){
                     Body powerUpBody = WorldUtils.createPowerUp(brick.getPosition());
                     brick.getParent().addActor(new PowerUp(powerUpBody, brick.getPowerUpType()));
+                }
+
+                if(getStage() instanceof ServerStage){
+                    ServerStage stage = (ServerStage) getStage();
+                    stage.active_bricks.remove(brick);
                 }
             }else if(userData instanceof PowerUpUserData){
                 PowerUpUserData powerUpUserData = (PowerUpUserData) userData;

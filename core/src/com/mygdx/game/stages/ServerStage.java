@@ -37,7 +37,8 @@ import com.mygdx.game.utils.WorldUtils;
 public class ServerStage extends GameStage {
     public Server server;
     private List<VirtualPlayer> players;
-    private List<VirtualEnemy> enemies;
+    public List<VirtualEnemy> enemies;
+    public List<Brick> bricks;
     private Queue<Object> notProcessedPackets;
 
     public ServerStage(GameScreen gameScreen, LevelConfig levelConfig, BombermanConfig bombermanConfig) {
@@ -86,8 +87,8 @@ public class ServerStage extends GameStage {
 
     @Override
     protected void setupBricks() {
-        // List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
-        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(config.amountOfBricks, spawnAreaBricks);
+        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
+        // List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(config.amountOfBricks, spawnAreaBricks);
 
         for (RandomPlacement.Position pos : bricksPositions) {
             Brick brick = new Brick(WorldUtils.createBrick(pos));

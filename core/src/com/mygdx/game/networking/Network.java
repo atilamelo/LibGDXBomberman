@@ -1,13 +1,10 @@
 package com.mygdx.game.networking;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.mygdx.game.actors.Brick;
 import com.mygdx.game.configs.EnemyConfig;
@@ -33,6 +30,7 @@ public class Network {
         kryo.register(PlaceBomb.class);
         kryo.register(BrickPositions.class);
         kryo.register(BombermanDie.class);
+        kryo.register(EnemyDie.class);
         kryo.register(UserDataType.class);
         kryo.register(EnemyConfig.class);
         kryo.register(int[].class);
@@ -241,6 +239,21 @@ public class Network {
         @Override
         public String toString() {
             return "BombermanDie [id=" + id + "]";
+        }
+    }
+
+    static public class EnemyDie extends Packet {
+        public UUID id; // What enemy died
+        
+        public EnemyDie(){}
+
+        public EnemyDie(UUID id) {
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return "EnemyDie [id=" + id + "]";
         }
     }
 

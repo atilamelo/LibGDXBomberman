@@ -151,6 +151,7 @@ public class WorldUtils {
 
         // Create body
         Body body = world.createBody(bodyDef);
+        body.setSleepingAllowed(false);
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();
@@ -219,6 +220,7 @@ public class WorldUtils {
 
         // Create body
         Body body = world.createBody(bodyDef);
+        body.setSleepingAllowed(false);
 
         // Fixture Def
         FixtureDef fdef = new FixtureDef();

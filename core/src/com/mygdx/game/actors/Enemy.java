@@ -42,7 +42,7 @@ public class Enemy extends GameActor {
     private float lastSendX;
     private float lastSendY;
     private float packetSendTimer;
-    private UUID multiplayer_id;
+    public UUID multiplayer_id;
 
     public static enum State {
         WALKING_UP,
@@ -178,7 +178,7 @@ public class Enemy extends GameActor {
         
 
         /* Check if enemy is dead / dying */
-        if (hp < 0 && !state.equals(State.DYING) & !state.equals(State.DIE)) {
+        if (hp <= 0 && !state.equals(State.DYING) & !state.equals(State.DIE)) {
             stateTime = 0f;
             state = State.DYING;
         }

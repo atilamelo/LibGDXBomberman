@@ -14,6 +14,7 @@ import com.mygdx.game.box2d.BrickUserData;
 import com.mygdx.game.box2d.UserData;
 import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.networking.Network.BombermanDie;
+import com.mygdx.game.networking.Network.EnemyDie;
 import com.mygdx.game.stages.ServerStage;
 import com.mygdx.game.utils.GameManager;
 
@@ -26,7 +27,7 @@ public class ServerWorldListener extends WorldListener {
 
     @Override
     public void beginContact(Contact contact) {
-                Fixture fixA = contact.getFixtureA();
+        Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
         short categoryBitsA = fixA.getFilterData().categoryBits;
         short categoryBitsB = fixB.getFilterData().categoryBits;
@@ -39,7 +40,6 @@ public class ServerWorldListener extends WorldListener {
                 case GameManager.PLAYER_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixB.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
-                    System.out.println("BOMBERMAN ID: " + bombermanData.playerId);
                     bombermanActor.die(UserDataType.EXPLOSION);
 
                     BombermanDie die = new BombermanDie(bombermanData.playerId, UserDataType.EXPLOSION);
@@ -62,6 +62,12 @@ public class ServerWorldListener extends WorldListener {
                     UserData enemyData = (UserData) fixB.getBody().getUserData();
                     Enemy enemyActor = (Enemy) enemyData.getActor();
                     enemyActor.takeDamage(1);
+
+                    EnemyDie dieEnemy = new EnemyDie(enemyActor.multiplayer_id);
+                    System.out.println("Sending packet to all clients");
+                    System.out.println("\t" + dieEnemy);
+                    serverStage.server.sendToAllTCP(dieEnemy);
+
                     break;
                 case GameManager.DOOR_BIT:
                     UserData doorData = (UserData) fixB.getBody().getUserData();
@@ -98,6 +104,12 @@ public class ServerWorldListener extends WorldListener {
                     UserData enemyData = (UserData) fixA.getBody().getUserData();
                     Enemy enemyActor = (Enemy) enemyData.getActor();
                     enemyActor.takeDamage(1);
+
+                    EnemyDie dieEnemy = new EnemyDie(enemyActor.multiplayer_id);
+                    System.out.println("Sending packet to all clients");
+                    System.out.println("\t" + dieEnemy);
+                    serverStage.server.sendToAllTCP(dieEnemy);
+                    
                     break;
                 case GameManager.DOOR_BIT:
                     UserData doorData = (UserData) fixA.getBody().getUserData();
@@ -113,6 +125,13 @@ public class ServerWorldListener extends WorldListener {
                     BombermanUserData bombermanData = (BombermanUserData) fixA.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
                     bombermanActor.die(UserDataType.ENEMY);
+                    System.out.println("Dying by enemy");
+
+                    BombermanDie die = new BombermanDie(bombermanData.playerId, UserDataType.ENEMY);
+                    System.out.println("Sending packet to all clients");
+                    System.out.println("\t" + die);
+                    serverStage.server.sendToAllTCP(die);
+
                     break;
                 case GameManager.POWER_UP_BIT:
                     UserData powerUpData = (UserData) fixB.getBody().getUserData();
@@ -131,7 +150,14 @@ public class ServerWorldListener extends WorldListener {
                 case GameManager.ENEMY_BIT:
                     BombermanUserData bombermanData = (BombermanUserData) fixB.getBody().getUserData();
                     Bomberman bombermanActor = (Bomberman) bombermanData.getActor();
+                    System.out.println("Dying by enemy");
                     bombermanActor.die(UserDataType.ENEMY);
+
+                    BombermanDie die = new BombermanDie(bombermanData.playerId, UserDataType.ENEMY);
+                    System.out.println("Sending packet to all clients");
+                    System.out.println("\t" + die);
+                    serverStage.server.sendToAllTCP(die);
+
                     break;
                 case GameManager.POWER_UP_BIT:
                     UserData powerUpData = (UserData) fixA.getBody().getUserData();

@@ -22,6 +22,7 @@ import com.mygdx.game.networking.VirtualEnemy;
 import com.mygdx.game.networking.Network.BombermanDie;
 import com.mygdx.game.networking.Network.BrickPositions;
 import com.mygdx.game.networking.Network.DisconnectedPlayer;
+import com.mygdx.game.networking.Network.EnemyDie;
 import com.mygdx.game.networking.Network.EnemyPosition;
 import com.mygdx.game.networking.Network.Packet;
 import com.mygdx.game.networking.Network.PlaceBomb;
@@ -80,14 +81,25 @@ public class MultiplayerStage extends GameStage {
                     }
                 }
 
-            } else if (packet instanceof EnemyPosition){         
+            } else if (packet instanceof EnemyPosition){       
+
                 EnemyPosition enemyPosition = (EnemyPosition) packet;
                 for (VirtualEnemy enemy : network_enemies) {
                     if (enemy.id.equals(enemyPosition.id)) {
                         enemy.body.setTransform(enemyPosition.x, enemyPosition.y, 0);
                     }
                 }
-            }else if (packet instanceof RegisteredPlayers) {
+
+            } else if (packet instanceof EnemyDie) {
+                    
+                EnemyDie enemyDie = (EnemyDie) packet;
+                for (VirtualEnemy enemy : network_enemies) {
+                    if (enemy.id.equals(enemyDie.id)) {
+                        enemy.actor.takeDamage(1);
+                    }
+                }
+
+            } else if (packet instanceof RegisteredPlayers) {
 
                 RegisteredPlayers registeredPlayers = (RegisteredPlayers) packet;
                 for (int i = 0; i < registeredPlayers.amountOfPlayers; i++) {
@@ -228,7 +240,7 @@ public class MultiplayerStage extends GameStage {
 
     @Override
     public void setupEnemies() {
-        
+
     }
 
 

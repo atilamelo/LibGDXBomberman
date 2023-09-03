@@ -3,16 +3,9 @@ package com.mygdx.game.listeners;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.game.actors.Bomb;
-import com.mygdx.game.actors.Bomberman;
 import com.mygdx.game.actors.Brick;
-import com.mygdx.game.actors.Door;
-import com.mygdx.game.actors.Enemy;
-import com.mygdx.game.actors.PowerUp;
 import com.mygdx.game.box2d.BombUserData;
-import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.box2d.BrickUserData;
-import com.mygdx.game.box2d.UserData;
-import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.utils.GameManager;
 
 public class ClientWorldListener extends WorldListener{
