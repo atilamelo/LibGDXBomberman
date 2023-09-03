@@ -97,7 +97,7 @@ public abstract class GameActor extends Actor {
 
                 if(getStage() instanceof ServerStage){
                     ServerStage stage = (ServerStage) getStage();
-                    stage.active_bricks.remove(brick);
+                    stage.active_bricks.values().remove(brick);
                 }
             }else if(userData instanceof PowerUpUserData){
                 PowerUpUserData powerUpUserData = (PowerUpUserData) userData;

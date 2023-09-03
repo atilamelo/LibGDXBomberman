@@ -36,7 +36,7 @@ import com.mygdx.game.utils.WorldUtils;
 
 public class ServerStage extends GameStage {
     public Server server;
-    private List<VirtualPlayer> players;
+    public List<VirtualPlayer> players;
     public List<VirtualEnemy> enemies;
     public List<Brick> bricks;
     private Queue<Object> notProcessedPackets;

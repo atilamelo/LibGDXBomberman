@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -103,10 +105,12 @@ public class MultiplayerStage extends GameStage {
 
                 RegisteredPlayers registeredPlayers = (RegisteredPlayers) packet;
                 for (int i = 0; i < registeredPlayers.amountOfPlayers; i++) {
-                    VirtualPlayer player = new VirtualPlayer(registeredPlayers.ids[i], registeredPlayers.names[i],
-                            MultiplayerStage.this);
-                    player.body.setTransform(registeredPlayers.positions[i].getX(), registeredPlayers.positions[i].getY(), 0);
-                    network_players.add(player);
+                    if(registeredPlayers.isAlive[i]) {
+                        VirtualPlayer player = new VirtualPlayer(registeredPlayers.ids[i], registeredPlayers.names[i],
+                                MultiplayerStage.this);
+                        player.body.setTransform(registeredPlayers.positions[i].getX(), registeredPlayers.positions[i].getY(), 0);
+                        network_players.add(player);
+                    }
                 }
 
             } else if (packet instanceof RegisteredEnemies) {
@@ -272,6 +276,8 @@ public class MultiplayerStage extends GameStage {
         @Override
         public void disconnected(Connection connection) {
             System.out.println("Disconnected from server");
+            Gdx.app.exit();
+            System.exit(1);
         }
     }
 

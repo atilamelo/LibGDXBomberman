@@ -17,6 +17,8 @@ import com.mygdx.game.box2d.BombermanUserData;
 import com.mygdx.game.configs.BombermanConfig;
 import com.mygdx.game.enums.UserDataType;
 import com.mygdx.game.networking.Network;
+import com.mygdx.game.networking.VirtualPlayer;
+import com.mygdx.game.networking.Network.BombermanDie;
 import com.mygdx.game.stages.GameStage;
 import com.mygdx.game.stages.MultiplayerStage;
 import com.mygdx.game.stages.ServerStage;
@@ -372,6 +374,19 @@ public class Bomberman extends GameActor {
             if (!getUserData().getState().equals(State.DYING)) {
                 stateTime = 0f;
                 getUserData().setState(State.DYING);
+                if(getStage() instanceof ServerStage){
+                    ServerStage serverStage = (ServerStage) getStage();
+                    for(VirtualPlayer player : serverStage.players){
+                        if(player.id == getUserData().playerId){
+                            player.isAlive = false;
+                        }
+                    }
+                    BombermanDie die = new BombermanDie(getUserData().playerId, cause);
+                    System.out.println("Sending packet to all clients");
+                    System.out.println("\t" + die);
+                    serverStage.server.sendToAllTCP(die);
+
+                }
             }
         }
     }

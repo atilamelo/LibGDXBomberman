@@ -11,6 +11,7 @@ public class VirtualPlayer {
     public String name;
     public Body body;
     public Bomberman actor;
+    public boolean isAlive = true;
     
     @Override
     public String toString() {

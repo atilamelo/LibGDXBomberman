@@ -37,6 +37,7 @@ public class Network {
         kryo.register(short[].class);
         kryo.register(UUID[].class);
         kryo.register(float[].class);
+        kryo.register(boolean[].class);
         kryo.register(String[].class);
         kryo.register(EnemyConfig[].class);
         kryo.register(Position[].class);
@@ -68,6 +69,7 @@ public class Network {
         public String[] names;
         public int[] ids;
         public Position[] positions;
+        public boolean[] isAlive;
         public int amountOfPlayers;
 
         public RegisteredPlayers() {}
@@ -77,12 +79,14 @@ public class Network {
             this.names = new String[amountOfPlayers];
             this.ids = new int[amountOfPlayers];
             this.positions = new Position[amountOfPlayers];
+            this.isAlive = new boolean[amountOfPlayers];
 
             for (int i = 0; i < amountOfPlayers; i++) {
                 VirtualPlayer player = players.get(i);
                 this.names[i] = player.name;
                 this.ids[i] = player.id;
                 this.positions[i] = new Position((int) player.body.getPosition().x, (int) player.body.getPosition().y);
+                this.isAlive[i] = player.isAlive;
             }
         }
 
