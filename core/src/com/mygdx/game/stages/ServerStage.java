@@ -87,8 +87,7 @@ public class ServerStage extends GameStage {
 
     @Override
     protected void setupBricks() {
-        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(1, spawnAreaBricks);
-        // List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(config.amountOfBricks, spawnAreaBricks);
+        List<RandomPlacement.Position> bricksPositions = RandomPlacement.generateRandomPositions(config.amountOfBricks, spawnAreaBricks);
 
         for (RandomPlacement.Position pos : bricksPositions) {
             Brick brick = new Brick(WorldUtils.createBrick(pos));

@@ -13,7 +13,7 @@ import com.mygdx.game.systems.RandomPlacement;
 import com.mygdx.game.systems.RandomPlacement.Position;
 
 public class Network {
-    static public final int tcpPort = 54552;
+    static public final int tcpPort = 54543;
     static public final int udpPort = 54777;
 
     static public void register(EndPoint endpoint) {
