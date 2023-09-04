@@ -2,6 +2,8 @@ package com.mygdx.game.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -303,6 +305,8 @@ public class WorldUtils {
     }
 
     public static boolean hasObjectAtPosition(Vector2 position, short categoryBits) {
+        if(categoryBits == GameManager.PLAYER_BIT) return false;
+        
         World world = GameManager.getInstance().getWorld();
         final boolean[] hasBody = { false };
         final short categoryBitsFinal = categoryBits;
