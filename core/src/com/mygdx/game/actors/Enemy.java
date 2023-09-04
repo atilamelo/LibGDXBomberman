@@ -187,7 +187,7 @@ public class Enemy extends GameActor {
          * System for randomly changing direction when the player encounters an
          * intersection
          */
-        if(this.getStage() instanceof GameStage && !(this.getStage() instanceof MultiplayerStage)){
+        if(!(this.getStage() instanceof MultiplayerStage)){
             if (intersectionChangeChance > 0) {
                 handleIntersectChange();
             }
@@ -200,21 +200,22 @@ public class Enemy extends GameActor {
             /* Handle state system */
             handleState();
 
-            /* If server, send information of x, y to all clients */
-            if(this.getStage() instanceof ServerStage) {
-                packetSendTimer += delta;
-                if (packetSendTimer >= PACKET_SEND_INTERVAL) {
-                    packetSendTimer -= PACKET_SEND_INTERVAL;
+        } 
         
-                    if (lastSendX != body.getPosition().x || lastSendY != body.getPosition().y) {
-                        ServerStage stage = (ServerStage) this.getStage();
-                        lastSendX = body.getPosition().x;
-                        lastSendY = body.getPosition().y;
-                        stage.sendEnemyPosition(multiplayer_id, lastSendX, lastSendY);
-                    }
+        /* If server, send information of x, y to all clients */
+        if(this.getStage() instanceof ServerStage) {
+            packetSendTimer += delta;
+            if (packetSendTimer >= PACKET_SEND_INTERVAL) {
+                packetSendTimer -= PACKET_SEND_INTERVAL;
+    
+                if (lastSendX != body.getPosition().x || lastSendY != body.getPosition().y) {
+                    ServerStage stage = (ServerStage) this.getStage();
+                    lastSendX = body.getPosition().x;
+                    lastSendY = body.getPosition().y;
+                    stage.sendEnemyPosition(multiplayer_id, lastSendX, lastSendY);
                 }
             }
-        } 
+        }
     }
 
     private void handleState() {
